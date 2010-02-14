@@ -69,14 +69,39 @@ namespace Server.Engines.Craft
 			AddButton( 15, 402, 4017, 4019, 0, GumpButtonType.Reply, 0 );
 			AddHtmlLocalized( 50, 405, 150, 18, 1011441, LabelColor, false, false ); // EXIT
 
-			AddButton( 270, 402, 4005, 4007, GetButtonID( 6, 2 ), GumpButtonType.Reply, 0 );
-			AddHtmlLocalized( 305, 405, 150, 18, 1044013, LabelColor, false, false ); // MAKE LAST
+//MODDED FROM this to	AddButton( 270, 402, 4005, 4007, GetButtonID( 6, 2 ), GumpButtonType.Reply, 0 );
+//MODDED FROM this to	AddHtmlLocalized( 305, 405, 150, 18, 1044013, LabelColor, false, false ); // MAKE LAST
+			AddButton( 170, 402, 4005, 4007, GetButtonID( 6, 2 ), GumpButtonType.Reply, 0 );
+			AddHtmlLocalized( 205, 405, 150, 18, 1044013, LabelColor, false, false ); // MAKE LAST
+//I ADDED
+			bool autoloop = false;
+			if (context !=null && context.AutoLoop)
+			autoloop = true;
+
+			AddButton(320, 342, autoloop ? 209 : 208, autoloop ? 208 : 209, GetButtonID(6, 11), GumpButtonType.Reply, 0);
+			AddHtml(355, 345, 150, 18, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", FontColor, "Auto Loop"), false, false);
+
+			AddHtml(320, 370, 150, 18, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", FontColor, "Make Count"), false, false);
+			int count = 0;
+			if (context != null && context.TotalCount > 0)
+			count = context.TotalCount;
+
+			AddImageTiled(414, 370, 52, 22, 2624);
+			AddImageTiled(415, 371, 50, 20, 2524);
+
+			AddTextEntry(415, 371, 50, 20, 261, 100, count>0 ? count.ToString():"");
+
+
+
+//I ADDED
 
 			// Mark option
 			if ( craftSystem.MarkOption )
 			{
-				AddButton( 270, 362, 4005, 4007, GetButtonID( 6, 6 ), GumpButtonType.Reply, 0 );
-				AddHtmlLocalized( 305, 365, 150, 18, 1044017 + (context == null ? 0 : (int)context.MarkOption), LabelColor, false, false ); // MARK ITEM
+//Moded from this to				AddButton( 270, 362, 4005, 4007, GetButtonID( 6, 6 ), GumpButtonType.Reply, 0 );
+//Moded from this to				AddHtmlLocalized( 305, 365, 150, 18, 1044017 + (context == null ? 0 : (int)context.MarkOption), LabelColor, false, false ); // MARK ITEM
+				AddButton( 170, 362, 4005, 4007, GetButtonID( 6, 6 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 205, 365, 150, 18, 1044017 + (context == null ? 0 : (int)context.MarkOption), LabelColor, false, false ); // MARK ITEM
 			}
 			// ****************************************
 
@@ -91,16 +116,20 @@ namespace Server.Engines.Craft
 			// Repair option
 			if ( craftSystem.Repair )
 			{
-				AddButton( 270, 342, 4005, 4007, GetButtonID( 6, 5 ), GumpButtonType.Reply, 0 );
-				AddHtmlLocalized( 305, 345, 150, 18, 1044260, LabelColor, false, false ); // REPAIR ITEM
+//Modded this from to				AddButton( 270, 342, 4005, 4007, GetButtonID( 6, 5 ), GumpButtonType.Reply, 0 );
+//Modded this from to				AddHtmlLocalized( 305, 345, 150, 18, 1044260, LabelColor, false, false ); // REPAIR ITEM
+				AddButton( 170, 342, 4005, 4007, GetButtonID( 6, 5 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 205, 345, 150, 18, 1044260, LabelColor, false, false ); // REPAIR ITEM
 			}
 			// ****************************************
 
 			// Enhance option
 			if ( craftSystem.CanEnhance )
 			{
-				AddButton( 270, 382, 4005, 4007, GetButtonID( 6, 8 ), GumpButtonType.Reply, 0 );
-				AddHtmlLocalized( 305, 385, 150, 18, 1061001, LabelColor, false, false ); // ENHANCE ITEM
+//Modded this from to				AddButton( 270, 382, 4005, 4007, GetButtonID( 6, 8 ), GumpButtonType.Reply, 0 );
+//Modded this from to				AddHtmlLocalized( 305, 385, 150, 18, 1061001, LabelColor, false, false ); // ENHANCE ITEM
+				AddButton( 170, 382, 4005, 4007, GetButtonID( 6, 8 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 205, 385, 150, 18, 1061001, LabelColor, false, false ); // ENHANCE ITEM
 			}
 			// ****************************************
 
@@ -404,6 +433,38 @@ namespace Server.Engines.Craft
 			CraftSystem system = m_CraftSystem;
 			CraftGroupCol groups = system.CraftGroups;
 			CraftContext context = system.GetContext( m_From );
+//I ADDED
+			if (context != null)
+			{
+			context.Count = 0;
+			context.TotalCount = 0;
+
+			TextRelay text = info.GetTextEntry(100);
+			if (text.Text != null)
+			{
+			    string keywordstring = text.Text;
+			    string[] keywords = keywordstring.Split(' ');
+			    if (keywords.Length > 0)
+			    {
+			        string keyword = keywords[0];
+
+			        try
+			        {
+     				   int value;
+				   if (Int32.TryParse(keyword, out value))
+				   {
+				       if (value > 0)
+					   context.TotalCount = value;
+				   }
+				}
+				catch
+				{
+				}
+			    }
+			}
+		}
+
+//I ADDED
 
 			switch ( type )
 			{
@@ -609,6 +670,18 @@ namespace Server.Engines.Craft
 
 							break;
 						}
+//I ADDED
+						case 11: // LOOP
+						{
+							if (context == null)
+							    break;
+							context.AutoLoop = (!context.AutoLoop);
+							m_From.SendGump(new CraftGump(m_From, m_CraftSystem, m_Tool, null, m_Page));
+							break;
+						}
+
+//I ADDED
+
 					}
 
 					break;

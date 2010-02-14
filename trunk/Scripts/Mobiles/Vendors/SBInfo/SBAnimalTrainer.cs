@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using Server.Items;
+using Xanthos.ShrinkSystem;//added so can add petleash
 
 namespace Server.Mobiles
 {
@@ -21,12 +22,18 @@ namespace Server.Mobiles
 		{
 			public InternalBuyInfo()
 			{
-				Add( new AnimalBuyInfo( 1, typeof( Cat ), 132, 10, 201, 0 ) );
-				Add( new AnimalBuyInfo( 1, typeof( Dog ), 170, 10, 217, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( PetLeash ), 8000, 10, 4980, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( StablePostDeed ), 20000, 10, 5351, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( PetBondingDeed ), 7000, 10, 5360, 572 ) );
 				Add( new AnimalBuyInfo( 1, typeof( Horse ), 550, 10, 204, 0 ) );
 				Add( new AnimalBuyInfo( 1, typeof( PackHorse ), 631, 10, 291, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( rideablepackhorse ), 1262, 10, 291, 0 ) );
 				Add( new AnimalBuyInfo( 1, typeof( PackLlama ), 565, 10, 292, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( rideablepackllama ), 1130, 10, 292, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( Cat ), 132, 10, 201, 0 ) );
+				Add( new AnimalBuyInfo( 1, typeof( Dog ), 170, 10, 217, 0 ) );
 				Add( new AnimalBuyInfo( 1, typeof( Rabbit ), 106, 10, 205, 0 ) );
+
 
 				if( !Core.AOS )
 				{

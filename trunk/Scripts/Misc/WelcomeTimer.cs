@@ -27,7 +27,7 @@ namespace Server.Misc
 				} :
 			new string[]
 				{	//Yes, this message is a pathetic message, It's suggested that you change it.
-					"Welcome to this shard.",
+					"Welcome to the DragonKnights Shard.",
 					"Please enjoy your stay."
 				} );
 

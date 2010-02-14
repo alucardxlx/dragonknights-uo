@@ -235,6 +235,16 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( BodySash ), 1015283, 1025441, 4.1, 29.1, typeof( Cloth ), 1044286, 4, 1044287 );
 			AddCraft( typeof( HalfApron ), 1015283, 1025435, 20.7, 45.7, typeof( Cloth ), 1044286, 6, 1044287 );
 			AddCraft( typeof( FullApron ), 1015283, 1025437, 29.0, 54.0, typeof( Cloth ), 1044286, 10, 1044287 );
+// I ADDED
+
+			AddCraft( typeof( Bag ), 1015283, "Bag", 50.00, 75.00, typeof( Leather ), "Leather", 3, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( Pouch ), 1015283, "Pouch", 50.00, 75.00, typeof( Leather ), "Leather", 6, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( Backpack ), 1015283, "Backpack", 50.00, 75.00, typeof( Leather ), "Leather", 9, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( BlankScroll ), 1015283, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
+
+
+
+//
 
 			if( Core.SE )
 			{
@@ -496,6 +506,7 @@ namespace Server.Engines.Craft
 			AddSubRes( typeof( HornedLeather ),	1049152, 80.0, 1044462, 1049311 );
 			AddSubRes( typeof( BarbedLeather ),	1049153, 99.0, 1044462, 1049311 );
 
+			Resmelt = true;
 			MarkOption = true;
 			Repair = Core.AOS;
 			CanEnhance = Core.AOS;

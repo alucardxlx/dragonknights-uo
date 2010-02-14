@@ -143,6 +143,19 @@ namespace Server.Mobiles
 
 					m_Mobile.FocusMob = from;
 				}
+//I added				
+				else // sell bag
+                {
+                    string speech = e.Speech.ToLower();
+                    if (speech.EndsWith(" sell bag") || speech.StartsWith("sell bag ") || speech == "sell bag" || speech.Contains(" sell bag "))
+                    {
+                        e.Handled = true;
+                        ((BaseVendor)m_Mobile).VendorSellBag(from);
+                        m_Mobile.FocusMob = from;
+                    }
+                }
+//I added				
+
 			}
 		}
 	}

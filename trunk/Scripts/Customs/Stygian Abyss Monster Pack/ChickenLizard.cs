@@ -9,7 +9,7 @@ namespace Server.Mobiles
 	public class ChickenLizard : BaseCreature
 	{
 		[Constructable]
-		public ChickenLizard() : base( AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4 )
+		public ChickenLizard() : base( AIType.AI_Animal, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
 			Name = "a chicken lizard";
 			Body = 716;

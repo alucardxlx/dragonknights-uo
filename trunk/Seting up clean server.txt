@@ -1,0 +1,1500 @@
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL GAIN
+
+Scripts\Misc
+
+SkillCheck.cs
+
+Around line 119:
+LOOK FOR THIS CODE. AND THE GC /=2;//CHANGE THIS NUMBER HIGHER MEENS SLOWER GAINING
+
+Code:
+		public static bool CheckSkill( Mobile from, Skill skill, object amObj, double chance )
+		{
+			if ( from.Skills.Cap == 0 )
+				return false;
+
+			bool success = ( chance >= Utility.RandomDouble() );
+			double gc = (double)(from.Skills.Cap - from.Skills.Total) / from.Skills.Cap;
+			gc += ( skill.Cap - skill.Base ) / skill.Cap;
+			gc /= 2;//CHANGE THIS NUMBER HIGHER MEENS SLOWER GAINING
+
+			gc += ( 1.0 - chance ) * ( success ? 0.5 : (Core.AOS ? 0.0 : 0.2) );
+			gc /= 2;//CHANGE THIS NUMBER HIGHER MEENS SLOWER GAINING
+
+			gc *= skill.Info.GainFactor;
+
+			if ( gc < 0.01 )
+				gc = 0.01;
+
+			if ( from is BaseCreature && ((BaseCreature)from).Controlled )
+				gc *= 2;
+
+			if ( from.Alive && ( ( gc >= Utility.RandomDouble() && AllowGain( from, skill, amObj ) ) || skill.Base < 10.0 ) )
+				Gain( from, skill );
+
+			return success;
+		}
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+ Disable Lenient Kick 
+
+
+
+What this short tutorial is going to show you to do is how to disable Lenient Kick from your server. Lenient kick will kick any client that is running an older client than the server host. The way to disable this is actually really easy.
+
+Go into your server directory, and go to Scripts\Misc\ClientVerification.cs. Then within that file, search for:
+
+Code:
+private static OldClientResponse m_OldClientResponse = OldClientResponse.LenientKick;and change it to:
+
+Code:
+private static OldClientResponse m_OldClientResponse = OldClientResponse.Ignore;Save and restart your server and the problem is fixed.
+--------------------------------------------------------------------------------
+
+How to change House Limit. 
+
+
+
+In the script BaseHouse.cs which is located Scripts/Multis/BaseHouse.cs find this code:
+
+
+Code:
+public static bool HasAccountHouse( Mobile m )Now... Replace Everything Under that bool to say this:
+
+
+Code:
+		{
+			Account a = m.Account as Account;
+
+			if ( a == null )
+				return false;
+
+            ArrayList allHouses = new ArrayList();
+
+			for ( int i = 0; i < a.Length; ++i )
+			{
+				Mobile mob = a[i];
+
+				if ( mob != null )
+					allHouses.AddRange( GetHouses( mob ) );
+			}
+           //3 means 4 house limit. Same thing with any number. You want 2 houses? Set it to 1.
+            if(allHouses.Count > 3) return true;
+
+			//for ( int i = 0; i < a.Length; ++i )
+			//	if ( a[i] != null && HasHouse( a[i] ) )
+			//		return true;
+
+			return false;
+		}
+
+
+
+
+
+
+And Whala! Works like a charm. I wouldn't Have posted this FAQ if people would use the search button. I have been asked about 14 times how to do this so. Enjoy!
+--------------------------------------------------------------------------------
+
+Customize your server's welcome message! 
+
+
+Alright, in this tutorial you will learn how to edit your server's welcome message, the message that players get once their client connects to your server.
+
+Open your RunUO directory and go to Scripts > Misc> WelcomeTimer.cs. Once here, Ctrl + F and search for the following:
+
+Code:
+new string[]
+				{	//Yes, this message is a pathetic message, It's suggested that you change it.Now, you will notice that there is a message wrapped in quotation marks (" "), change it to whatever you want players to see when they connect to your server. Here's an example:
+
+Code:
+"Welcome to the Super Happy Fun Time server! You have a world full of positive, fun at your disposal!",
+"Please enjoy your stay."Notice that after the first phrase in quotation marks there is a comma (,). This tells the server to start a new paragraph after the first one is displayed. All your quoted phrases must have a comma at the end of the line or your server will not compile correctly. The only line that doesn't end with a comma is the last quoted line.
+
+You now have the information, put whatever you want in there! 
+
+--------------------------------------------------------------------------------
+
+Setting FollowersMax on 2.0 RC2 
+
+
+
+Go into the playermobile.cs and add FollowersMax = **; in the constructors. Like so..
+
+Code:
+ public PlayerMobile()
+{
+m_VisList = new List<Mobile>();
+m_PermaFlags = new List<Mobile>();
+m_AntiMacroTable = new Hashtable();
+FollowersMax = **;  (whatever you want the amount to be)
+
+
+m_BOBFilter = new Engines.BulkOrders.BOBFilter();
+
+m_GameTime = TimeSpan.Zero;
+m_ShortTermElapse = TimeSpan.FromHours( 8.0 );
+m_LongTermElapse = TimeSpan.FromHours( 40.0 );
+
+m_JusticeProtectors = new List<Mobile>();
+m_GuildRank = Guilds.RankDefinition.Lowest;
+
+m_ChampionTitles = new ChampionTitleInfo();
+
+InvalidateMyRunUO();
+}
+
+
+
+It will only show up on newly created player characters tho. Old ones need it manually added in thru props.
+
+--------------------------------------------------------------------------------
+
+
+How to Change Auto-Save Times 
+
+
+
+Ok, when I first started hosting shards, the auto-save time took place about every five minutes. I found a lot of people asking me how to change it, so a while back I took the effort to go and find out how. Here is how you do it:
+
+Open RunUO/Scripts/Misc/AutoSave.cs
+
+Around the top you should see:
+
+
+Quote:
+private static TimeSpan m_Delay = TimeSpan.FromMinutes( ##.0 );
+private static TimeSpan m_Warning = TimeSpan.FromSeconds( ##.0);
+//private static TimeSpan m_Warning = TimeSpan.FromSeconds( ##.0 );  
+
+Of course, where the number signs are, there are numbers, but since I altered it, I don't know what the numbers originally were. So simply edit the part of the script, and replace the number signs with actual numbers, for example:
+
+
+Quote:
+private static TimeSpan m_Delay = TimeSpan.FromMinutes( 30.0 );
+private static TimeSpan m_Warning = TimeSpan.FromSeconds( 60.0);
+//private static TimeSpan m_Warning = TimeSpan.FromSeconds( 15.0 );  
+
+Then just save the edited AutoSave.cs and restart your server and you are good to go!
+
+Note: Make sure to read the correct times, because 'FromMinutes' of course means the time in minutes, as does 'FromSeconds' mean time from seconds.
+
+
+
+
+--------------------------------------------------------------------------------
+
+How to change your server name 
+
+
+to change your server name go to scripts/misc/serverlist.cs
+
+there find the line 
+
+
+Quote:
+public const string ServerName = "Runuo Test Center"  
+
+and change the "Runuo Test Center" part to whatever name you want
+
+
+--------------------------------------------------------------------------------
+
+
+How to change your server name 
+
+
+to change your server name go to scripts/misc/serverlist.cs
+
+there find the line 
+
+
+Quote:
+public const string ServerName = "Runuo Test Center"  
+
+and change the "Runuo Test Center" part to whatever name you want
+
+
+--------------------------------------------------------------------------------
+
+
+Change new character starting location 
+
+
+In Scripts\Misc\CharacterCreation.cs, look for the line that starts "CityInfo city" (At or around line 655)
+
+There should be two lines at that location, which should look something like this:
+
+
+Code:
+CityInfo city = GetStartLocation( args, young );
+//CityInfo city = new CityInfo( "Britain", "Sweet Dreams Inn", 1496, 1628, 10, Map.Felucca );Place comment marks ( // ) in front of the short line, and remove them from the beginning of the longer line. Edit the marked values of the second line to suit your needs.
+
+
+Code:
+//CityInfo city = GetStartLocation( args, young );
+CityInfo city = new CityInfo( "Britain", "Sweet Dreams Inn", 1496, 1628, 10, Map.Felucca );The text fields can say whatever you like.
+
+The numbers are X coordinate, Y coordinate, and Z coordinate, in that order. To get the coordinates of a location, go to the spot you want new characters to start, type '[get location', and click yourself - that will give you the coordinates.
+
+The Map.whatever is which map to start the character on. Ex: Map.Felucca, Map.Trammel, Map.Ilshenar, Map.Malas, or Map.Tokuno.
+
+Example:
+
+
+Code:
+//CityInfo city = GetStartLocation( args, young );
+CityInfo city = new CityInfo( "NewbieLand", "New Character Starting Area", 5230, 393, 22, Map.Trammel );This modification changes the starting location for all characters, whether young or not, and regardless of class.
+
+
+If you want to change the starting location just for specific classes, scroll down to around line 681, at that location you should find something called GetStartLocation. There you can edit starting locations for specific character types. The format works the same way as the one listed above, with the same fields.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+Toggling Auto Account 
+
+
+
+To turn auto account on and off 
+go to scripts\accounting\AccountHandler.cs
+
+in line 14 you will find a code that looks like this
+
+
+Code:
+		private static bool AutoAccountCreation = true;if you want auto account on it should say true
+if you want auto account off it should say false
+remeber do not capitalize true or false or it will not work.
+
+
+--------------------------------------------------------------------------------
+
+
+Character Deletion 
+
+
+If you want your players to delete their characters before a 7 day period is up then follow these steps
+
+Go to Scripts\Accounting\AccountHandler.cs
+
+In line 15 you should find a code that looks like this
+
+
+Code:
+		private static bool RestrictDeletion = true;if it is on true then it will be 7 days before a player can delete a character they have created
+if it is false a player can delete a character right away.
+
+
+--------------------------------------------------------------------------------
+
+Multiple Accounts Per IP 
+
+
+Go to Scripts\Accounting\AccountHandler.cs
+
+On line 13 you will find a code that looks like this
+
+
+Code:
+private static int MaxAccountsPerIP = 1;Change the number 1 to how many accounts you want to have per IP.
+
+Save and Restart your Server
+
+--------------------------------------------------------------------------------
+
+
+Depositing items in players bank 
+
+
+This is a very simple edit to do. If you want to have items dropped into a player bank without activating Test Center. 
+First open your CharacterCreation.cs which is in Scripts/Misc. Find line 645(in an unedited file). It will look like this:
+
+Code:
+if( TestCenter.Enabled )Just comment the line out like this:
+
+Code:
+//if( TestCenter.Enabled )
+
+
+Then restart your server and all the items listed will drop into the players bank when they start.
+
+
+
+--------------------------------------------------------------------------------
+How to Change Max Skills Cap 
+
+
+Go to Scripts\Misc\charactercreation.cs
+
+Around line 614 you will find a code that looks like this
+
+
+Code:
+newChar.Hunger = 20;After that line add this
+
+
+Code:
+newChar.Skills.Cap = (number you want skill cap to be);it should look something like this
+
+
+
+Code:
+			newChar.Hunger = 20;
+			newChar.Skills.Cap = 100000;Remember to always add an extra 0 at the end of the number you want skills to be set at. if you want skills to be set at 500 then you need to type 5000.
+If you only type 500 then your players max skill cap will be 50.
+
+
+--------------------------------------------------------------------------------
+
+
+
+{Settingsml    = To enable stuff that is disabled like the spellweaving book spells.
+
+---------------------------------------------------------------------------------
+
+Edit playervendor.cs
+
+
+		public int ChargePerDay
+//I ADDED
+{get {return 1;}}
+
+//
+//		{
+//			get
+//			{ 
+//				if ( BaseHouse.NewVendorSystem )
+//				{
+//					return ChargePerRealWorldDay / 12;
+//				}
+//				else
+//				{
+//					long total = 0;
+//					foreach ( VendorItem vi in m_SellItems.Values )
+//					{
+//						total += vi.Price;
+//					}
+//
+//					total -= 500;
+//
+//					if ( total < 0 )
+//						total = 0;
+//
+//					return (int)( 20 + (total / 500) );
+//				}
+//			}
+//		}
+
+		public int ChargePerRealWorldDay
+//I ADDED
+{get {return 1;}}
+//
+//
+//		{
+//			get
+//			{
+//				if ( BaseHouse.NewVendorSystem )
+//				{
+//					long total = 0;
+//					foreach ( VendorItem vi in m_SellItems.Values )
+//					{
+//						total += vi.Price;
+//					}
+//
+//					return (int)( 60 + (total / 500) * 3 );
+//				}
+//				else
+//				{
+//					return ChargePerDay * 12;
+//				}
+//			}
+//		}
+
+		public virtual bool IsOwner( Mobile m )
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+edit defcarpentry.cs
+
+add this under //misc see the file with extra stuff also to see the differences
+
+
+// Misc
+			AddCraft( typeof( DartBoardSouthDeed ), 1044290, 1044325, 15.7, 40.7, typeof( Log ), 1044041, 5, 1044351 );
+			AddCraft( typeof( DartBoardEastDeed ), 1044290, 1044326, 15.7, 40.7, typeof( Log ), 1044041, 5, 1044351 );
+//I ADDED
+			AddCraft( typeof( BlankScroll ), 1044290, "BlankScroll", 0.00, 75.00, typeof( Log ), "Log", 2, "You do not have sufficent wood to make that." );
+//
+			
+			#region Mondain's Legacy
+
+
+------------------------------------------------------------------------------------------------------------------------
+edit definscription.cs
+
+
+
+			if ( Core.SE )
+				AddCraft( typeof( Spellbook ), 1044294, 1023834, 50.0, 150.0, typeof( BlankScroll ), 1044377, 10,  1044378 );
+//I ADDED
+				AddCraft( typeof( NecromancerSpellbook ), 1044294, "NecromancerSpellbook", 50.0, 150.0, typeof( BlankScroll ), 1044377, 10,  1044378 );
+				AddCraft( typeof( BlankScroll ), 1044294, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
+
+//			
+			#region Mondain's Legacy	
+			if ( Core.ML )
+			{
+				index = AddCraft( typeof( ScrappersCompendium ), 1044294, 1072940, 75.0, 125.0, typeof( BlankScroll ), 1044377, 100, 1044378 );
+				AddRes( index, typeof( DreadHornMane ), 1032682, 1, 1044253 );
+	
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+edit deftailoring.cs
+
+
+			#region Misc
+			AddCraft( typeof( BodySash ), 1015283, 1025441, 4.1, 29.1, typeof( Cloth ), 1044286, 4, 1044287 );
+			AddCraft( typeof( HalfApron ), 1015283, 1025435, 20.7, 45.7, typeof( Cloth ), 1044286, 6, 1044287 );
+			AddCraft( typeof( FullApron ), 1015283, 1025437, 29.0, 54.0, typeof( Cloth ), 1044286, 10, 1044287 );
+// I ADDED
+
+AddCraft( typeof( Bag ), 1015283, "Bag", 50.00, 75.00, typeof( Leather ), "Leather", 3, "You do not have sufficent leather to make that." );
+AddCraft( typeof( Pouch ), 1015283, "Pouch", 50.00, 75.00, typeof( Leather ), "Leather", 6, "You do not have sufficent leather to make that." );
+AddCraft( typeof( Backpack ), 1015283, "Backpack", 50.00, 75.00, typeof( Leather ), "Leather", 9, "You do not have sufficent leather to make that." );
+AddCraft( typeof( BlankScroll ), 1015283, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
+
+
+
+//
+
+			if( Core.SE )
+			{
+				index = AddCraft( typeof( Obi ), 1015283, 1030219, 20.0, 45.0, typeof( Cloth ), 1044286, 6, 1044287 );
+				SetNeededExpansion( index, Expansion.SE );
+			}
+
+
+----------------------------------------------------------------------------------------------------------------------------
+edit mining.cs
+------------------------------
+			// Resource banks are every 8x8 tiles CHANGED TO 4X4 AREA
+			oreAndStone.BankWidth = 4;
+			oreAndStone.BankHeight = 4;
+------------------------------
+			// Resource banks are every 8x8 tiles MADE 4 X 4
+			sand.BankWidth = 4;
+			sand.BankHeight = 4;
+------------------------------
+
+
+			if ( Core.ML )
+			{
+				oreAndStone.BonusResources = new BonusHarvestResource[]
+				{
+					new BonusHarvestResource( 0, 98.17, null, null ),	//Nothing
+					new BonusHarvestResource( 100, .10, 1072562, typeof( BlueDiamond ) ),
+					new BonusHarvestResource( 100, .10, 1072567, typeof( DarkSapphire ) ),
+					new BonusHarvestResource( 100, .10, 1072570, typeof( EcruCitrine ) ),
+					new BonusHarvestResource( 100, .10, 1072564, typeof( FireRuby ) ),
+					new BonusHarvestResource( 100, .10, 1072566, typeof( PerfectEmerald ) ),
+					new BonusHarvestResource( 100, .10, 1072568, typeof( Turquoise ) ),
+
+
+//
+					new BonusHarvestResource( 100, .01, "You dig up a Tourmaline and put it in your pack", typeof( Tourmaline ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Amethyst and put it in your pack", typeof( Amethyst ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Citrine and put it in your pack", typeof( Citrine ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Ruby and put it in your pack", typeof( Ruby ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Sapphire and put it in your pack", typeof( Sapphire ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Emerald and put it in your pack", typeof( Emerald ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Diamond and put it in your pack", typeof( Diamond ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Star Sapphire and put it in your pack", typeof( StarSapphire ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Amber and put it in your pack", typeof( Amber ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Brilliant Amber and put it in your pack", typeof( BrilliantAmber ) ),
+
+//57
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1alchemygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1anatomygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1animalloregem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1animaltaminggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1archerygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1armsloregem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1begginggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1blacksmithgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1bushidogem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1campinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1carpentrygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1cartographygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1chivalrygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1cookinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1detecthiddengem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1discordancegem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1evalintgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1fencinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1fishinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1fletchinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1focusgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1forensicsgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1healinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1herdinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1hidinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1inscribegem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1itemidgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1lockpickinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1lumberjackinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1macinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1magerygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1magicresistgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1meditationgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1mininggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1musicianshipgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1necromancygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1ninjitsugem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1parrygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1peacemakinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1poisoninggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1provocationgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1removetrapgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1snoopinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1spellweavinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1spiritspeakgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1stealinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1stealthgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1swordsgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tacticsgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tailoringgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tasteidgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tinkeringgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1trackinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1veterinarygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1wrestlinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( nightsightgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( SpellChannelingGem ) ),
+//56
+
+
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2alchemygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2anatomygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2animalloregem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2animaltaminggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2archerygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2armsloregem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2begginggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2blacksmithgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2bushidogem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2campinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2carpentrygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2cartographygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2chivalrygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2cookinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2detecthiddengem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2discordancegem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2evalintgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2fencinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2fishinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2fletchinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2focusgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2forensicsgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2healinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2herdinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2hidinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2inscribegem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2itemidgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2lockpickinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2lumberjackinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2macinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2magerygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2magicresistgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2meditationgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2mininggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2musicianshipgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2necromancygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2ninjitsugem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2parrygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2peacemakinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2poisoninggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2provocationgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2removetrapgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2snoopinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2spellweavinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2spiritspeakgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2stealinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2stealthgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2swordsgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tacticsgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tailoringgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tasteidgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tinkeringgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2trackinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2veterinarygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2wrestlinggem ) ),
+
+					new BonusHarvestResource( 100, .01, "You dig up a skill erace gem and put it in your pack", typeof( plus0skilleracegem ) )
+
+
+
+//
+
+
+
+
+
+				};
+			}
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+edit /scripts/spells/base/spell.cs - if remember correctly
+
+
+
+
+
+
+		public virtual bool ConsumeReagents()
+		{
+			if ( m_Scroll != null || !m_Caster.Player )
+				return true;
+
+			if ( AosAttributes.GetValue( m_Caster, AosAttribute.LowerRegCost ) > Utility.Random( 100 ) )
+				return true;
+
+			Container pack = m_Caster.Backpack;
+
+			if ( pack == null )
+				return false;
+
+			if ( pack.ConsumeTotal( m_Info.Reagents, m_Info.Amounts ) == -1 )
+				return true;
+//I ADDED can use reagents from spell caster keys.
+            ResourceStorageKeySpellCasters sck = (ResourceStorageKeySpellCasters)pack.FindItemByType(typeof(ResourceStorageKeySpellCasters));
+            if (sck != null && sck.ConsumeReg(m_Info.Reagents, m_Info.Amounts))
+            	return true;
+            if (m_Caster.BankBox != null)
+            	{
+            	sck = (ResourceStorageKeySpellCasters)(m_Caster.BankBox).FindItemByType(typeof(ResourceStorageKeySpellCasters));
+            	if (sck != null && sck.ConsumeReg(m_Info.Reagents, m_Info.Amounts))
+            		return true;
+            	}
+//I ADDED can use reagents from spell caster keys.            
+
+			return false;
+		}
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+edit /scripts/engines/craft/
+
+
+defalchemy.cs
+
+			// Earthen Mixtures
+			if ( Core.ML )
+			{
+//I added
+				index = AddCraft( typeof( DirtTileHouseAddonDeed ), 1074832, "House Tile Dirt Deed", 90.0, 140.0, typeof( FertileDirt ), "Fertile Dirt", 200, "You do not have sufficent dirt to make that." );
+				AddRes( index, typeof ( GreaterCurePotion ), "Greater Cure Potion", 4, "You do not have sufficent greater cure potions to make that." );
+				AddRes( index, typeof ( TotalRefreshPotion ), "Total Refresh Potion", 4, "You do not have sufficent total refresh potions to make that." );
+				AddRes( index, typeof ( GreaterHealPotion ), "Greater Heal Potion", 4, "You do not have sufficent greater heal potions to make that." );
+//I added
+
+
+----------------------------------
+deftinkering.cs
+
+
+            #region Tools
+            AddCraft(typeof(Scissors), 1044046, 1023998, 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(MortarPestle), 1044046, 1023739, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
+            AddCraft(typeof(Scorp), 1044046, 1024327, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(TinkerTools), 1044046, 1044164, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(Hatchet), 1044046, 1023907, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(typeof(DrawKnife), 1044046, 1024324, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(SewingKit), 1044046, 1023997, 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
+//I ADDED
+                index = AddCraft(typeof(PoisonResistSewingKit), 1044046, "Poison Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( DeadlyPoisonPotion ), "Deadly Poison Potion", 10, "You do not have sufficient Deadly Poison Potions. And I don't meen the Jack Daniels..." );
+
+                index = AddCraft(typeof(ColdResistSewingKit), 1044046, "Cold Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( TotalRefreshPotion ), "Total Refresh Potion", 10, "You do not have sufficient Total Refresh Potions. Either that or hot soup..." );
+
+                index = AddCraft(typeof(EnergyResistSewingKit), 1044046, "Energy Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( GreaterStrengthPotion ), "Greater Strength Potion", 10, "You do not have sufficient Greater Strength Potions. Get some, maybe you will get more energy." );
+                
+                index = AddCraft(typeof(FireResistSewingKit), 1044046, "Fire Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( SmokeBomb ), "Smoke Bomb", 10, "You do not have sufficient Smoke Bombs, how else are you gona resist the flames?" );
+//I ADDED
+
+-----------------------------
+defblacksmithy.cs
+
+
+
+			#region Dragon Scale Armor
+			index = AddCraft( typeof( DragonGloves ), 1053114, 1029795, 68.9, 118.9, typeof( RedScales ), 1060883, 16, 1060884 );
+			SetUseSubRes2( index, true );
+
+			index = AddCraft( typeof( DragonHelm ), 1053114, 1029797, 72.6, 122.6, typeof( RedScales ), 1060883, 20, 1060884 );
+			SetUseSubRes2( index, true );
+
+			index = AddCraft( typeof( DragonLegs ), 1053114, 1029799, 78.8, 128.8, typeof( RedScales ), 1060883, 28, 1060884 );
+			SetUseSubRes2( index, true );
+
+			index = AddCraft( typeof( DragonArms ), 1053114, 1029815, 76.3, 126.3, typeof( RedScales ), 1060883, 24, 1060884 );
+			SetUseSubRes2( index, true );
+
+			index = AddCraft( typeof( DragonChest ), 1053114, 1029793, 85.0, 135.0, typeof( RedScales ), 1060883, 36, 1060884 );
+			SetUseSubRes2( index, true );
+//I ADDED
+                        index = AddCraft( typeof( TallDragonBrazierAddonDeed ), 1053114, "Tall Dragon Brazier", 100.0, 140.0, typeof( IronIngot ), "Ingots", 50, "You do not have sufficent Ingots to make that." );
+                        AddRes( index, typeof( RedScales ), "Dragon Scales", 40, "You do not have sufficient Dragon Scales to make that." );
+                        AddRes( index, typeof( FireRuby ), "Fire Ruby", 30, "You do not have sufficient Fire Rubys to make that." );
+			SetUseSubRes2( index, true );
+//I ADDED
+			#endregion
+
+---------------------------
+defcarpemtry.cs
+
+
+
+
+			// Misc
+			AddCraft( typeof( DartBoardSouthDeed ), 1044290, 1044325, 15.7, 40.7, typeof( Log ), 1044041, 5, 1044351 );
+			AddCraft( typeof( DartBoardEastDeed ), 1044290, 1044326, 15.7, 40.7, typeof( Log ), 1044041, 5, 1044351 );
+//I ADDED
+			AddCraft( typeof( BlankScroll ), 1044290, "BlankScroll", 0.00, 75.00, typeof( Log ), "Log", 2, "You do not have sufficent wood to make that." );
+//
+
+
+-------------------------
+
+deftailoring.cs
+
+
+
+			#region Misc
+			AddCraft( typeof( BodySash ), 1015283, 1025441, 4.1, 29.1, typeof( Cloth ), 1044286, 4, 1044287 );
+			AddCraft( typeof( HalfApron ), 1015283, 1025435, 20.7, 45.7, typeof( Cloth ), 1044286, 6, 1044287 );
+			AddCraft( typeof( FullApron ), 1015283, 1025437, 29.0, 54.0, typeof( Cloth ), 1044286, 10, 1044287 );
+// I ADDED
+
+			AddCraft( typeof( Bag ), 1015283, "Bag", 50.00, 75.00, typeof( Leather ), "Leather", 3, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( Pouch ), 1015283, "Pouch", 50.00, 75.00, typeof( Leather ), "Leather", 6, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( Backpack ), 1015283, "Backpack", 50.00, 75.00, typeof( Leather ), "Leather", 9, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( BlankScroll ), 1015283, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
+
+
+
+//
+
+			if( Core.SE )
+
+
+----------------------
+definscription.cs
+
+
+			if ( Core.SE )
+				AddCraft( typeof( Spellbook ), 1044294, 1023834, 50.0, 150.0, typeof( BlankScroll ), 1044377, 10,  1044378 );
+//I ADDED
+				AddCraft( typeof( NecromancerSpellbook ), 1044294, "NecromancerSpellbook", 50.0, 150.0, typeof( BlankScroll ), 1044377, 10,  1044378 );
+				AddCraft( typeof( BlankScroll ), 1044294, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
+
+//
+
+
+------------------------------------------------------------------------------------------
+To get sell bag script to work have to edit basevendor.cs, and have selldata.cs, and vendorAI.cs
+
+Base vendor edit
+------------------------
+//I ADDED at the top
+using Server.Targeting;
+using Server.Engines.XmlSpawner2;
+//I ADDED
+
+
+
+//I ADDED after the vendorsell - public one           
+
+		public virtual void VendorSellBag(Mobile from)
+        {
+            if ( !IsActiveBuyer )
+				return;
+
+			if ( !from.CheckAlive() )
+				return;
+
+			if ( !CheckVendorAccess( from ) )
+			{
+				Say( 501522 ); // I shall not treat with scum like thee!
+				return;
+			}
+
+            from.Target = new InternalSellBagTarget(this);
+            from.SendMessage("Which bag of items you want to sell?");
+        }
+
+        private class InternalSellBagTarget : Target
+        {
+            private BaseVendor m_Vendor;
+            public InternalSellBagTarget(BaseVendor vendor)
+                : base(1, false, TargetFlags.None)
+            {
+                m_Vendor = vendor;
+            }
+
+            protected override void OnTarget(Mobile from, object targeted)
+            {
+                if (!from.Alive)
+                    return;
+
+                if (!(targeted is Container))
+                {
+                    from.SendMessage("That is not a container.");
+                    return;
+                }
+
+                Container sellbag = (Container)targeted;
+                if (!sellbag.IsChildOf(from.Backpack))
+                {
+                    from.SendMessage("That is not inside your backpack.");
+                    return;
+                }
+
+                SellData selldata = (SellData)XmlAttach.FindAttachment(from, typeof(SellData));
+                bool noSellData = true;
+                if (selldata != null)
+                    noSellData = false;
+
+                int payment = 0;
+
+                IShopSellInfo[] info = m_Vendor.GetSellInfo();
+
+                foreach (IShopSellInfo ssi in info)
+                {
+                    Item[] items = sellbag.FindItemsByType(ssi.Types);
+
+                    foreach (Item item in items)
+                    {
+                        if (item is Container && ((Container)item).Items.Count != 0)
+                            continue;
+
+                        ItemOwnerAttachment att1 = (ItemOwnerAttachment)XmlAttach.FindAttachment(item, typeof(ItemOwnerAttachment));
+                        if (att1 != null && att1.ItemOwner != null && att1.ItemOwner != from)
+                            continue;
+
+                        if (item.IsStandardLoot() && item.Movable && ssi.IsSellable(item))
+                        {
+                            if (noSellData || SellData.isSellable(selldata, item))
+                            {
+                                payment += ssi.GetSellPriceFor(item) * item.Amount;
+                                item.Delete();
+                            }
+                        }
+                    }
+                }
+
+                if (payment > 0)
+                {
+                    from.AddToBackpack(new Gold(payment));
+                    m_Vendor.SayTo(from, "That bag of stuff is sold for " + payment.ToString() + " gp.");
+                }
+                else
+                {
+                    m_Vendor.SayTo(from, "There is nothing in that bag that I would be interested in.");
+                }
+
+            }
+        }
+        
+//I ADDED		
+
+-------------------
+vendorai.cs edit
+//I added
+                else // sell bag
+                {
+                    string speech = e.Speech.ToLower();
+                    if (speech.EndsWith(" sell bag") || speech.StartsWith("sell bag ") || speech == "sell bag" || speech.Contains(" sell bag "))
+                    {
+                        e.Handled = true;
+                        ((BaseVendor)m_Mobile).VendorSellBag(from);
+                        m_Mobile.FocusMob = from;
+                    }
+                }
+//I added
+
+--------------------------------------------------------------------------------------------
+Enable stat/ skill bonuses so that if level 100 taiming and add ring that has +3 your
+taiming will be 103 - and max out at 120, if dont do this it will be stuck at 100 reguardless of bonus jewelery
+
+find \server\skills.cs
+around line 422
+
+				value += bonusNotObey;
+
+				if( value < Cap + 25 ) // + 25 is mod to allow skillMod to push skill to Cap + 20, but skill gain will stop at Cap.
+				{
+					value += bonusObey;
+
+					if( value > Cap + 25 )
+						value = Cap + 25;
+				}
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------
+Party Accept Gump 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Find Party.cs in engines dir
+Add to top of file
+
+using Server.Gumps;
+
+
+then find this code:
+target.Send(new MessageLocalizedAffix(Serial.MinusOne, -1, MessageType.Label, 0x3B2, 3, 1008089, "", AffixType.Prepend | AffixType.System, from.Name, ""));
+and add this under it:
+target.SendGump(new PartyGump(from, target));
+
+Then find DeclineTimer.cs
+add this to top of the file
+using Server.Gumps;
+and then look for this and make is like this one
+Code:
+	protected override void OnTick()
+		{
+			m_Table.Remove( m_Mobile );
+
+            if (m_Mobile.Party == m_Leader && PartyCommands.Handler != null)
+            {
+                PartyCommands.Handler.OnDecline(m_Mobile, m_Leader);
+                m_Mobile.CloseGump(typeof(PartyGump));
+            }
+		}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Animallore.cs
+
+Moded so can be able to use on controled EVO dragon.
+if ( c.Body.IsAnimal || c.Body.IsMonster || c.Body.IsSea || c.Controlled )
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Change color of Repair deeds depending on the craft
+in run-uo-svn\Scripts\Items\Skill Items\Misc\repairdeed.cs
+
+
+		public RepairDeed( RepairSkillType skill, double level, Mobile crafter, bool normalizeLevel ) : base( 0x14F0 )
+		{
+			if( normalizeLevel )
+				SkillLevel = (int)(level/10)*10;
+			else
+				SkillLevel = level;
+
+			m_Skill = skill;
+			m_Crafter = crafter;
+//			Hue = 0x1BC;
+            switch (skill)
+            {
+                case RepairSkillType.Smithing: Hue = 893; break;
+                case RepairSkillType.Tailoring: Hue = 643; break;
+                case RepairSkillType.Carpentry: Hue = 50; break;
+                case RepairSkillType.Fletching: Hue = 50; break;
+                case RepairSkillType.Tinkering: Hue = 1161; break;
+            }
+			
+			
+			LootType = LootType.Blessed;
+		}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Auto harvest....
+line 76 cange from: return tool; (to) return typeof( HarvestSystem );
+
+line 244 compair to whats there and make difference
+
+			OnHarvestFinished( from, tool, def, vein, bank, resource, toHarvest );
+			Timer.DelayCall(TimeSpan.FromSeconds(0.7), new TimerStateCallback(StartHarvesting_Resume), new object[] { from, tool, toHarvest });
+
+		}
+   	        public void StartHarvesting_Resume(object state)
+                {
+                    object[] states = (object[])state;
+	            Mobile from = (Mobile)states[0];
+	            Item tool = (Item)states[1];
+        	    object toHarvest = states[2];
+
+	            StartHarvesting(from, tool, toHarvest);
+                }
+
+		public virtual void OnHarvestFinished( Mobile from, Item tool, HarvestDefinition def, HarvestVein vein, HarvestBank bank, HarvestResource resource, object harvested )
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+Adding AUTO LOOP TO CRAFTING MENU (3 seperat file edits)
+
+\Scripts\Engines\Craft\Core\craftContext.cs
+
+
+Look and compair... Very simple file add
+
+
+
+		private bool m_DoNotColor;
+		private CraftMarkOption m_MarkOption;
+//I ADDED
+		private bool m_AutoLoop;
+		private int m_Count;
+		private int m_TotalCount;
+
+//I ADDED
+		public List<CraftItem> Items { get { return m_Items; } }
+		public int LastResourceIndex{ get{ return m_LastResourceIndex; } set{ m_LastResourceIndex = value; } }
+		public int LastResourceIndex2{ get{ return m_LastResourceIndex2; } set{ m_LastResourceIndex2 = value; } }
+		public int LastGroupIndex{ get{ return m_LastGroupIndex; } set{ m_LastGroupIndex = value; } }
+		public bool DoNotColor{ get{ return m_DoNotColor; } set{ m_DoNotColor = value; } }
+		public CraftMarkOption MarkOption{ get{ return m_MarkOption; } set{ m_MarkOption = value; } }
+//I Added
+		public bool AutoLoop { get { return m_AutoLoop; } set { m_AutoLoop = value; } }
+		public int Count { get { return m_Count; } set { m_Count = value; } }
+		public int TotalCount { get { return m_TotalCount; } set { m_TotalCount = value; } }
+
+//I ADDED
+
+
+		public CraftContext()
+		{
+			m_Items = new List<CraftItem>();
+			m_LastResourceIndex = -1;
+			m_LastResourceIndex2 = -1;
+			m_LastGroupIndex = -1;
+//I ADDED
+   			m_Count = 0;
+			m_TotalCount = 0;
+
+//I ADDED
+		}
+
+
+
+-------------------------------------------------------------------
+
+\Scripts\Engines\Craft\Core\craftgump.cs
+			AddHtmlLocalized( 10, 37, 200, 22, 1044010, LabelColor, false, false ); // <CENTER>CATEGORIES</CENTER>
+			AddHtmlLocalized( 215, 37, 305, 22, 1044011, LabelColor, false, false ); // <CENTER>SELECTIONS</CENTER>
+			AddHtmlLocalized( 10, 302, 150, 25, 1044012, LabelColor, false, false ); // <CENTER>NOTICES</CENTER>
+
+			AddButton( 15, 402, 4017, 4019, 0, GumpButtonType.Reply, 0 );
+			AddHtmlLocalized( 50, 405, 150, 18, 1011441, LabelColor, false, false ); // EXIT
+
+//MODDED FROM this to	AddButton( 270, 402, 4005, 4007, GetButtonID( 6, 2 ), GumpButtonType.Reply, 0 );
+//MODDED FROM this to	AddHtmlLocalized( 305, 405, 150, 18, 1044013, LabelColor, false, false ); // MAKE LAST
+			AddButton( 170, 402, 4005, 4007, GetButtonID( 6, 2 ), GumpButtonType.Reply, 0 );
+			AddHtmlLocalized( 205, 405, 150, 18, 1044013, LabelColor, false, false ); // MAKE LAST
+//I ADDED
+            bool autoloop = false;
+            if (context !=null && context.AutoLoop)
+                autoloop = true;
+
+            AddButton(320, 342, autoloop ? 209 : 208, autoloop ? 208 : 209, GetButtonID(6, 11), GumpButtonType.Reply, 0);
+            AddHtml(355, 345, 150, 18, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", FontColor, "Auto Loop"), false, false);
+
+            AddHtml(320, 370, 150, 18, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", FontColor, "Make Count"), false, false);
+            int count = 0;
+            if (context != null && context.TotalCount > 0)
+                count = context.TotalCount;
+
+            AddImageTiled(414, 370, 52, 22, 2624);
+            AddImageTiled(415, 371, 50, 20, 2524);
+
+            AddTextEntry(415, 371, 50, 20, 261, 100, count>0 ? count.ToString():"");
+
+
+
+//I ADDED
+			// Mark option
+			if ( craftSystem.MarkOption )
+			{
+//Moded from this to				AddButton( 270, 362, 4005, 4007, GetButtonID( 6, 6 ), GumpButtonType.Reply, 0 );
+//Moded from this to				AddHtmlLocalized( 305, 365, 150, 18, 1044017 + (context == null ? 0 : (int)context.MarkOption), LabelColor, false, false ); // MARK ITEM
+				AddButton( 170, 362, 4005, 4007, GetButtonID( 6, 6 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 205, 365, 150, 18, 1044017 + (context == null ? 0 : (int)context.MarkOption), LabelColor, false, false ); // MARK ITEM
+			}
+			// ****************************************
+
+			// Resmelt option
+			if ( craftSystem.Resmelt )
+			{
+				AddButton( 15, 342, 4005, 4007, GetButtonID( 6, 1 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 50, 345, 150, 18, 1044259, LabelColor, false, false ); // SMELT ITEM
+			}
+			// ****************************************
+
+			// Repair option
+			if ( craftSystem.Repair )
+			{
+//Modded this from to				AddButton( 270, 342, 4005, 4007, GetButtonID( 6, 5 ), GumpButtonType.Reply, 0 );
+//Modded this from to				AddHtmlLocalized( 305, 345, 150, 18, 1044260, LabelColor, false, false ); // REPAIR ITEM
+				AddButton( 170, 342, 4005, 4007, GetButtonID( 6, 5 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 205, 345, 150, 18, 1044260, LabelColor, false, false ); // REPAIR ITEM
+			}
+			// ****************************************
+
+			// Enhance option
+			if ( craftSystem.CanEnhance )
+			{
+//Modded this from to				AddButton( 270, 382, 4005, 4007, GetButtonID( 6, 8 ), GumpButtonType.Reply, 0 );
+//Modded this from to				AddHtmlLocalized( 305, 385, 150, 18, 1061001, LabelColor, false, false ); // ENHANCE ITEM
+				AddButton( 170, 382, 4005, 4007, GetButtonID( 6, 8 ), GumpButtonType.Reply, 0 );
+				AddHtmlLocalized( 205, 385, 150, 18, 1061001, LabelColor, false, false ); // ENHANCE ITEM
+			}
+			// ****************************************
+
+
+
+
+
+
+AND IN A DIFFERENT AREA DOWN THE PAGE
+			if ( info.ButtonID <= 0 )
+				return; // Canceled
+
+			int buttonID = info.ButtonID - 1;
+			int type = buttonID % 7;
+			int index = buttonID / 7;
+
+			CraftSystem system = m_CraftSystem;
+			CraftGroupCol groups = system.CraftGroups;
+			CraftContext context = system.GetContext( m_From );
+//I ADDED
+            if (context != null)
+            {
+                context.Count = 0;
+                context.TotalCount = 0;
+
+                TextRelay text = info.GetTextEntry(100);
+                if (text.Text != null)
+                {
+                    string keywordstring = text.Text;
+                    string[] keywords = keywordstring.Split(' ');
+                    if (keywords.Length > 0)
+                    {
+                        string keyword = keywords[0];
+
+                        try
+                        {
+                            int value;
+                            if (Int32.TryParse(keyword, out value))
+                            {
+                                if (value > 0)
+                                    context.TotalCount = value;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+
+//I ADDED
+
+			switch ( type )
+			{
+				case 0: // Show group
+				{
+					if ( context == null )
+						break;
+
+					if ( index >= 0 && index < groups.Count )
+					{
+						context.LastGroupIndex = index;
+						m_From.SendGump( new CraftGump( m_From, system, m_Tool, null ) );
+					}
+
+					break;
+				}
+				case 1: // Create item
+
+
+
+
+AND IN A DIFFERENT AREA DOWN THE PAGE
+
+
+
+
+						case 8: // Enhance item
+						{
+							if ( system.CanEnhance )
+								Enhance.BeginTarget( m_From, system, m_Tool );
+
+							break;
+						}
+//I ADDED
+                        case 11: // LOOP
+                        {
+                            if (context == null)
+                                break;
+                            context.AutoLoop = (!context.AutoLoop);
+                            m_From.SendGump(new CraftGump(m_From, m_CraftSystem, m_Tool, null, m_Page));
+                            break;
+                        }
+
+//I ADDED
+					}
+
+					break;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------
+
+
+
+\Scripts\Engines\Craft\Core\craftitem.cs
+AROUND Line 1326
+                // TODO: Scroll imbuing
+
+                if (queryFactionImbue)
+                    from.SendGump(new FactionImbueGump(quality, item, from, craftSystem, tool, num, availableSilver, faction, def));
+                else if (tool != null && !tool.Deleted && tool.UsesRemaining > 0)
+//I added                	
+                {
+                    CraftContext context = craftSystem.GetContext(from);
+                    if (context != null && context.AutoLoop)
+                    {
+                        context.Count++;
+                        if (context.TotalCount == 0 || context.Count < context.TotalCount)
+                        {
+                            this.Craft(from, craftSystem, typeRes, tool);
+                        }
+                        else
+                            from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                    }
+                    else
+                        from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                }
+                	
+//I ADDED this originaly there                   from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                else if (num > 0)
+                    from.SendLocalizedMessage(num);
+            }
+            else if (!allRequiredSkills)
+            {
+                if (tool != null && !tool.Deleted && tool.UsesRemaining > 0)
+                    from.SendGump(new CraftGump(from, craftSystem, tool, 1044153));
+                else
+                    from.SendLocalizedMessage(1044153); // You don't have the required skills to attempt this item.
+            }
+
+
+
+AROUND LINE 1388
+                // SkillCheck failed.
+                int num = craftSystem.PlayEndingEffect(from, true, true, toolBroken, endquality, false, this);
+
+                if (tool != null && !tool.Deleted && tool.UsesRemaining > 0)
+//I added
+                 {
+                    CraftContext context = craftSystem.GetContext(from);
+                    if (context != null && context.AutoLoop)
+                    {
+                        context.Count++;
+                        if (context.TotalCount == 0 || context.Count < context.TotalCount)
+                        {
+                            this.Craft(from, craftSystem, typeRes, tool);
+                        }
+                        else
+                            from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                    }
+                    else
+                        from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                }
+//I added this originaly there                    from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                else if (num > 0)
+                    from.SendLocalizedMessage(num);
+            }
+        }
+
+        private class InternalTimer : Timer
+        {
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Modded ORE.cs to be able to access from horse and less different style of same type ore
+2 spots edited 1st for the different types and then for the horse access.
+
+
+
+//I MODED HERE DOWN
+		public BaseOre( CraftResource resource, int amount ) : base( Utility.Random( 2 ) )
+		{
+			{
+				double random = Utility.RandomDouble();
+				if ( 0.25 >= random )
+					ItemID = 0x19B8;
+				else
+					ItemID = 0x19B9;
+			}
+			
+			Stackable = true;
+			Amount = amount;
+			Hue = CraftResources.GetHue( resource );
+
+			m_Resource = resource;
+		}
+//ORIGINAL MODED ABOVE
+//		public BaseOre( CraftResource resource, int amount ) : base( Utility.Random( 4 ) )
+//		{
+//			{
+//				double random = Utility.RandomDouble();
+//				if ( 0.12 >= random )
+//					ItemID = 0x19B7;
+//				else if ( 0.18 >= random )
+//					ItemID = 0x19B8;
+//				else if ( 0.25 >= random )
+//					ItemID = 0x19BA;
+//				else
+//					ItemID = 0x19B9;
+//			}
+//			
+//			Stackable = true;
+//			Amount = amount;
+//			Hue = CraftResources.GetHue( resource );
+//
+//			m_Resource = resource;
+//		}
+
+
+
+
+
+
+
+
+
+
+//MODDED HERE DOWN
+		public override void OnDoubleClick( Mobile from )
+		{
+			if ( !Movable )
+				return;
+			
+			if ( from.InRange( this.GetWorldLocation(), 2 ) )
+			{
+				from.SendLocalizedMessage( 501971 ); // Select the forge on which to smelt the ore, or another pile of ore with which to combine it.
+				from.Target = new InternalTarget( this );
+			}
+			else
+			{
+				from.SendLocalizedMessage( 501976 ); // The ore is too far away.
+			}
+		}
+//ORIGINAL. I MODED ABOVE
+//		public override void OnDoubleClick( Mobile from )
+//		{
+//			if ( !Movable )
+//				return;
+//			
+//			if ( RootParent is BaseCreature )
+//			{
+//				from.SendLocalizedMessage( 500447 ); // That is not accessible
+//				return;
+//			}
+//			else if ( from.InRange( this.GetWorldLocation(), 2 ) )
+//			{
+//				from.SendLocalizedMessage( 501971 ); // Select the forge on which to smelt the ore, or another pile of ore with which to combine it.
+//				from.Target = new InternalTarget( this );
+//			}
+//			else
+//			{
+//				from.SendLocalizedMessage( 501976 ); // The ore is too far away.
+//			}
+//		}
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How to change the weather 
+
+--------------------------------------------------------------------------------
+
+i answered a similar question in a post and some on replied "why dont you put that in the faq thread so i am, 
+
+To change the weather\season on a facet is very easy, the "MapDefinitions.cs" holds the answer, you can locate this file in scripts\misc folder, near the start of the file you will see the following code(i will just use one line for felucca as an example but the same follows for theother facets)
+
+
+Code:
+RegisterMap( 0, 0, 0, 6144, 4096, 4, "Felucca",MapRules.FeluccaRules );The 4 represents the season value for that facet
+
+here is an explantion of the season numbers
+
+
+Code:
+0 = Spring
+1 = Summer
+2 = Fall
+3 = Winter
+4 = Desolationso all you do is change the highlighed number for the season and facet you want, save file and restart shard
+
+4 is the season for Felucca no leaves on trees blood on ground etc, part of the asked question was "why is there no leaves on ground an blood every where"
+
+Hope this helps some people
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Characters Per Account 
+
+--------------------------------------------------------------------------------
+
+To change characters per account go into the Scripts\Accounting\Account.cs file and change the below 5 to 1, 5, or 6 as it says in the summary. 
+
+
+Code:
+		/// <summary>
+		/// Gets the maximum amount of characters allowed to be created on this account. Values other than 1, 5, or 6 are not supported.
+		/// </summary>
+		public int Limit
+		{
+			get{ return 5; }
+		}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

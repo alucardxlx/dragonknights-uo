@@ -77,6 +77,7 @@ namespace Server.Engines.Craft
         {
             // no sound
             //from.PlaySound( 0x241 );
+            from.PlaySound( 0x956 );
         }
 
         private static Type[] m_TinkerColorables = new Type[]
@@ -192,6 +193,27 @@ namespace Server.Engines.Craft
             AddCraft(typeof(Hatchet), 1044046, 1023907, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(DrawKnife), 1044046, 1024324, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(SewingKit), 1044046, 1023997, 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
+//I ADDED
+                index = AddCraft(typeof(PoisonResistSewingKit), 1044046, "Poison Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( DeadlyPoisonPotion ), "Deadly Poison Potion", 10, "You do not have sufficient Deadly Poison Potions. And I don't meen the Jack Daniels..." );
+
+                index = AddCraft(typeof(ColdResistSewingKit), 1044046, "Cold Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( TotalRefreshPotion ), "Total Refresh Potion", 10, "You do not have sufficient Total Refresh Potions. Either that or hot soup..." );
+
+                index = AddCraft(typeof(EnergyResistSewingKit), 1044046, "Energy Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( GreaterStrengthPotion ), "Greater Strength Potion", 10, "You do not have sufficient Greater Strength Potions. Get some, maybe you will get more energy." );
+                
+                index = AddCraft(typeof(FireResistSewingKit), 1044046, "Fire Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
+                AddRes( index, typeof( SmokeBomb ), "Smoke Bomb", 10, "You do not have sufficient Smoke Bombs, how else are you gona resist the flames?" );
+//I ADDED
             AddCraft(typeof(Saw), 1044046, 1024148, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(DovetailSaw), 1044046, 1024136, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(Froe), 1044046, 1024325, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -212,11 +234,12 @@ namespace Server.Engines.Craft
             #region Mondain's Legacy
             if (Core.ML)
             {
-                AddCraft(typeof(MetalContainerEngraver), 1044046, 1072154, 75.0, 100.0, typeof(IronIngot), 1044036, 4, 1044037);
+                index = AddCraft(typeof(MetalContainerEngraver), 1044046, 1072154, 75.0, 100.0, typeof(IronIngot), 1044036, 4, 1044037);
                 AddRes(index, typeof(Springs), 1044171, 1, 1044253);
                 AddRes(index, typeof(Gears), 1044254, 2, 1044253);
                 AddRes(index, typeof(Diamond), 1062608, 1, 1044240);
                 SetNeededExpansion(index, Expansion.ML);
+
             }
             #endregion
 
@@ -260,6 +283,14 @@ namespace Server.Engines.Craft
             #endregion
 
             #region Misc
+//I ADDED
+            index = AddCraft(typeof(MetalChest), 1044050, "metal chest", 73.6, 98.6, typeof(IronIngot), "Ingots", 50, "You do not have sufficient ingots to make that.");
+            AddRes( index, typeof( AxleGears ), "Axle With Gears", 3, "You do not have sufficent Axles With Gears." );
+
+            index = AddCraft(typeof(MetalBox), 1044050, "metal box", 73.6, 98.6, typeof(IronIngot), "Ingots", 50, "You do not have sufficient ingots to make that.");
+            AddRes( index, typeof( AxleGears ), "Axle With Gears", 3, "You do not have sufficent Axles With Gears." );
+
+//I ADDED            
             AddCraft(typeof(KeyRing), 1044050, 1024113, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(Candelabra), 1044050, 1022599, 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(Scales), 1044050, 1026225, 60.0, 110.0, typeof(IronIngot), 1044036, 4, 1044037);

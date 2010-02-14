@@ -9,7 +9,10 @@ using Server.Misc;
 using Server.Engines.BulkOrders;
 using Server.Regions;
 using Server.Factions;
-
+//I ADDED
+using Server.Targeting;
+using Server.Engines.XmlSpawner2;
+//I ADDED
 namespace Server.Mobiles
 {
 	public enum VendorShoeType
@@ -737,7 +740,99 @@ namespace Server.Mobiles
 				}
 			}
 		}
+//I ADDED            
+		public virtual void VendorSellBag(Mobile from)
+        {
+            if ( !IsActiveBuyer )
+				return;
 
+			if ( !from.CheckAlive() )
+				return;
+
+			if ( !CheckVendorAccess( from ) )
+			{
+				Say( 501522 ); // I shall not treat with scum like thee!
+				return;
+			}
+
+            from.Target = new InternalSellBagTarget(this);
+            from.SendMessage("Which bag of items you want to sell?");
+        }
+
+        private class InternalSellBagTarget : Target
+        {
+            private BaseVendor m_Vendor;
+            public InternalSellBagTarget(BaseVendor vendor)
+                : base(1, false, TargetFlags.None)
+            {
+                m_Vendor = vendor;
+            }
+
+            protected override void OnTarget(Mobile from, object targeted)
+            {
+                if (!from.Alive)
+                    return;
+
+                if (!(targeted is Container))
+                {
+                    from.SendMessage("That is not a container.");
+                    return;
+                }
+
+                Container sellbag = (Container)targeted;
+                if (!sellbag.IsChildOf(from.Backpack))
+                {
+                    from.SendMessage("That is not inside your backpack.");
+                    return;
+                }
+
+                SellData selldata = (SellData)XmlAttach.FindAttachment(from, typeof(SellData));
+                bool noSellData = true;
+                if (selldata != null)
+                    noSellData = false;
+
+                int payment = 0;
+
+                IShopSellInfo[] info = m_Vendor.GetSellInfo();
+
+                foreach (IShopSellInfo ssi in info)
+                {
+                    Item[] items = sellbag.FindItemsByType(ssi.Types);
+
+                    foreach (Item item in items)
+                    {
+                        if (item is Container && ((Container)item).Items.Count != 0)
+                            continue;
+
+//                        ItemOwnerAttachment att1 = (ItemOwnerAttachment)XmlAttach.FindAttachment(item, typeof(ItemOwnerAttachment));
+//                        if (att1 != null && att1.ItemOwner != null && att1.ItemOwner != from)
+//                            continue;
+
+                        if (item.IsStandardLoot() && item.Movable && ssi.IsSellable(item))
+                        {
+                            if (noSellData || SellData.isSellable(selldata, item))
+                            {
+                                payment += ssi.GetSellPriceFor(item) * item.Amount;
+                                item.Delete();
+                            }
+                        }
+                    }
+                }
+
+                if (payment > 0)
+                {
+                    from.AddToBackpack(new Gold(payment));
+                    m_Vendor.SayTo(from, "That bag of stuff is sold for " + payment.ToString() + " gp.");
+                }
+                else
+                {
+                    m_Vendor.SayTo(from, "There is nothing in that bag that I would be interested in.");
+                }
+
+            }
+        }
+        
+//I ADDED		
 		public override bool OnDragDrop( Mobile from, Item dropped )
 		{
 			if ( dropped is SmallBOD || dropped is LargeBOD )

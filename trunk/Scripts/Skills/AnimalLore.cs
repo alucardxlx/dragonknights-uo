@@ -40,7 +40,7 @@ namespace Server.SkillHandlers
 
 					if ( !c.IsDeadPet )
 					{
-						if ( c.Body.IsAnimal || c.Body.IsMonster || c.Body.IsSea )
+						if ( c.Body.IsAnimal || c.Body.IsMonster || c.Body.IsSea || c.Controlled )
 						{
 							if ( (!c.Controlled || !c.Tamable) && from.Skills[SkillName.AnimalLore].Base < 100.0 )
 							{
@@ -63,6 +63,7 @@ namespace Server.SkillHandlers
 						else
 						{
 							from.SendLocalizedMessage( 500329 ); // That's not an animal!
+							//from.SendMessage("Body");
 						}
 					}
 					else
@@ -73,6 +74,7 @@ namespace Server.SkillHandlers
 				else
 				{
 					from.SendLocalizedMessage( 500329 ); // That's not an animal!
+					//from.SendMessage("BaseCreature");
 				}
 			}
 		}

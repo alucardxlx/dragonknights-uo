@@ -421,12 +421,12 @@ namespace Server
 
 				value += bonusNotObey;
 
-				if( value < Cap )
+				if( value < Cap + 25) // was Cap + 25 is mod to allow skillMod to push skill to Cap + 20, but skill gain will stop at Cap.
 				{
 					value += bonusObey;
 
-					if( value > Cap )
-						value = Cap;
+					if( value > Cap + 25)
+						value = Cap + 25;
 				}
 
 				return value;

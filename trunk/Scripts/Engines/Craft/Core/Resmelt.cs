@@ -1,17 +1,12 @@
 using System;
+using System.Collections.Generic;
 using Server;
 using Server.Targeting;
 using Server.Items;
+using Server.Engines.XmlSpawner2;
 
 namespace Server.Engines.Craft
 {
-	public enum SmeltResult
-	{
-		Success,
-		Invalid,
-		NoSkill
-	}
-
 	public class Resmelt
 	{
 		public Resmelt()
@@ -22,14 +17,15 @@ namespace Server.Engines.Craft
 		{
 			int num = craftSystem.CanCraft( from, tool, null );
 
-			if ( num > 0 && num != 1044267 )
+			if ( num > 0 )
 			{
 				from.SendGump( new CraftGump( from, craftSystem, tool, num ) );
 			}
 			else
 			{
 				from.Target = new InternalTarget( craftSystem, tool );
-				from.SendLocalizedMessage( 1044273 ); // Target an item to recycle.
+                from.SendMessage("Target an item or a bag of items to recycle.");
+				//from.SendLocalizedMessage( 1044273 ); // Target an item to recycle.
 			}
 		}
 
@@ -44,118 +40,135 @@ namespace Server.Engines.Craft
 				m_Tool = tool;
 			}
 
-			private SmeltResult Resmelt( Mobile from, Item item, CraftResource resource )
+			private bool Resmelt( Mobile from, Item item, CraftResource resource )
 			{
-				try
-				{
-					if ( CraftResources.GetType( resource ) != CraftResourceType.Metal )
-						return SmeltResult.Invalid;
+                try
+                {
+                    //if (CraftResources.GetType(resource) != CraftResourceType.Metal)
+                    //    return false;
 
-					CraftResourceInfo info = CraftResources.GetInfo( resource );
+                    CraftResourceInfo info = CraftResources.GetInfo(resource);
 
-					if ( info == null || info.ResourceTypes.Length == 0 )
-						return SmeltResult.Invalid;
+                    if (info == null || info.ResourceTypes.Length == 0)
+                        return false;
 
-					CraftItem craftItem = m_CraftSystem.CraftItems.SearchFor( item.GetType() );
+                    CraftItem craftItem = m_CraftSystem.CraftItems.SearchFor(item.GetType());
 
-					if ( craftItem == null || craftItem.Resources.Count == 0 )
-						return SmeltResult.Invalid;
+                    if (craftItem == null || craftItem.Resources.Count == 0)
+                        return false;
 
-					CraftRes craftResource = craftItem.Resources.GetAt( 0 );
+                    CraftRes craftResource = craftItem.Resources.GetAt(0);
 
-					if ( craftResource.Amount < 2 )
-						return SmeltResult.Invalid; // Not enough metal to resmelt
+                    if (craftResource.Amount < 2)
+                        return false; // Not enough metal to resmelt
 
-					double difficulty = 0.0;
+                    Type resourceType = info.ResourceTypes[0];
+                    Item ingot = (Item)Activator.CreateInstance(resourceType);
 
-					switch ( resource )
-					{
-						case CraftResource.DullCopper: difficulty = 65.0; break;
-						case CraftResource.ShadowIron: difficulty = 70.0; break;
-						case CraftResource.Copper: difficulty = 75.0; break;
-						case CraftResource.Bronze: difficulty = 80.0; break;
-						case CraftResource.Gold: difficulty = 85.0; break;
-						case CraftResource.Agapite: difficulty = 90.0; break;
-						case CraftResource.Verite: difficulty = 95.0; break;
-						case CraftResource.Valorite: difficulty = 99.0; break;
-					}
+                    if (item is DragonBardingDeed || (item is BaseArmor && ((BaseArmor)item).PlayerConstructed) || (item is BaseWeapon && ((BaseWeapon)item).PlayerConstructed) || (item is BaseClothing && ((BaseClothing)item).PlayerConstructed))
+                        ingot.Amount = craftResource.Amount / 2;
+                    else
+                        ingot.Amount = 1;
 
-					if ( difficulty > from.Skills[ SkillName.Mining ].Value )
-						return SmeltResult.NoSkill;
+                    item.Delete();
+                    from.AddToBackpack(ingot);
 
-					Type resourceType = info.ResourceTypes[0];
-					Item ingot = (Item)Activator.CreateInstance( resourceType );
+                    return true;
+                }
+                catch
+                {
+                }
 
-					if ( item is DragonBardingDeed || (item is BaseArmor && ((BaseArmor)item).PlayerConstructed) || (item is BaseWeapon && ((BaseWeapon)item).PlayerConstructed) || (item is BaseClothing && ((BaseClothing)item).PlayerConstructed) )
-						ingot.Amount = craftResource.Amount / 2;
-					else
-						ingot.Amount = 1;
-
-					item.Delete();
-					from.AddToBackpack( ingot );
-
-					from.PlaySound( 0x2A );
-					from.PlaySound( 0x240 );
-					return SmeltResult.Success;
-				}
-				catch
-				{
-				}
-
-				return SmeltResult.Invalid;
+				return false;
 			}
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
 				int num = m_CraftSystem.CanCraft( from, m_Tool, null );
 
-				if ( num > 0 )
+                if (num > 0)
+                {
+                    from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, num));
+                }
+                else if (targeted is Container)
+                {
+                    Container bag = (Container)targeted;
+                    if (!bag.IsChildOf(from.Backpack))
+                    {
+                        from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, "That is not inside your backpack."));
+                        return;
+                    }
+                    bool success = false;
+                    List<Item> items = bag.Items;
+                    for (int i = items.Count - 1; i >= 0; i--)
+                    {
+                        Item item = items[i];
+//                        TimedAttachment att = (TimedAttachment)XmlAttach.FindAttachment(item, typeof(TimedAttachment));
+//                        if (att == null)
+//                        {
+                            if (item is BaseArmor && Resmelt(from, (BaseArmor)item, ((BaseArmor)item).Resource))
+                                success = true;
+                            else if (item is BaseWeapon && Resmelt(from, (BaseWeapon)item, ((BaseWeapon)item).Resource))
+                                success = true;
+                            else if (targeted is BaseClothing && Resmelt(from, (BaseClothing)targeted, ((BaseClothing)targeted).Resource))
+                                success = true;
+                            else if (item is DragonBardingDeed && Resmelt(from, (DragonBardingDeed)item, ((DragonBardingDeed)item).Resource))
+                                success = true;
+//                        }
+                    }
+                    if (success)
+                    {
+                        from.PlaySound(0x2A);
+                        from.PlaySound(0x240);
+                        from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, "You recycled that bag of items into raw resources."));
+                    }
+                    else
+                        from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, "There is nothing in that bag that can be recycled."));
+                }
+                else
 				{
-					if ( num == 1044267 )
-					{
-						bool anvil, forge;
-			
-						DefBlacksmithy.CheckAnvilAndForge( from, 2, out anvil, out forge );
-
-						if ( !anvil )
-							num = 1044266; // You must be near an anvil
-						else if ( !forge )
-							num = 1044265; // You must be near a forge.
-					}
-					
-					from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, num ) );
-				}
-				else
-				{
-					SmeltResult result = SmeltResult.Invalid;
+					bool success = false;
 					bool isStoreBought = false;
-					int message;
 
-					if ( targeted is BaseArmor )
-					{
-						result = Resmelt( from, (BaseArmor)targeted, ((BaseArmor)targeted).Resource );
-						isStoreBought = !((BaseArmor)targeted).PlayerConstructed;
-					}
-					else if ( targeted is BaseWeapon )
-					{
-						result = Resmelt( from, (BaseWeapon)targeted, ((BaseWeapon)targeted).Resource );
-						isStoreBought = !((BaseWeapon)targeted).PlayerConstructed;
-					}
-					else if ( targeted is DragonBardingDeed )
-					{
-						result = Resmelt( from, (DragonBardingDeed)targeted, ((DragonBardingDeed)targeted).Resource );
-						isStoreBought = false;
-					}
+                    if (targeted is Item && !((Item)targeted).IsChildOf(from.Backpack))
+                    {
+                        from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, "That is not inside your backpack."));
+                        return;
+                    }
 
-					switch ( result )
-					{
-						default:
-						case SmeltResult.Invalid: message = 1044272; break; // You can't melt that down into ingots.
-						case SmeltResult.NoSkill: message = 1044269; break; // You have no idea how to work this metal.
-						case SmeltResult.Success: message = isStoreBought ? 500418 : 1044270; break; // You melt the item down into ingots.
-					}
-					
-					from.SendGump( new CraftGump( from, m_CraftSystem, m_Tool, message ) );
+//                    TimedAttachment att = (TimedAttachment)XmlAttach.FindAttachment(targeted, typeof(TimedAttachment));
+//                    if (att == null)
+//                    {
+                        if (targeted is BaseArmor)
+                        {
+                            success = Resmelt(from, (BaseArmor)targeted, ((BaseArmor)targeted).Resource);
+                            isStoreBought = !((BaseArmor)targeted).PlayerConstructed;
+                        }
+                        else if (targeted is BaseWeapon)
+                        {
+                            success = Resmelt(from, (BaseWeapon)targeted, ((BaseWeapon)targeted).Resource);
+                            isStoreBought = !((BaseWeapon)targeted).PlayerConstructed;
+                        }
+                        else if (targeted is BaseClothing)
+                        {
+                            success = Resmelt(from, (BaseClothing)targeted, ((BaseClothing)targeted).Resource);
+                            isStoreBought = !((BaseClothing)targeted).PlayerConstructed;
+                        }
+                        else if (targeted is DragonBardingDeed)
+                        {
+                            success = Resmelt(from, (DragonBardingDeed)targeted, ((DragonBardingDeed)targeted).Resource);
+                            isStoreBought = false;
+//                        }
+                    }
+
+                    if (success)
+                    {
+                        from.PlaySound(0x2A);
+                        from.PlaySound(0x240);
+                        from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, "You recycled that into raw resources."));// isStoreBought ? 500418 : 1044270)); // You melt the item down into ingots.
+                    }
+                    else
+                        from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, "You can't recycle that into raw resources."));// 1044272)); // You can't melt that down into ingots.
 				}
 			}
 		}

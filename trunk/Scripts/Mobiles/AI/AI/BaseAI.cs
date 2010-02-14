@@ -1165,11 +1165,24 @@ namespace Server.Mobiles
 				{
 					m_Mobile.DebugSay( "My master told me come" );
 
-					// Not exactly OSI style, but better than nothing.
-					bool bRun = (iCurrDist > 5);
-
-					if( WalkMobileRange( m_Mobile.ControlMaster, 1, bRun, 0, 1 ) )
+/*Change Speed*/
+					bool mOnHorse = ( m_Mobile.ControlMaster.Mount != null );
+					Direction mDirection = m_Mobile.ControlMaster.Direction;
+					bool mRunning = ((mDirection & Direction.Running) != 0);
+					bool WMR;
+					if( mOnHorse )
 					{
+						m_Mobile.CurrentSpeed = (mRunning ? .1 : .15);
+						WMR = WalkMobileRange( m_Mobile.ControlMaster, 2, true, 0, 1 );
+					}
+					else
+					{
+						m_Mobile.CurrentSpeed = (mRunning ? .2 : .25);
+						WMR = WalkMobileRange( m_Mobile.ControlMaster, 2, mRunning, 0, 1 );
+					}
+
+					if ( WMR )
+/*Change Speed*/	{
 						if( m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && !m_Mobile.Combatant.IsDeadBondedPet )
 						{
 							m_Mobile.Warmode = true;
@@ -1279,11 +1292,24 @@ namespace Server.Mobiles
 				{
 					m_Mobile.DebugSay( "My master told me to follow: {0}", m_Mobile.ControlTarget.Name );
 
-					// Not exactly OSI style, but better than nothing.
-					bool bRun = (iCurrDist > 5);
+/*Change Speed*/
+                    bool mOnHorse = (m_Mobile.ControlTarget.Mount != null);
+                    Direction mDirection = m_Mobile.ControlTarget.Direction;
+                    bool mRunning = ((mDirection & Direction.Running) != 0);
+                    bool WMR;
+                    if (mOnHorse)
+                    {
+                        m_Mobile.CurrentSpeed = (mRunning ? .1 : .15);
+                        WMR = WalkMobileRange(m_Mobile.ControlTarget, 2, true, 0, 3);
+                    }
+                    else
+                    {
+                        m_Mobile.CurrentSpeed = (mRunning ? .2 : .25);
+                        WMR = WalkMobileRange(m_Mobile.ControlTarget, 2, mRunning, 0, 3);
+                    }
 
-					if( WalkMobileRange( m_Mobile.ControlTarget, 1, bRun, 0, 1 ) )
-					{
+                    if (WMR)
+/*Change Speed*/    {
 						if( m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && !m_Mobile.Combatant.IsDeadBondedPet )
 						{
 							m_Mobile.Warmode = true;
@@ -1461,10 +1487,22 @@ namespace Server.Mobiles
 				m_Mobile.DebugSay( "Nothing to guard from" );
 
 				m_Mobile.Warmode = false;
-				m_Mobile.CurrentSpeed = 0.1;
-
-				WalkMobileRange( controlMaster, 1, false, 0, 1 );
-			}
+/*Change Speed*/
+                bool mOnHorse = (m_Mobile.ControlMaster.Mount != null);
+                Direction mDirection = m_Mobile.ControlMaster.Direction;
+                bool mRunning = ((mDirection & Direction.Running) != 0);
+                if (mOnHorse)
+                {
+                    m_Mobile.CurrentSpeed = (mRunning ? .1 : .15);
+                    WalkMobileRange(m_Mobile.ControlMaster, 2, true, 0, 1);
+                }
+                else
+                {
+                    m_Mobile.CurrentSpeed = (mRunning ? .2 : .25);
+                    WalkMobileRange(m_Mobile.ControlMaster, 2, mRunning, 0, 1);
+                }
+/*Change Speed*/
+            }
 
 			return true;
 		}
@@ -1956,7 +1994,17 @@ namespace Server.Mobiles
 
 			offset = 1.0 - offset;
 
-			delay += (offset * 0.8);
+//Modded for pet follow 
+//originaly was there			delay += (offset * 0.8);
+            if (!isControlled)
+            {
+                delay += (offset * 0.8);
+            }
+            else
+            {
+                delay += (offset * 0.4);
+            }
+//Modded for pet follow above
 
 			if( delay < 0.0 )
 				delay = 0.0;

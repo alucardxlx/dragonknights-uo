@@ -6,6 +6,7 @@ using Server.Items;
 using Server.Factions;
 using Server.Mobiles;
 using Server.Commands;
+using Server.Engines.XmlSpawner2;//added for craftbag not autoloop
 
 namespace Server.Engines.Craft
 {
@@ -1279,7 +1280,14 @@ namespace Server.Engines.Craft
                             item.Amount = maxAmount;
                     }
 
-                    from.AddToBackpack(item);
+//I Added FOR CRAFTBAG                    
+                    Container craftbag = GetCraftBag(from);
+                    if (!craftbag.TryDropItem(from, item, false))
+                    {
+                        from.AddToBackpack(item);
+                    }
+//I Added For craftbacg above. The original below
+//originaly was there above                    from.AddToBackpack(item);
 
                     if (from.AccessLevel > AccessLevel.Player)
                         CommandLogging.WriteLine(from, "Crafting {0} with craft system {1}", CommandLogging.Format(item), craftSystem.GetType().Name);
@@ -1328,7 +1336,24 @@ namespace Server.Engines.Craft
                 if (queryFactionImbue)
                     from.SendGump(new FactionImbueGump(quality, item, from, craftSystem, tool, num, availableSilver, faction, def));
                 else if (tool != null && !tool.Deleted && tool.UsesRemaining > 0)
-                    from.SendGump(new CraftGump(from, craftSystem, tool, num));
+//I added for autoloop                	
+                {
+                    CraftContext context = craftSystem.GetContext(from);
+                    if (context != null && context.AutoLoop)
+                    {
+                        context.Count++;
+                        if (context.TotalCount == 0 || context.Count < context.TotalCount)
+                        {
+                            this.Craft(from, craftSystem, typeRes, tool);
+                        }
+                        else
+                            from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                    }
+                    else
+                        from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                }
+                	
+//I ADDED autoloop this originaly there                   from.SendGump(new CraftGump(from, craftSystem, tool, num));
                 else if (num > 0)
                     from.SendLocalizedMessage(num);
             }
@@ -1372,12 +1397,49 @@ namespace Server.Engines.Craft
                 int num = craftSystem.PlayEndingEffect(from, true, true, toolBroken, endquality, false, this);
 
                 if (tool != null && !tool.Deleted && tool.UsesRemaining > 0)
-                    from.SendGump(new CraftGump(from, craftSystem, tool, num));
+//I added auto loop
+                 {
+                    CraftContext context = craftSystem.GetContext(from);
+                    if (context != null && context.AutoLoop)
+                    {
+                        context.Count++;
+                        if (context.TotalCount == 0 || context.Count < context.TotalCount)
+                        {
+                            this.Craft(from, craftSystem, typeRes, tool);
+                        }
+                        else
+                            from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                    }
+                    else
+                        from.SendGump(new CraftGump(from, craftSystem, tool, num));
+                }
+//I added autoloop this originaly there                    from.SendGump(new CraftGump(from, craftSystem, tool, num));
                 else if (num > 0)
                     from.SendLocalizedMessage(num);
             }
         }
+//I ADDED FOR CRAFTBAG
 
+        public static Container GetCraftBag(Mobile from)
+        {
+            XmlAttachment att = XmlAttach.FindAttachment(from, typeof(CraftBagAtt));
+            if (att != null)
+            {
+                Container bag = ((CraftBagAtt)att).CraftBag;
+                if (bag != null && !bag.Deleted && bag.IsChildOf(from.Backpack))
+                    return bag;
+                else
+                {
+                    att.Delete();
+                    from.SendMessage("Previously selected craft bag not found.  Your craft bag is now your backpack.");
+                    return from.Backpack;
+                }
+            }
+            else
+                return from.Backpack;
+        }
+
+//I ADDED FOR CRAFTBAG ABOVE
         private class InternalTimer : Timer
         {
             private Mobile m_From;

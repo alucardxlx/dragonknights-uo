@@ -19,6 +19,11 @@ namespace Server.Engines.Craft
 		private int m_LastGroupIndex;
 		private bool m_DoNotColor;
 		private CraftMarkOption m_MarkOption;
+//I ADDED
+		private bool m_AutoLoop;
+		private int m_Count;
+		private int m_TotalCount;
+//I ADDED
 
 		public List<CraftItem> Items { get { return m_Items; } }
 		public int LastResourceIndex{ get{ return m_LastResourceIndex; } set{ m_LastResourceIndex = value; } }
@@ -26,6 +31,12 @@ namespace Server.Engines.Craft
 		public int LastGroupIndex{ get{ return m_LastGroupIndex; } set{ m_LastGroupIndex = value; } }
 		public bool DoNotColor{ get{ return m_DoNotColor; } set{ m_DoNotColor = value; } }
 		public CraftMarkOption MarkOption{ get{ return m_MarkOption; } set{ m_MarkOption = value; } }
+//I Added
+		public bool AutoLoop { get { return m_AutoLoop; } set { m_AutoLoop = value; } }
+		public int Count { get { return m_Count; } set { m_Count = value; } }
+		public int TotalCount { get { return m_TotalCount; } set { m_TotalCount = value; } }
+//I ADDED
+
 
 		public CraftContext()
 		{
@@ -33,6 +44,10 @@ namespace Server.Engines.Craft
 			m_LastResourceIndex = -1;
 			m_LastResourceIndex2 = -1;
 			m_LastGroupIndex = -1;
+//I ADDED
+   			m_Count = 0;
+			m_TotalCount = 0;
+//I ADDED
 		}
 
 		public CraftItem LastMade

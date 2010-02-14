@@ -371,7 +371,8 @@ namespace Server.Mobiles
 			{
 				get
 				{
-					return TimeSpan.FromSeconds( ((m_Mount.IsDonationItem && RewardSystem.GetRewardLevel( m_Rider ) < 3)? ( 7.5 + ( Core.AOS ? 3.0 : 2.0)) : ( Core.AOS ? 3.0 : 2.0)) );
+//					return TimeSpan.FromSeconds( ((m_Mount.IsDonationItem && RewardSystem.GetRewardLevel( m_Rider ) < 3)? ( 7.5 + ( Core.AOS ? 3.0 : 2.0)) : ( Core.AOS ? 3.0 : 2.0)) );
+					return TimeSpan.FromSeconds( ((m_Mount.IsDonationItem && RewardSystem.GetRewardLevel( m_Rider ) < 3)? ( 7.5 + ( Core.AOS ? 3.0 : 2.0)) : ( Core.AOS ? 3.0 : -1.0)) );
 				}
 			}
 
