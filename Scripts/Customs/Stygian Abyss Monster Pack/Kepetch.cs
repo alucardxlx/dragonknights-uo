@@ -40,7 +40,7 @@ namespace Server.Mobiles
 		}
 
 		[Constructable]
-		public Kepetch() : base( AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4 )
+		public Kepetch() : base( AIType.AI_Animal, FightMode.Closest, 10, 1, 0.2, 0.4 )
 		{
 			Name = "a kepetch";
 			Body = 726;

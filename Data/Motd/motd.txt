@@ -1,0 +1,107 @@
+**************************************************************************
+               Welcome to the DragonKnight's Shard
+**************************************************************************
+We are currently in the testing of the additions that we have compiled to
+make your playing here more interesting.
+
+We will be makeing a list of the addons so that you know what to look for.
+
+If you have any questions please contact our staff.
+
+<b>PERKS:</b>
+
+<b>Corpse Retrieval Wand</b> - For a fee, your Corpse will be brought to your location.
+
+<b>Special Craft Menus</b> - Beside having custome added items in the craft menus, there are options where you can do AUTO LOOP, MAKE COUNT, and Smelt Item for the tailor and blacksmith.
+
+<b>Auto Harvest</b> - To save your fingers, we have implamented a system that will allow mining or lumberjacking till the resource is depleated. The same goes for Spinning and Looming for the tailor.
+
+<b>Housing</b> - You can buy certian buildings that have been setup for you to purchace, which you can sell back and get the money back that you spent on buying the place.
+OR
+You can make your own, (Via the House Placement Tool), which each account has a limit of having 4 houses. Houses will decay 90days from last refresh.
+
+<b>Accounts</b> - You can have 3 Accounts per IP. So if you, spouse and child would like to all play together. If you need more then 3 accounts please contact a GM to assist you.
+
+<b>Character Slots</b> - You can have 5 different characters per account.
+
+<b>Skill Cap</b> - Is set to 900.00 points per character.
+
+<b>Stat Cap</b> - Is set to 225 points per character.
+
+<b>Stat/Skill Purchase Crystal</b> - This item will allow you to purchase Stats and skills. You can purchase up to 90 points on a skill. It will not allow you to purchase past 90, the rest you will have to work on yourself.
+
+<b>Skill Gems / Resist Sewing Kits</b> - If you have the correct level Skill, you can use these items, and add skill bonuses to your armor, weapons, cloths, and jewlery from the Skill Gems. Or Add Cold, Fire, Energy, and Poison Resists from using the Resist Sewing Kits.
+
+<b>Evolution Dragons</b> - A dragons egg, which if you have the right Animal Taming and Animal Lore you can hatch it, and raise your dragon to be stronger then a normal tamed animal. As it Evos you will see it grow.
+
+<b>Special Storage Keys</b> - Which help a great deal with holding a lot of different items, giving you easy access to the stored items anywhere in the world.
+
+<b>ADDONS:</b>
+<b>Battle Chess</b>: Like the movie Harry Potter's Wizard's Chess.
+
+<b>JunkBuyer</b>: NPC buys a lot of odds and end items that you may consider is junk. He is located in MoonGlow. If there is an Item that he does not buy from you, and you feel that he should, there is a Metal Chest next to him that you may place the item in so that I could add it to his shopping list. **NOTE: NPCs will never buy Blessed Items."
+
+<b>Autioner</b>: NPC aution, where you can put items up for auction. He is located in MoonGlow. Click on him one time to pull up the menu and then click buy to get the Auction Menu. There is also a special command to access him when your out in the world. Read the commands list and the additional information reguarding this command.
+
+<b>Ultima Online World Museum</b>: Created by: GM DracoSmith, Located at the East Side of Luna in Malas. 
+
+<b>DragonKnights Monster Arena</b>: Created by: GM AlphaDragon, Located in Green Acres, you can access it by a portal next to the Museum.
+
+<b>Training Island</b>: Created by GM DracoSmith, Which you can access the island by a portal next to the Museum.
+
+<b>Gold Vendor Stone</b>: It is a vending stone that sells aditional items that you may or may not find on regular vendors.
+
+<b>Pet Res Stone</b>: Placed in several different areas in Trammel, for 1000 Gold it will rez your pets if they are dead.
+
+
+<b>COMMANDS:</b>
+
+<b>PLAYER'S COMMANDS:</b>
+
+<b>MyAuction</b> - brings up a limited auction gump. Players can only access auctions they're already participating in. They can't use this menu to create new auctions or to place bids on items they haven't bid on before. There is a Auctioner in MoonGlow.
+
+<b>[grab options</b> - to setup your grab options.
+
+<b>[grab</b> - to grab items that are on the floor.
+
+<b>[craftbag</b> - to select a bag that you would like the items you craft to go into, instead of having the items put in your main bag when crafting items.
+
+<b>[AFK</b> - to show yourself afk and with message if you want.
+IE: [afk bathroom break
+
+<b>[dump</b> - dump items from one container to another
+
+<b>[emote</b> - to do an action such as laughing, ect.
+
+<b>[getpet</b> - for a fee any pet that is in the field and not in a stable will be brought to your location.
+
+<b>[point</b> - to point at a location so that another player would see the item your talking about.
+
+<b>[what is my status</b> - to show your status such as online time, fame, karma. *Note there is a joke that happens also with it.
+
+<b>motd</b> - to access the Message Of The Day
+
+<b>[c</b> to open chat program or type [c your message here to, chat in world chat
+
+<b>[i</b> - to access your message menu to send messages to players
+
+<b>[ma</b> or <b>[mail</b> - to access your in game mail
+
+<b>[Sell Options</b> - To select which items you would like to sell, when you go to the vendor and say "Sell Bag". For an example: After setting up the sell options, walk up to the junk buyer in MoonGlow and type Sell Bag, it will ask you which bag of items you would like to sell. Any item that you have chosen to sell in the "[Sell options" and if the vendor buys that item, he will buy it from the bag you have chosen.
+
+
+<b>ADMIN COMMANDS:</b>
+
+<b>[add</b> - to add a item that is in the database.
+
+<b>[dupe</b> - to duplicate a item.
+
+<b>[props</b> - to get the propertys menu.
+
+<b>[skills</b> - to access a persons skills for adjustment.
+
+<b>[toolbar</b> - to get the admin tool bar back if it dissapears.
+
+<b>[healself</b> - to fully heal yourself.
+
+

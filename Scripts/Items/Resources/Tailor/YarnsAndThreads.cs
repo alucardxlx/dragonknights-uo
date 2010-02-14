@@ -1,6 +1,7 @@
 using System;
 using Server.Items;
 using Server.Targeting;
+using Server.Engines.XmlSpawner2;
 
 namespace Server.Items
 {
@@ -77,28 +78,35 @@ namespace Server.Items
 				if ( loom == null && targeted is AddonComponent )
 					loom = ((AddonComponent)targeted).Addon as ILoom;
 
-				if ( loom != null )
+				if ( loom != null && loom is Item)
 				{
+                    Item item = (Item)loom;
 					if ( !m_Material.IsChildOf( from.Backpack ) )
 					{
 						from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
 					}
-					else if ( loom.Phase < 4 )
-					{
-						m_Material.Consume();
-
-						if ( targeted is Item )
-							((Item)targeted).SendLocalizedMessageTo( from, 1010001 + loom.Phase++ );
-					}
+                    else if (loom.Looming)
+                    {
+                        from.SendMessage("That loom is being used.");
+                    }
 					else
 					{
-						Item create = new BoltOfCloth();
-						create.Hue = m_Material.Hue;
+                        LoomQuotaAttachment att = (LoomQuotaAttachment)XmlAttach.FindAttachment(from, typeof(LoomQuotaAttachment));
 
-						m_Material.Consume();
-						loom.Phase = 0;
-						from.SendLocalizedMessage( 500368 ); // You create some cloth and put it in your backpack.
-						from.AddToBackpack( create );
+                        if (att == null)
+                        {
+                            att = new LoomQuotaAttachment();
+                            XmlAttach.AttachTo(from, att);
+                        }
+                        if (att.getNumLooms() < LoomQuotaAttachment.m_LoomQuotaCap)
+                        {
+                            att.AddLooms(item);
+                            from.PublicOverheadMessage(Server.Network.MessageType.Emote, 51, false, "*looming*");
+                            m_Material.Consume();
+                            loom.BeginLoom(new LoomCallback(BaseClothMaterial.OnLoomLoop), from, m_Material.Hue, m_Material);
+                        }
+                        else
+                            from.SendMessage("You are too occupied with the " + LoomQuotaAttachment.m_LoomQuotaCap.ToString() + " looms you are running.");
 					}
 				}
 				else
@@ -107,6 +115,58 @@ namespace Server.Items
 				}
 			}
 		}
+
+        public static void OnLoomLoop(ILoom loom, Mobile from, int hue, Item thread)
+        {
+            if (loom.Phase > 4)
+            {
+                loom.Phase = 0;
+                Item item = new BoltOfCloth();
+                item.Hue = hue;
+                from.AddToBackpack(item);
+                from.SendLocalizedMessage(500368); // You create some cloth and put it in your backpack.
+            }
+
+            LoomQuotaAttachment att = (LoomQuotaAttachment)XmlAttach.FindAttachment(from, typeof(LoomQuotaAttachment));
+            if (att == null)
+            {
+                att = new LoomQuotaAttachment();
+                XmlAttach.AttachTo(from, att);
+            }
+            att.RemoveLooms((Item)loom);
+
+            if (from.NetState == null) // player logged off
+                return;
+            if (thread.Deleted || thread.Amount < 1 || !(thread is BaseClothMaterial))
+                from.SendMessage("You finished processing all the threads/yarns.");
+            else if (!thread.IsChildOf(from.Backpack))
+                from.SendMessage("You can not continue without the threads/yarns in your backpack.");
+            else if (loom is Item)
+            {
+                Item loom1 = (Item)loom;
+
+                if (loom1.Deleted)
+                    from.SendMessage("Where did the loom go?");
+                else if (!from.InRange(loom1.GetWorldLocation(), 3))
+                    from.SendMessage("You are too far away from the loom to continue your work.");
+                else if (loom.Looming)
+                    from.SendMessage("That loom is being used.");
+                else
+                {
+                    if (att.getNumLooms() < LoomQuotaAttachment.m_LoomQuotaCap)
+                    {
+                        att.AddLooms(loom1);
+                        if (Utility.Random(20 * att.getNumLooms()) < 1)
+                            from.PublicOverheadMessage(Server.Network.MessageType.Emote, 51, false, "*looming*");
+                        thread.Consume();
+                        loom.BeginLoom(new LoomCallback(BaseClothMaterial.OnLoomLoop), from, thread.Hue, thread);
+                        return;
+                    }
+                    else
+                        from.SendMessage("You are too occupied with the " + LoomQuotaAttachment.m_LoomQuotaCap.ToString() + " looms you are running.");
+                }
+            }
+        }
 	}
 
 	public class DarkYarn : BaseClothMaterial

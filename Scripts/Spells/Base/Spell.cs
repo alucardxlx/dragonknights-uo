@@ -243,6 +243,17 @@ namespace Server.Spells
 
 			if ( pack.ConsumeTotal( m_Info.Reagents, m_Info.Amounts ) == -1 )
 				return true;
+//I ADDED can use reagents from spell caster keys.
+            ResourceStorageKeySpellCasters sck = (ResourceStorageKeySpellCasters)pack.FindItemByType(typeof(ResourceStorageKeySpellCasters));
+            if (sck != null && sck.ConsumeReg(m_Info.Reagents, m_Info.Amounts))
+            	return true;
+            if (m_Caster.BankBox != null)
+            	{
+            	sck = (ResourceStorageKeySpellCasters)(m_Caster.BankBox).FindItemByType(typeof(ResourceStorageKeySpellCasters));
+            	if (sck != null && sck.ConsumeReg(m_Info.Reagents, m_Info.Amounts))
+            		return true;
+            	}
+//I ADDED can use reagents from spell caster keys.            
 
 			return false;
 		}

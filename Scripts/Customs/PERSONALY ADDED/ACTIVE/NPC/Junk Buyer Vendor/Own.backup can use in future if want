@@ -1,0 +1,232 @@
+using System;
+using Server;
+using Server.Items;
+using Server.Mobiles;
+using Server.Engines.XmlSpawner2;
+using Server.Targeting;
+using System.Collections.Generic;
+
+namespace Server.Items
+{
+    public class ItemOwnerAttachment : XmlAttachment
+    {
+        private Mobile m_ItemOwner;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Mobile ItemOwner
+        { get { return m_ItemOwner; } set { m_ItemOwner = value; } }
+
+        public ItemOwnerAttachment(ASerial serial)
+            : base(serial)
+        {
+        }
+
+        [Attachable]
+        public ItemOwnerAttachment()
+        {
+        }
+
+        [Attachable]
+        public ItemOwnerAttachment(Mobile from)
+        {
+            m_ItemOwner = from;
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+
+            writer.Write((int)0);
+            // version 0
+            writer.Write(m_ItemOwner);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+
+            int version = reader.ReadInt();
+
+            switch (version)
+            {
+                case 0:
+                    // version 0
+                    m_ItemOwner = reader.ReadMobile();
+                    break;
+            }
+        }
+    }
+}
+
+namespace Server.Commands
+{
+    public class OwnCommand
+    {
+        public static void Initialize()
+        {
+            CommandSystem.Register("Own", AccessLevel.Player, new CommandEventHandler(Own_OnCommand));
+        }
+
+        [Usage("Own")]
+        [Description("Mark an item as owned by you, or remove the mark if it is already marked.")]
+        private static void Own_OnCommand(CommandEventArgs e)
+        {
+            if (e.Length != 0)
+            {
+                // show loot options gump
+                // we need to own a bag
+                if (e.GetString(0).ToLower() == "bag")
+                {
+                    e.Mobile.Target = new InternalTarget(true);
+                    e.Mobile.SendMessage("Which bag of items you want to toggle your owner's mark on?");
+                    return;
+                }
+                else
+                    e.Mobile.SendMessage("Typing the command  [own  by itself toggle your owner's mark on a single item.  [own bag  allows you to toggle the owner's mark on a bag of items. Items that can have owner's mark include armor, weapon, clothes, jewelries, spellbook and containers.");
+            }
+            else
+            {
+                e.Mobile.Target = new InternalTarget(false);
+                e.Mobile.SendMessage("Which item you want to toggle your owner's mark on?");
+            }
+        }
+
+        private class InternalTarget : Target
+        {
+            private bool m_IsBag;
+            public InternalTarget(bool isBag)
+                : base(2, false, TargetFlags.None)
+            {
+                m_IsBag = isBag;
+            }
+
+            protected override void OnTarget(Mobile from, object targeted)
+            {
+                if (!m_IsBag)
+                {
+                    Item targetedItem = targeted as Item;
+                    if (targetedItem == null)
+                    {
+                        from.SendMessage("You can not toggle owner's mark on that. The items you can own include armor, weapon, clothes, jewelry, spellbook, quiver and containers.");
+                        return;
+                    }
+                    ItemOwnerAttachment att = (ItemOwnerAttachment)XmlAttach.FindAttachment(targetedItem, typeof(ItemOwnerAttachment));
+                    if (att == null || att.ItemOwner == null) // empty, asking for mark
+                        ToggleOwnerMark(from, targetedItem, true, true);
+                    else // already marked by someone, asking for removal
+                        ToggleOwnerMark(from, targetedItem, true, false);
+                }
+                else
+                {
+                    if (!(targeted is BaseContainer))
+                    {
+                        from.SendMessage("That is not a container.");
+                        return;
+                    }
+                    BaseContainer cont = targeted as BaseContainer;
+
+                    if (!cont.IsChildOf(from.Backpack))
+                    {
+                        from.SendMessage("You can only target a container inside your backpack.");
+                        return;
+                    }
+
+                    if (!cont.Movable)
+                    {
+                        from.SendMessage("That container is not movable and can not be owned.");
+                        return;
+                    }
+
+                    List<Item> items = cont.Items;
+                    if (items.Count == 0)
+                    {
+                        from.SendMessage("There is nothing in there.");
+                        return;
+                    }
+
+                    ItemOwnerAttachment att = (ItemOwnerAttachment)XmlAttach.FindAttachment(cont, typeof(ItemOwnerAttachment));
+                    if (att == null || att.ItemOwner == null)
+                    {
+                        if (att != null) // empty attachment
+                            att.Delete();
+                        XmlAttach.AttachTo(cont, new ItemOwnerAttachment(from));
+                        cont.InvalidateProperties();
+                        for (int i = items.Count - 1; i >= 0; i--)
+                        {
+                            ToggleOwnerMark(from, items[i], false, true);
+                        }
+                        from.SendMessage("You added your owner's mark for that bag of items.");
+                    }
+                    else
+                    {
+                        if (att.ItemOwner == from) // remove mark
+                        {
+                            att.Delete();
+                            cont.InvalidateProperties();
+                            for (int i = items.Count - 1; i >= 0; i--)
+                            {
+                                ToggleOwnerMark(from, items[i], false, false);
+                            }
+                            from.SendMessage("You removed your owner's mark from that bag of items.");
+                        }
+                        else
+                            from.SendMessage("That container is already owned by " + att.ItemOwner.Name + ".");
+                    }
+                }
+            }
+        }
+        // if mark is true, this is asking for the item to be marked. otherwise is asking to be unmarked
+        public static void ToggleOwnerMark(Mobile from, Item targetedItem, bool message, bool mark)
+        {
+            if (targetedItem is BaseArmor
+                || targetedItem is BaseClothing
+                || targetedItem is BaseJewel
+                || targetedItem is BaseWeapon
+                || targetedItem is Spellbook
+                || targetedItem is BaseQuiver
+                || targetedItem is BaseContainer)
+            {
+                if (!targetedItem.IsChildOf(from.Backpack))
+                {
+                    if (message) from.SendMessage("You must have that in your backpack to toggle owner's mark on it.");
+                    return;
+                }
+
+                if (!targetedItem.Movable)
+                {
+                    if (message) from.SendMessage("That is not movable. You can't toggle owner's mark on that.");
+                    return;
+                }
+
+                ItemOwnerAttachment att = (ItemOwnerAttachment)XmlAttach.FindAttachment(targetedItem, typeof(ItemOwnerAttachment));
+                if (att != null && att.ItemOwner != null)
+                {
+                    if (att.ItemOwner == from && !mark) // remove mark
+                    {
+                        if (message) from.SendMessage("You removed your owner's mark from it.");
+                        att.Delete();
+                        targetedItem.InvalidateProperties();
+                        return;
+                    }
+                    else
+                    {
+                        if (message) from.SendMessage("That item is already owned by " + att.ItemOwner.Name + ".");
+                        return;
+                    }
+                }
+                else if (mark) // mark
+                {
+                    if (att != null) // empty attachment
+                        att.Delete();
+                    XmlAttach.AttachTo(targetedItem, new ItemOwnerAttachment(from));
+                    targetedItem.InvalidateProperties();
+                    if (message) from.SendMessage("You put your owner's mark on that item.");
+                }
+            }
+            else
+            {
+                if (message) from.SendMessage("You can not toggle owner's mark on that. The items you can own include armor, weapon, clothes, jewelry, spellbook, quiver and containers.");
+            }
+        }
+    }
+}

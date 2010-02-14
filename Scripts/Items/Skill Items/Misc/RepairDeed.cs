@@ -136,7 +136,17 @@ namespace Server.Items
 
 			m_Skill = skill;
 			m_Crafter = crafter;
-			Hue = 0x1BC;
+//			Hue = 0x1BC;
+            switch (skill)
+            {
+                case RepairSkillType.Smithing: Hue = 893; break;
+                case RepairSkillType.Tailoring: Hue = 643; break;
+                case RepairSkillType.Carpentry: Hue = 50; break;
+                case RepairSkillType.Fletching: Hue = 51; break;
+                case RepairSkillType.Tinkering: Hue = 1161; break;
+            }
+			
+			
 			LootType = LootType.Blessed;
 		}
 

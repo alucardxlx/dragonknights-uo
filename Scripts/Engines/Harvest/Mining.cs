@@ -41,9 +41,9 @@ namespace Server.Engines.Harvest
 			#region Mining for ore and stone
 			HarvestDefinition oreAndStone = m_OreAndStone = new HarvestDefinition();
 
-			// Resource banks are every 8x8 tiles
-			oreAndStone.BankWidth = 8;
-			oreAndStone.BankHeight = 8;
+			// Resource banks are every 8x8 tiles CHANGED TO 4X4 AREA
+			oreAndStone.BankWidth = 4;
+			oreAndStone.BankHeight = 4;
 
 			// Every bank holds from 10 to 34 ore
 			oreAndStone.MinTotal = 10;
@@ -92,6 +92,7 @@ namespace Server.Engines.Harvest
 					new HarvestResource( 90.0, 50.0, 130.0, 1007078, typeof( AgapiteOre ),		typeof( AgapiteGranite ),		typeof( AgapiteElemental ) ),
 					new HarvestResource( 95.0, 55.0, 135.0, 1007079, typeof( VeriteOre ),		typeof( VeriteGranite ),		typeof( VeriteElemental ) ),
 					new HarvestResource( 99.0, 59.0, 139.0, 1007080, typeof( ValoriteOre ),		typeof( ValoriteGranite ),		typeof( ValoriteElemental ) )
+
 				};
 
 			veins = new HarvestVein[]
@@ -114,13 +115,154 @@ namespace Server.Engines.Harvest
 			{
 				oreAndStone.BonusResources = new BonusHarvestResource[]
 				{
-					new BonusHarvestResource( 0, 99.4, null, null ),	//Nothing
-					new BonusHarvestResource( 100, .1, 1072562, typeof( BlueDiamond ) ),
-					new BonusHarvestResource( 100, .1, 1072567, typeof( DarkSapphire ) ),
-					new BonusHarvestResource( 100, .1, 1072570, typeof( EcruCitrine ) ),
-					new BonusHarvestResource( 100, .1, 1072564, typeof( FireRuby ) ),
-					new BonusHarvestResource( 100, .1, 1072566, typeof( PerfectEmerald ) ),
-					new BonusHarvestResource( 100, .1, 1072568, typeof( Turquoise ) )
+					new BonusHarvestResource( 0, 98.17, null, null ),	//Nothing
+					new BonusHarvestResource( 100, .10, 1072562, typeof( BlueDiamond ) ),
+					new BonusHarvestResource( 100, .10, 1072567, typeof( DarkSapphire ) ),
+					new BonusHarvestResource( 100, .10, 1072570, typeof( EcruCitrine ) ),
+					new BonusHarvestResource( 100, .10, 1072564, typeof( FireRuby ) ),
+					new BonusHarvestResource( 100, .10, 1072566, typeof( PerfectEmerald ) ),
+					new BonusHarvestResource( 100, .10, 1072568, typeof( Turquoise ) ),
+
+
+//
+					new BonusHarvestResource( 100, .01, "You dig up a Tourmaline and put it in your pack", typeof( Tourmaline ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Amethyst and put it in your pack", typeof( Amethyst ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Citrine and put it in your pack", typeof( Citrine ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Ruby and put it in your pack", typeof( Ruby ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Sapphire and put it in your pack", typeof( Sapphire ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Emerald and put it in your pack", typeof( Emerald ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Diamond and put it in your pack", typeof( Diamond ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Star Sapphire and put it in your pack", typeof( StarSapphire ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Amber and put it in your pack", typeof( Amber ) ),
+					new BonusHarvestResource( 100, .01, "You dig up a Brilliant Amber and put it in your pack", typeof( BrilliantAmber ) ),
+
+//57
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1alchemygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1anatomygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1animalloregem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1animaltaminggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1archerygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1armsloregem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1begginggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1blacksmithgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1bushidogem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1campinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1carpentrygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1cartographygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1chivalrygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1cookinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1detecthiddengem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1discordancegem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1evalintgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1fencinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1fishinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1fletchinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1focusgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1forensicsgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1healinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1herdinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1hidinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1inscribegem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1itemidgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1lockpickinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1lumberjackinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1macinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1magerygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1magicresistgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1meditationgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1mininggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1musicianshipgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1necromancygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1ninjitsugem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1parrygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1peacemakinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1poisoninggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1provocationgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1removetrapgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1snoopinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1spellweavinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1spiritspeakgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1stealinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1stealthgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1swordsgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tacticsgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tailoringgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tasteidgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1tinkeringgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1trackinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1veterinarygem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1wrestlinggem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( nightsightgem ) ),
+					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( SpellChannelingGem ) ),
+//56
+
+
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2alchemygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2anatomygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2animalloregem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2animaltaminggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2archerygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2armsloregem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2begginggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2blacksmithgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2bushidogem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2campinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2carpentrygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2cartographygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2chivalrygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2cookinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2detecthiddengem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2discordancegem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2evalintgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2fencinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2fishinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2fletchinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2focusgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2forensicsgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2healinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2herdinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2hidinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2inscribegem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2itemidgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2lockpickinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2lumberjackinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2macinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2magerygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2magicresistgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2meditationgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2mininggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2musicianshipgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2necromancygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2ninjitsugem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2parrygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2peacemakinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2poisoninggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2provocationgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2removetrapgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2snoopinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2spellweavinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2spiritspeakgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2stealinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2stealthgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2swordsgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tacticsgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tailoringgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tasteidgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2tinkeringgem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2trackinggem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2veterinarygem ) ),
+					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2wrestlinggem ) ),
+
+					new BonusHarvestResource( 100, .01, "You dig up a skill erace gem and put it in your pack", typeof( plus0skilleracegem ) )
+
+
+
+//
+
+
+
+
+
 				};
 			}
 
@@ -133,9 +275,9 @@ namespace Server.Engines.Harvest
 			#region Mining for sand
 			HarvestDefinition sand = m_Sand = new HarvestDefinition();
 
-			// Resource banks are every 8x8 tiles
-			sand.BankWidth = 8;
-			sand.BankHeight = 8;
+			// Resource banks are every 8x8 tiles MADE 4 X 4
+			sand.BankWidth = 4;
+			sand.BankHeight = 4;
 
 			// Every bank holds from 6 to 12 sand
 			sand.MinTotal = 6;

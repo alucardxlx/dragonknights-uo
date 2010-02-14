@@ -49,7 +49,7 @@ namespace Server.Multis
 			set{ m_RestrictDecay = value; }
 		}
 
-		public virtual TimeSpan DecayPeriod{ get{ return TimeSpan.FromDays( 5.0 ); } }
+		public virtual TimeSpan DecayPeriod{ get{ return TimeSpan.FromDays( 90.0 ); } }
 
 		public virtual DecayType DecayType
 		{
@@ -2940,11 +2940,11 @@ namespace Server.Multis
 		public override void OnAfterDelete()
 		{
 			#region Mondain's Legacy
-			if ( m_Region != null )
-			{
-				NoHousingItem houseItem = new NoHousingItem( this );
-				houseItem.MoveToWorld( m_Region.GoLocation, m_Region.Map );
-			}
+//			if ( m_Region != null )
+//			{
+//				NoHousingItem houseItem = new NoHousingItem( this );
+//				houseItem.MoveToWorld( m_Region.GoLocation, m_Region.Map );
+//			}
 			#endregion
 
 			base.OnAfterDelete();
@@ -3129,9 +3129,23 @@ namespace Server.Multis
 			if ( a == null )
 				return false;
 
+            ArrayList allHouses = new ArrayList();
+
 			for ( int i = 0; i < a.Length; ++i )
-				if ( a[i] != null && HasHouse( a[i] ) )
-					return true;
+			{
+				Mobile mob = a[i];
+
+				if ( mob != null )
+					allHouses.AddRange( GetHouses( mob ) );
+			}
+           //3 means 4 house limit. Same thing with any number. You want 2 houses? Set it to 1.
+            if(allHouses.Count > 3) return true;
+
+
+
+		//	for ( int i = 0; i < a.Length; ++i )
+		//		if ( a[i] != null && HasHouse( a[i] ) )
+		//			return true;
 
 			return false;
 		}

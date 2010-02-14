@@ -73,7 +73,7 @@ namespace Server.Engines.Harvest
 			 *  - 'return typeof( HarvestSystem );' : This will completely restrict concurrent harvesting.
 			 */
 
-			return tool;
+			return typeof( HarvestSystem );
 		}
 
 		public virtual void OnConcurrentHarvest( Mobile from, Item tool, HarvestDefinition def, object toHarvest )
@@ -242,7 +242,20 @@ namespace Server.Engines.Harvest
 				def.SendMessageTo( from, def.FailMessage );
 
 			OnHarvestFinished( from, tool, def, vein, bank, resource, toHarvest );
+                        Timer.DelayCall(TimeSpan.FromSeconds(0.7), new TimerStateCallback(StartHarvesting_Resume), new object[] { from, tool, toHarvest });
+
 		}
+
+		public void StartHarvesting_Resume(object state)
+		{
+		object[] states = (object[])state;
+		Mobile from = (Mobile)states[0];
+		Item tool = (Item)states[1];
+		object toHarvest = states[2];
+
+		StartHarvesting(from, tool, toHarvest);
+		}
+
 
 		public virtual void OnHarvestFinished( Mobile from, Item tool, HarvestDefinition def, HarvestVein vein, HarvestBank bank, HarvestResource resource, object harvested )
 		{

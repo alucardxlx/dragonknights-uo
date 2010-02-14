@@ -570,51 +570,59 @@ namespace Server.Mobiles
 		}
 
 		public int ChargePerDay
-		{
-			get
-			{ 
-				if ( BaseHouse.NewVendorSystem )
-				{
-					return ChargePerRealWorldDay / 12;
-				}
-				else
-				{
-					long total = 0;
-					foreach ( VendorItem vi in m_SellItems.Values )
-					{
-						total += vi.Price;
-					}
+//I ADDED
+{get {return 1;}}
 
-					total -= 500;
-
-					if ( total < 0 )
-						total = 0;
-
-					return (int)( 20 + (total / 500) );
-				}
-			}
-		}
+//
+//		{
+//			get
+//			{ 
+//				if ( BaseHouse.NewVendorSystem )
+//				{
+//					return ChargePerRealWorldDay / 12;
+//				}
+//				else
+//				{
+//					long total = 0;
+//					foreach ( VendorItem vi in m_SellItems.Values )
+//					{
+//						total += vi.Price;
+//					}
+//
+//					total -= 500;
+//
+//					if ( total < 0 )
+//						total = 0;
+//
+//					return (int)( 20 + (total / 500) );
+//				}
+//			}
+//		}
 
 		public int ChargePerRealWorldDay
-		{
-			get
-			{
-				if ( BaseHouse.NewVendorSystem )
-				{
-					long total = 0;
-					foreach ( VendorItem vi in m_SellItems.Values )
-					{
-						total += vi.Price;
-					}
-
-					return (int)( 60 + (total / 500) * 3 );
-				}
-				else
-				{
-					return ChargePerDay * 12;
-				}
-			}
-		}
+//I ADDED
+{get {return 1;}}
+//
+//
+//		{
+//			get
+//			{
+//				if ( BaseHouse.NewVendorSystem )
+//				{
+//					long total = 0;
+//					foreach ( VendorItem vi in m_SellItems.Values )
+//					{
+//						total += vi.Price;
+//					}
+//
+//					return (int)( 60 + (total / 500) * 3 );
+//				}
+//				else
+//				{
+//					return ChargePerDay * 12;
+//				}
+//			}
+//		}
 
 		public virtual bool IsOwner( Mobile m )
 		{

@@ -7,10 +7,6 @@ namespace Server.Items
 	{
 		public override BaseAddonDeed Deed{ get{ return new ElvenSpinningwheelSouthDeed(); } }
 
-		#region Mondain's Legacy
-		public override bool RetainDeedHue{ get{ return true; }	}
-		#endregion
-
 		[Constructable]
 		public ElvenSpinningwheelSouthAddon()
 		{
@@ -50,9 +46,9 @@ namespace Server.Items
 
 		public bool Spinning{ get{ return m_Timer != null; } }
 
-		public void BeginSpin( SpinCallback callback, Mobile from, int hue )
+		public void BeginSpin( SpinCallback callback, Mobile from, int hue, Item resource )
 		{
-			m_Timer = new SpinTimer( this, callback, from, hue );
+			m_Timer = new SpinTimer( this, callback, from, hue, resource );
 			m_Timer.Start();
 
 			foreach ( AddonComponent c in Components )
@@ -67,7 +63,7 @@ namespace Server.Items
 			}
 		}
 
-		public void EndSpin( SpinCallback callback, Mobile from, int hue )
+		public void EndSpin( SpinCallback callback, Mobile from, int hue, Item resource )
 		{
 			if ( m_Timer != null )
 				m_Timer.Stop();
@@ -86,7 +82,7 @@ namespace Server.Items
 			}
 
 			if ( callback != null )
-				callback( this, from, hue );
+				callback( this, from, hue, resource );
 		}
 
 		private class SpinTimer : Timer
@@ -95,19 +91,21 @@ namespace Server.Items
 			private SpinCallback m_Callback;
 			private Mobile m_From;
 			private int m_Hue;
+            private Item m_Resource;
 
-			public SpinTimer( ElvenSpinningwheelSouthAddon wheel, SpinCallback callback, Mobile from, int hue ) : base( TimeSpan.FromSeconds( 3.0 ) )
+			public SpinTimer( ElvenSpinningwheelSouthAddon wheel, SpinCallback callback, Mobile from, int hue, Item resource ) : base( TimeSpan.FromSeconds( 3.0 ) )
 			{
 				m_Wheel = wheel;
 				m_Callback = callback;
 				m_From = from;
 				m_Hue = hue;
+                m_Resource = resource;
 				Priority = TimerPriority.TwoFiftyMS;
 			}
 
 			protected override void OnTick()
 			{
-				m_Wheel.EndSpin( m_Callback, m_From, m_Hue );
+				m_Wheel.EndSpin( m_Callback, m_From, m_Hue, m_Resource );
 			}
 		}
 	}

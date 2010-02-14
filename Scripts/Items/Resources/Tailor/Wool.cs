@@ -1,6 +1,7 @@
 using System;
 using Server.Items;
 using Server.Targeting;
+using Server.Engines.XmlSpawner2;
 
 namespace Server.Items
 {
@@ -68,6 +69,54 @@ namespace Server.Items
 			from.SendLocalizedMessage( 1010576 ); // You put the balls of yarn in your backpack.
 		}
 
+        public static void OnSpunLoop(ISpinningWheel wheel, Mobile from, int hue, Item cotton)
+        {
+            Item item = new DarkYarn(3);
+            item.Hue = hue;
+            from.AddToBackpack(item);
+
+            SpinningWheelQuotaAttachment att = (SpinningWheelQuotaAttachment)XmlAttach.FindAttachment(from, typeof(SpinningWheelQuotaAttachment));
+            if (att == null)
+            {
+                att = new SpinningWheelQuotaAttachment();
+                XmlAttach.AttachTo(from, att);
+            }
+            att.RemoveWheels((Item)wheel);
+
+            if (from.NetState == null) // player logged off
+                return;
+            if (cotton.Deleted || cotton.Amount < 1 || !(cotton is Wool))
+                from.SendMessage("You finished processing all the wool.");
+            else if (!cotton.IsChildOf(from.Backpack))
+                from.SendMessage("You can not continue without the wool in your backpack.");
+            else if (wheel is Item)
+            {
+                Item wheel1 = (Item)wheel;
+
+                if (wheel1.Deleted)
+                    from.SendMessage("Where did the spinning wheel go?");
+                else if (!from.InRange(wheel1.GetWorldLocation(), 3))
+                    from.SendMessage("You are too far away from the spinning wheel to continue your work.");
+                else if (wheel.Spinning)
+                    from.SendLocalizedMessage(502656); // That spinning wheel is being used.
+                else
+                {
+                    if (att.getNumWheels() < SpinningWheelQuotaAttachment.m_WheelQuotaCap)
+                    {
+                        att.AddWheels(wheel1);
+                        if (Utility.Random(6 * att.getNumWheels()) < 1)
+                            from.PublicOverheadMessage(Server.Network.MessageType.Emote, 51, false, "*spinning*");
+                        cotton.Consume();
+                        wheel.BeginSpin(new SpinCallback(Wool.OnSpunLoop), from, cotton.Hue, cotton);
+                        return;
+                    }
+                    else
+                        from.SendMessage("You are too occupied with the " + SpinningWheelQuotaAttachment.m_WheelQuotaCap.ToString() + " spinning wheels you are running.");
+                }
+            }
+            from.SendLocalizedMessage(1010577); // You put the spools of thread in your backpack.
+        }
+
 		private class PickWheelTarget : Target
 		{
 			private Wool m_Wool;
@@ -101,9 +150,23 @@ namespace Server.Items
 					}
 					else
 					{
-						m_Wool.Consume();
-						wheel.BeginSpin( new SpinCallback( Wool.OnSpun ), from, m_Wool.Hue );
-					}
+                        SpinningWheelQuotaAttachment att = (SpinningWheelQuotaAttachment)XmlAttach.FindAttachment(from, typeof(SpinningWheelQuotaAttachment));
+
+                        if (att == null)
+                        {
+                            att = new SpinningWheelQuotaAttachment();
+                            XmlAttach.AttachTo(from, att);
+                        }
+                        if (att.getNumWheels() < SpinningWheelQuotaAttachment.m_WheelQuotaCap)
+                        {
+                            att.AddWheels(item);
+                            from.PublicOverheadMessage(Server.Network.MessageType.Emote, 51, false, "*spinning*");
+                            m_Wool.Consume();
+                            wheel.BeginSpin(new SpinCallback(Wool.OnSpunLoop), from, m_Wool.Hue, m_Wool);
+                        }
+                        else
+                            from.SendMessage("You are too occupied with the " + SpinningWheelQuotaAttachment.m_WheelQuotaCap.ToString() + " spinning wheels you are running.");
+                    }
 				}
 				else
 				{

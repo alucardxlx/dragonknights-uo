@@ -79,17 +79,13 @@ namespace Server.Items
 		public BaseOre( CraftResource resource ) : this( resource, 1 )
 		{
 		}
-
-		public BaseOre( CraftResource resource, int amount ) : base( Utility.Random( 4 ) )
+//I MODED HERE DOWN
+		public BaseOre( CraftResource resource, int amount ) : base( Utility.Random( 2 ) )
 		{
 			{
 				double random = Utility.RandomDouble();
-				if ( 0.12 >= random )
-					ItemID = 0x19B7;
-				else if ( 0.18 >= random )
+				if ( 0.25 >= random )
 					ItemID = 0x19B8;
-				else if ( 0.25 >= random )
-					ItemID = 0x19BA;
 				else
 					ItemID = 0x19B9;
 			}
@@ -100,6 +96,27 @@ namespace Server.Items
 
 			m_Resource = resource;
 		}
+//ORIGINAL MODED ABOVE
+//		public BaseOre( CraftResource resource, int amount ) : base( Utility.Random( 4 ) )
+//		{
+//			{
+//				double random = Utility.RandomDouble();
+//				if ( 0.12 >= random )
+//					ItemID = 0x19B7;
+//				else if ( 0.18 >= random )
+//					ItemID = 0x19B8;
+//				else if ( 0.25 >= random )
+//					ItemID = 0x19BA;
+//				else
+//					ItemID = 0x19B9;
+//			}
+//			
+//			Stackable = true;
+//			Amount = amount;
+//			Hue = CraftResources.GetHue( resource );
+//
+//			m_Resource = resource;
+//		}
 
 		public BaseOre( Serial serial ) : base( serial )
 		{
@@ -139,17 +156,13 @@ namespace Server.Items
 			}
 		}
 
+//MODDED HERE DOWN
 		public override void OnDoubleClick( Mobile from )
 		{
 			if ( !Movable )
 				return;
 			
-			if ( RootParent is BaseCreature )
-			{
-				from.SendLocalizedMessage( 500447 ); // That is not accessible
-				return;
-			}
-			else if ( from.InRange( this.GetWorldLocation(), 2 ) )
+			if ( from.InRange( this.GetWorldLocation(), 2 ) )
 			{
 				from.SendLocalizedMessage( 501971 ); // Select the forge on which to smelt the ore, or another pile of ore with which to combine it.
 				from.Target = new InternalTarget( this );
@@ -159,6 +172,27 @@ namespace Server.Items
 				from.SendLocalizedMessage( 501976 ); // The ore is too far away.
 			}
 		}
+//ORIGINAL. I MODED ABOVE
+//		public override void OnDoubleClick( Mobile from )
+//		{
+//			if ( !Movable )
+//				return;
+//			
+//			if ( RootParent is BaseCreature )
+//			{
+//				from.SendLocalizedMessage( 500447 ); // That is not accessible
+//				return;
+//			}
+//			else if ( from.InRange( this.GetWorldLocation(), 2 ) )
+//			{
+//				from.SendLocalizedMessage( 501971 ); // Select the forge on which to smelt the ore, or another pile of ore with which to combine it.
+//				from.Target = new InternalTarget( this );
+//			}
+//			else
+//			{
+//				from.SendLocalizedMessage( 501976 ); // The ore is too far away.
+//			}
+//		}
 
 		private class InternalTarget : Target
 		{

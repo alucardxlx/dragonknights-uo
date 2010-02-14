@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Server;
+using Server.Gumps;
 
 namespace Server.Engines.PartySystem
 {
@@ -32,7 +33,10 @@ namespace Server.Engines.PartySystem
 			m_Table.Remove( m_Mobile );
 
 			if ( m_Mobile.Party == m_Leader && PartyCommands.Handler != null )
+			{
 				PartyCommands.Handler.OnDecline( m_Mobile, m_Leader );
+				m_Mobile.CloseGump(typeof(PartyGump));
+			}
 		}
 	}
 }

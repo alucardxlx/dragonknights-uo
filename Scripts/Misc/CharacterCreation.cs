@@ -4,6 +4,8 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using Server.Accounting;
+using Xanthos.ShrinkSystem;//added so can add petlease to the pack of charitor on creation
+
 
 namespace Server.Misc
 {
@@ -28,9 +30,25 @@ namespace Server.Misc
 			}
 
 			PackItem( new RedBook( "a book", m.Name, 20, true ) );
-			PackItem( new Gold( 1000 ) ); // Starting gold can be customized here
+			PackItem( new Gold( 100 ) ); // Starting gold can be customized here
 			PackItem( new Dagger() );
 			PackItem( new Candle() );
+			PackItem( new BankCheck (900) );
+			PackItem( new Runebook(10) );
+			PackItem( new TrashPack() );
+			PackItem( new SkillBall() );
+			PackItem( new CorpseWand() );
+			PackItem( new SkillBall() );
+			PackItem( new PetLeash() );
+			PackItem( new ResourceStorageKeyBlackSmith() );
+			PackItem( new ResourceStorageKeyScribersTome() );
+			PackItem( new ResourceStorageKeySpellCasters() );
+			PackItem( new ResourceStorageKeyTailor() );
+			PackItem( new NewPlayerPackage() );
+			PackItem( new StatSkillPurchaseCrystal() );
+			//PackItem( new ResourceStorageKeyWood() );
+
+
 		}
 
 		private static Item MakeNewbie( Item item )
@@ -67,7 +85,6 @@ namespace Server.Misc
 			for ( int i = 0; i < PowerScroll.Skills.Length; ++i )
 				m.Skills[PowerScroll.Skills[ i ]].Cap = 120.0;
 
-			m.StatCap = 250;
 
 
 			Container cont;
@@ -640,6 +657,7 @@ namespace Server.Misc
 			newChar.Hue = newChar.Race.ClipSkinHue( args.Hue & 0x3FFF ) | 0x8000;
 
 			newChar.Hunger = 20;
+			newChar.Skills.Cap = 9000;
 
 			bool young = false;
 
@@ -681,6 +699,24 @@ namespace Server.Misc
 				AddShoes( newChar );
 			}
 
+//STUFFIADDED
+
+
+			
+			{
+			Container cont = new WoodenBox();
+			Container bank = newChar.BankBox;
+			cont.ItemID = 0xE7D;
+			cont.Hue = 0x489;
+			cont.Name = "Money Box";
+
+			PlaceItemIn( cont, 16, 51, new BankCheck( 4000 ) );
+			PlaceItemIn( bank, 26, 1, cont );
+			PlaceItemIn( bank, 36, 5, new Bandage( 50 ) );
+			PlaceItemIn( bank, 46, 10, new BagOfReagents() );
+			}
+
+//StuffIAdded
 			if( TestCenter.Enabled )
 				FillBankbox( newChar );
 
