@@ -246,12 +246,12 @@ namespace Server.Items.Crops
 				return; 
 			}
 
-			if ( DateTime.Now > lastpicked.AddSeconds(3) ) // 3 seconds between picking
+			if ( DateTime.Now > lastpicked.AddSeconds(1) ) // 3 seconds between picking changed to 1 sec
 			{
 				lastpicked = DateTime.Now;
 			
-				int mageValue = (int)from.Skills[SkillName.Magery].Value / 20;  //FUTURE add two skill checks...
-				if ( mageValue == 0 )
+				int cookingValue = (int)from.Skills[SkillName.Cooking].Value / 20;  //FUTURE add two skill checks...
+				if ( cookingValue == 0 )
 				{
 					from.SendMessage( "You have no idea how to harvest this crop." ); 
 					return;
@@ -277,14 +277,14 @@ namespace Server.Items.Crops
 
 						if ( from == m_sower ) 
 						{
-							mageValue *= 2;
+							cookingValue *= 2;
 							m_lastvisit = DateTime.Now;
 						}
 
-						if ( mageValue > m_yield ) 
-							mageValue = m_yield + 1;
+						if ( cookingValue > m_yield ) 
+							cookingValue = m_yield + 1;
 
-						int pick = Utility.Random( mageValue );
+						int pick = Utility.Random( cookingValue );
 						if ( pick == 0 )
 						{
 							from.SendMessage( "You do not manage to harvest any crops." ); 

@@ -41,10 +41,10 @@ namespace Server.Items
 			protected override void OnTick()
 			{
 				m_Mobile.Resurrect();
-				m_Mobile.SendMessage( "Res you should be more careful in the future." );
+				m_Mobile.SendMessage( "¤Res¤ you should be more careful in the future." );
 				
 				new BlessedTimer( m_Mobile ).Start();
-				m_Mobile.SendMessage( "Res You will be blessed for 60 seconds." );
+				m_Mobile.SendMessage( "¤Res¤ You will be blessed for 60 seconds." );
 
 				m_Mobile.Blessed = true;
 				Stop();

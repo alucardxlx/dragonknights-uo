@@ -58,6 +58,26 @@ namespace Server.Items.Crops
 						((CabbageCrop)m_crop).UpRoot( m_Owner );
 					else if ( m_crop is CornCrop )
 						((CornCrop)m_crop).UpRoot( m_Owner );
+
+//I ADDED
+					else if ( m_crop is PumpkinCrop )
+						((PumpkinCrop)m_crop).UpRoot( m_Owner );
+
+					else if ( m_crop is NightshadeCrop )
+						((NightshadeCrop)m_crop).UpRoot( m_Owner );
+
+					else if ( m_crop is GrapesCrop )
+						((GrapesCrop)m_crop).UpRoot( m_Owner );
+
+					else if ( m_crop is GinsengCrop )
+						((GinsengCrop)m_crop).UpRoot( m_Owner );
+
+					else if ( m_crop is BloodmossCrop )
+						((BloodmossCrop)m_crop).UpRoot( m_Owner );
+
+					else if ( m_crop is MandrakeRootCrop )
+						((MandrakeRootCrop)m_crop).UpRoot( m_Owner );
+//I ADDED
 				}
 			}
 		}

@@ -24,7 +24,7 @@ namespace Server.Items.Crops
 			// lumbervalue = 100; will give 100% sucsess in picking
 			mageValue = from.Skills[SkillName.Magery].Value + 20;
 
-			if ( DateTime.Now > lastpicked.AddSeconds(3) ) // 3 seconds between picking
+			if ( DateTime.Now > lastpicked.AddSeconds(1) ) // 3 seconds between picking changed to 1 sec
 			{
 				lastpicked = DateTime.Now;
 				if ( from.InRange( this.GetWorldLocation(), 1 ) ) 

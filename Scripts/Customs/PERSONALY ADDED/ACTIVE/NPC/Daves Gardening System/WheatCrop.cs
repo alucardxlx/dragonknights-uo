@@ -246,7 +246,7 @@ namespace Server.Items.Crops
 				return; 
 			}
 
-			if ( DateTime.Now > lastpicked.AddSeconds(3) ) // 3 seconds between picking
+			if ( DateTime.Now > lastpicked.AddSeconds(1) ) // 3 seconds between picking changed to 1 sec
 			{
 				lastpicked = DateTime.Now;
 			
