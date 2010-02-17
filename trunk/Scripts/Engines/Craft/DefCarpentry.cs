@@ -573,7 +573,7 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( DartBoardSouthDeed ), 1044290, 1044325, 15.7, 40.7, typeof( Log ), 1044041, 5, 1044351 );
 			AddCraft( typeof( DartBoardEastDeed ), 1044290, 1044326, 15.7, 40.7, typeof( Log ), 1044041, 5, 1044351 );
 //I ADDED
-			AddCraft( typeof( BlankScroll ), 1044290, "BlankScroll", 0.00, 75.00, typeof( Log ), "Log", 2, "You do not have sufficent wood to make that." );
+			AddCraft( typeof( BlankScroll ), 1044290, "BlankScroll", 0.00, 140.00, typeof( Log ), "Log", 2, "You do not have sufficent wood to make that." );
 //
 			
 			#region Mondain's Legacy

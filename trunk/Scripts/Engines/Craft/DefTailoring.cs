@@ -238,9 +238,9 @@ namespace Server.Engines.Craft
 // I ADDED
 
 			AddCraft( typeof( Bag ), 1015283, "Bag", 50.00, 75.00, typeof( Leather ), "Leather", 3, "You do not have sufficent leather to make that." );
-			AddCraft( typeof( Pouch ), 1015283, "Pouch", 50.00, 75.00, typeof( Leather ), "Leather", 6, "You do not have sufficent leather to make that." );
-			AddCraft( typeof( Backpack ), 1015283, "Backpack", 50.00, 75.00, typeof( Leather ), "Leather", 9, "You do not have sufficent leather to make that." );
-			AddCraft( typeof( BlankScroll ), 1015283, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( Backpack ), 1015283, "Backpack", 75.00, 100.00, typeof( Leather ), "Leather", 6, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( Pouch ), 1015283, "Pouch", 100.00, 140.00, typeof( Leather ), "Leather", 9, "You do not have sufficent leather to make that." );
+			AddCraft( typeof( BlankScroll ), 1015283, "BlankScroll", 0.00, 140.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
 
 
 

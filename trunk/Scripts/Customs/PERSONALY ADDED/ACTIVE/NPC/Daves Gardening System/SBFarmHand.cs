@@ -40,15 +40,23 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( typeof( Lime ), 3, 20, 0x172A, 0 ) );
 				Add( new GenericBuyInfo( typeof( Peach ), 3, 20, 0x9D2, 0 ) );
 				Add( new GenericBuyInfo( typeof( Pear ), 3, 20, 0x994, 0 ) );
-				Add( new GenericBuyInfo( "Cotton Seed", typeof( CottonSeed ), 250, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Flax Seed", typeof( FlaxSeed ), 250, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Wheat Seed", typeof( WheatSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Bloodmoss Seed", typeof( BloodmossSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Cabbage Seed", typeof( CabbageSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Carrot Seed", typeof( CarrotSeed ), 150, 20, 0xF27, 0x5E2 ) );
 				Add( new GenericBuyInfo( "Corn Seed", typeof( CornSeed ), 150, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Carrot Seed", typeof( CarrotSeed ), 50, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Onion Seed", typeof( OnionSeed ), 50, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Garlic Seed", typeof( GarlicSeed ), 50, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Lettuce Seed", typeof( LettuceSeed ), 50, 20, 0xF27, 0x5E2 ) );
-				Add( new GenericBuyInfo( "Cabbage Seed", typeof( CabbageSeed ), 50, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Cotton Seed", typeof( CottonSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Flax Seed", typeof( FlaxSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Garlic Seed", typeof( GarlicSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Ginseng Seed", typeof( GinsengSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Grapes Seed", typeof( GrapesSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Lettuce Seed", typeof( LettuceSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "MandrakeRoot Seed", typeof( MandrakeRootSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Nightshade Seed", typeof( NightshadeSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Onion Seed", typeof( OnionSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Pumpkin Seed", typeof( PumpkinSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				Add( new GenericBuyInfo( "Wheat Seed", typeof( WheatSeed ), 150, 20, 0xF27, 0x5E2 ) );
+				
+				
 			} 
 		} 
 

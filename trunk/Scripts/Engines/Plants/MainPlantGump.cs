@@ -306,6 +306,7 @@ namespace Server.Engines.Plants
 							{
 								foundUsableWater = true;
 								m_Plant.Pour( from, beverage );
+								from.SendGump( new MainPlantGump( m_Plant ) );
 								break;
 							}
 						}
