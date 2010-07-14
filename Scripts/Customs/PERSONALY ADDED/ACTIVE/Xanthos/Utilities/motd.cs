@@ -70,8 +70,8 @@ namespace Xanthos.Utilities
 		private const string kDefaultTitle	= "Current News";
 		private const string kNewMotdMessage= "The message of the day has been updated. To see it, type motd.";
 		private static int   kMaximumArchives			= 9;	// should be const, used static to get avoid compiler warning
-		private	static bool	 kAlwaysShowMotdOnLogin		= false;// should be const, used static to get avoid compiler warning
-		private	static bool  kTextInsteadOfGumpOnLogin	= true;	// should be const, used static to get avoid compiler warning
+		private	static bool	 kAlwaysShowMotdOnLogin		= true;// should be const, used static to get avoid compiler warning
+		private	static bool  kTextInsteadOfGumpOnLogin	= false;	// should be const, used static to get avoid compiler warning
 		
 		internal const int    kDataColor = 50;
 		internal const int    kLabelColor = 88;

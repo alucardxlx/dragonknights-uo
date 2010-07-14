@@ -1,0 +1,64 @@
+***********************
+Rocko's AOE dragon v1.0
+***********************
+
+Here is a list of modification made to BaseCreature.cs to make the AOE dragon work:
+
+1. Somewhere inside the definition of BaseCreature class, for example, right before the following line:
+		public virtual void BreathStart( Mobile target )
+Add: 
+
+        // AOE breath effect only
+        public virtual bool HasAOEBreath { get { return false; } }
+        public virtual int AOEBreathRadius { get { return 2; } }
+        public virtual int AOEBreathDuration { get { return 2; } }
+        public virtual int AOEBreathEffectItemID { get { return 0x376A; } }
+        public virtual string AOEBreathName { get { return "magical energy"; } }
+        public virtual int AOEBreathEffectHue { get { return 0; } }
+        public virtual void AOESpecialEffect(Mobile m)
+        {
+        }
+
+
+2. Inside function 
+		public virtual void BreathEffect_Callback( object state )
+replace the following two lines: 
+			BreathPlayEffect( target );
+			Timer.DelayCall( TimeSpan.FromSeconds( BreathDamageDelay ), new TimerStateCallback( BreathDamage_Callback ), target );
+By:
+            if (!HasAOEBreath)
+            {
+                BreathPlayEffect(target);
+
+                Timer.DelayCall(TimeSpan.FromSeconds(BreathDamageDelay), new TimerStateCallback(BreathDamage_Callback), target);
+            }
+            else
+            {
+                int bonusRange = 0;
+                Point3D p = target.Location;
+                if (Utility.RandomDouble() < 0.2) // target self instead of the enemy to hit those who try to melee
+                {
+                    p = this.Location;
+                    bonusRange = 1;
+                }
+
+                for (int i = -AOEBreathRadius - bonusRange; i <= AOEBreathRadius + bonusRange; ++i)
+                    for (int j = -AOEBreathRadius - bonusRange; j <= AOEBreathRadius + bonusRange; ++j)
+                    {
+                        if (Utility.RandomDouble() < 0.8)
+                        {
+                            Point3D loc = new Point3D(p.X + i, p.Y + j, p.Z);
+                            new AOEUnit(AOEBreathEffectItemID, loc, this, this.Map, TimeSpan.FromSeconds(AOEBreathDuration), i);
+                        }
+                    }
+            }
+
+
+3. (Optional. Since I set the AOE damage to be proportional to the dragon's HP, this is to limit the AOE damage going insane) Inside function:
+		public virtual int BreathComputeDamage()
+Right before this line:
+			return damage;
+Add:
+            if (damage > 70)
+                damage = 70;
+

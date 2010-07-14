@@ -393,7 +393,7 @@ namespace Server.Items
 						m_Post.OwnerAbandonTime = c.OwnerAbandonTime;
 						c.OwnerAbandonTime = DateTime.MaxValue;
 						m_Post.MinTameSkill = c.MinTameSkill;
-						c.MinTameSkill = 240.0;
+						c.MinTameSkill = 0.0;//changed from 240
 						c.ControlMaster = null;
 					}
 				}
@@ -403,6 +403,17 @@ namespace Server.Items
 					if (m_Post.Controlled == (BaseCreature)target && m_Post.Owner == from)
 					{
 						c = (BaseCreature)target;
+						if ( (from.Followers + c.ControlSlots) > from.FollowersMax)
+						{
+							from.SendMessage( "You can not release that creature at this time because you are unable to control it. You would have TO MANY FOLLOWERS." );
+							return;
+						}
+						if ( !c.CanBeControlledBy( from ))
+						{
+							from.SendMessage( "You do not have the required skills to control this pet." );
+							return;
+						}
+						
 						c.ControlMaster = m_Post.Owner;
 						c.Home = m_Post.Owner.Location;
 						c.RangeHome = 0;

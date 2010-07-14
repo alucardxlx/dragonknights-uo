@@ -218,6 +218,7 @@ namespace Server.Items
 							case DecorateCommand.West:	West( item, from );	break;
 // end added by Greywolf
 						}
+						from.Target = new InternalTarget( m_Decorator );
 					}
 				}
 			}
