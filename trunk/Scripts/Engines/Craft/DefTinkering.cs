@@ -187,13 +187,13 @@ namespace Server.Engines.Craft
 
             #region Tools
             AddCraft(typeof(Scissors), 1044046, 1023998, 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(MortarPestle), 1044046, 1023739, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-            AddCraft(typeof(Scorp), 1044046, 1024327, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(TinkerTools), 1044046, 1044164, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(Hatchet), 1044046, 1023907, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
-            AddCraft(typeof(DrawKnife), 1044046, 1024324, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(SewingKit), 1044046, 1023997, 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
 //I ADDED
+                index = AddCraft(typeof(CarpetWeaverTool), 1044046, "Carpet Weaver Tool", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
+                AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
+                AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth to make that." );
+                AddRes( index, typeof( Feather ), "Feather", 10, "You do not have sufficient feathers to make that." );
+
                 index = AddCraft(typeof(PoisonResistSewingKit), 1044046, "Poison Resist Sewing Kit", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
                 AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
                 AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
@@ -214,6 +214,11 @@ namespace Server.Engines.Craft
                 AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
                 AddRes( index, typeof( SmokeBomb ), "Smoke Bomb", 10, "You do not have sufficient Smoke Bombs, how else are you gona resist the flames?" );
 //I ADDED
+            AddCraft(typeof(MortarPestle), 1044046, 1023739, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
+            AddCraft(typeof(Scorp), 1044046, 1024327, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(TinkerTools), 1044046, 1044164, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(Hatchet), 1044046, 1023907, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
+            AddCraft(typeof(DrawKnife), 1044046, 1024324, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(Saw), 1044046, 1024148, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(DovetailSaw), 1044046, 1024136, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(Froe), 1044046, 1024325, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -338,7 +343,12 @@ namespace Server.Engines.Craft
             #region Multi-Component Items
             index = AddCraft(typeof(AxleGears), 1044051, 1024177, 0.0, 0.0, typeof(Axle), 1044169, 1, 1044253);
             AddRes(index, typeof(Gears), 1044254, 1, 1044253);
-
+//I ADDED            
+            index = AddCraft(typeof(BankersPodiumAddonDeed), 1044051, "banker's podium" , 100.0, 140.0, typeof(IronIngot), "ingots", 100, "You do not have sufficient ingots to make that.");
+            AddRes(index, typeof(ResourceBox), "resource box", 1, "You do not have a resource box to make that.");
+            AddRes(index, typeof(Board), "board", 100, "You do not have sufficent boards to make that.");
+            AddRes(index, typeof(ResourceStorageKeyMaster), "master worker's keys", 1, "You do not have a master worker's keys to make that.");
+//I ADDED            
             index = AddCraft(typeof(ClockParts), 1044051, 1024175, 0.0, 0.0, typeof(AxleGears), 1044170, 1, 1044253);
             AddRes(index, typeof(Springs), 1044171, 1, 1044253);
 

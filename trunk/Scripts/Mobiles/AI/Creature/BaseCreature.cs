@@ -480,7 +480,20 @@ namespace Server.Mobiles
         // Anger sound/animations
         public virtual int BreathAngerSound { get { return GetAngerSound(); } }
         public virtual int BreathAngerAnimation { get { return 12; } }
+//I ADDED for AOEDRAGOn
 
+        // AOE breath effect only
+        public virtual bool HasAOEBreath { get { return false; } }
+        public virtual int AOEBreathRadius { get { return 2; } }
+        public virtual int AOEBreathDuration { get { return 2; } }
+        public virtual int AOEBreathEffectItemID { get { return 0x376A; } }
+        public virtual string AOEBreathName { get { return "magical energy"; } }
+        public virtual int AOEBreathEffectHue { get { return 0; } }
+        public virtual void AOESpecialEffect(Mobile m)
+        {
+        }
+
+//I ADDED for AOEDRAGOn
         public virtual void BreathStart(Mobile target)
         {
             BreathStallMovement();
@@ -516,9 +529,38 @@ namespace Server.Mobiles
                 return;
 
             BreathPlayEffectSound();
-            BreathPlayEffect(target);
+//i remed for AOEDRAGOn.            BreathPlayEffect(target);
+//i remed for AOEDRAGOn.
+//i remed for AOEDRAGOn.            Timer.DelayCall(TimeSpan.FromSeconds(BreathDamageDelay), new TimerStateCallback(BreathDamage_Callback), target);
+//i added for AOEDRAGOn
+            if (!HasAOEBreath)
+            {
+                BreathPlayEffect(target);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(BreathDamageDelay), new TimerStateCallback(BreathDamage_Callback), target);
+                Timer.DelayCall(TimeSpan.FromSeconds(BreathDamageDelay), new TimerStateCallback(BreathDamage_Callback), target);
+            }
+            else
+            {
+                int bonusRange = 0;
+                Point3D p = target.Location;
+                if (Utility.RandomDouble() < 0.2) // target self instead of the enemy to hit those who try to melee
+                {
+                    p = this.Location;
+                    bonusRange = 1;
+                }
+
+                for (int i = -AOEBreathRadius - bonusRange; i <= AOEBreathRadius + bonusRange; ++i)
+                    for (int j = -AOEBreathRadius - bonusRange; j <= AOEBreathRadius + bonusRange; ++j)
+                    {
+                        if (Utility.RandomDouble() < 0.8)
+                        {
+                            Point3D loc = new Point3D(p.X + i, p.Y + j, p.Z);
+                            new AOEUnit(AOEBreathEffectItemID, loc, this, this.Map, TimeSpan.FromSeconds(AOEBreathDuration), i);
+                        }
+                    }
+            }
+
+//i added for AOEDRAGOn
         }
 
         public virtual void BreathPlayEffectSound()
@@ -571,7 +613,11 @@ namespace Server.Mobiles
 
             if (IsParagon)
                 damage = (int)(damage / Paragon.HitsBuff);
+//i added for AOEDRAGOn
+            if (damage > 70)
+                damage = 70;
 
+//i added for AOEDRAGOn
             return damage;
         }
         #endregion
