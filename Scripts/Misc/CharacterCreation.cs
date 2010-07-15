@@ -46,6 +46,7 @@ namespace Server.Misc
 			PackItem( new ResourceStorageKeyTailor() );
 			PackItem( new NewPlayerPackage() );
 			PackItem( new StatSkillPurchaseCrystal() );
+			PackItem( new NewPlayerWelcomeHandbook() );
 			//PackItem( new ResourceStorageKeyWood() );
 
 

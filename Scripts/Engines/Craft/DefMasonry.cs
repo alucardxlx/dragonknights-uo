@@ -111,12 +111,21 @@ namespace Server.Engines.Craft
 			// Decorations
 			AddCraft( typeof( Vase ), 1044501, 1022888, 52.5, 102.5, typeof( Granite ), 1044514, 1, 1044513 );
 			AddCraft( typeof( LargeVase ), 1044501, 1022887, 52.5, 102.5, typeof( Granite ), 1044514, 3, 1044513 );
-			
+// i added
+			AddCraft( typeof( DecorationSmallVase ), 1044501, "Decoration Small Vase", 82.0, 140.0, typeof( Granite ), 1044514, 1, 1044513 );
+			AddCraft( typeof( DecorationLargeVase ), 1044501, "Decoration Large Vase", 82.0, 140.0, typeof( Granite ), 1044514, 3, 1044513 );
+//fin			
 			if( Core.SE )
 			{
 				int index = AddCraft( typeof( SmallUrn ), 1044501, 1029244, 82.0, 132.0, typeof( Granite ), 1044514, 3, 1044513 );
 				SetNeededExpansion( index, Expansion.SE );
+//i added
+				index = AddCraft( typeof( Urn2Artifact ), 1044501, "medium urn", 82.0, 140.0, typeof( Granite ), 1044514, 3, 1044513 );
+				SetNeededExpansion( index, Expansion.SE );
 
+				index = AddCraft( typeof( AncientUrn ), 1044501, "large urn", 82.0, 140.0, typeof( Granite ), 1044514, 3, 1044513 );
+				SetNeededExpansion( index, Expansion.SE );
+//fin
 				index = AddCraft( typeof( SmallTowerSculpture ), 1044501, 1029242, 82.0, 132.0, typeof( Granite ), 1044514, 3, 1044513 );
 				SetNeededExpansion( index, Expansion.SE );
 			}
@@ -138,7 +147,15 @@ namespace Server.Engines.Craft
 			// Misc Addons
 			if ( Core.ML )
 			{
-				int index = AddCraft( typeof( StoneAnvilSouthDeed ), 1044290, 1072876, 78.0, 128.0, typeof( Granite ), 1044514, 20, 1044513 );
+//I added
+				int index = AddCraft( typeof( SmallEmptyPot ), 1044290, "Small Empty Pot", 100.0, 140.0, typeof( Granite ), 1044514, 20, 1044513 );
+				index = AddCraft( typeof( LargeEmptyPot ), 1044290, "Large Empty Pot", 100.0, 140.0, typeof( Granite ), 1044514, 20, 1044513 );
+				index = AddCraft( typeof( EmptyPewterBowl ), 1044290, "Empty Pewter Bowl", 100.0, 140.0, typeof( Granite ), 1044514, 20, 1044513 );
+				index = AddCraft( typeof( EmptyPewterTub ), 1044290, "Empty Pewter Tub", 100.0, 140.0, typeof( Granite ), 1044514, 20, 1044513 );
+				index = AddCraft( typeof( Engines.Plants.PlantBowl ), 1044290, "A Plant Bowl", 100.0, 140.0, typeof( Granite ), 1044514, 20, 1044513 );
+//fin				
+
+				index = AddCraft( typeof( StoneAnvilSouthDeed ), 1044290, 1072876, 78.0, 128.0, typeof( Granite ), 1044514, 20, 1044513 );
 				AddRecipe( index, (int) CarpRecipes.StoneAnvilSouth );
 				SetNeededExpansion( index, Expansion.ML );
 				
