@@ -10,6 +10,9 @@ using Server.Accounting;
 using Server.Engines.Reports;
 using Server.Commands;
 using System.Collections.Generic;
+//i added for tints page gueue gump
+using Server.Gumps;
+//add fin
 
 namespace Server.Engines.Help
 {
@@ -271,6 +274,25 @@ namespace Server.Engines.Help
 				e.Mobile.SendMessage( "The page queue is empty." );
 			}
 		}
+//*********Tintamar's Page In Queue*********** added for tints page queue gump
+        		public static void Pages_OnCalled( Mobile from )
+        		{
+            			PageEntry entry = (PageEntry)m_KeyedByHandler[from];
+
+            			if ( entry != null )
+            			{
+                			from.SendGump( new PageEntryGump( from, entry ) );
+            			}
+            			else if ( m_List.Count > 0 )
+            			{
+                			from.SendGump( new PageQueueGump() );
+            			}
+            			else
+            			{
+                			from.SendMessage( "The page queue is empty." );
+            			}
+        		}
+//**************************************************add fin
 
 		public static bool IsHandling( Mobile check )
 		{
@@ -336,7 +358,16 @@ namespace Server.Engines.Help
 				Mobile m = ns.Mobile;
 
 				if ( m != null && m.AccessLevel >= AccessLevel.Counselor && m.AutoPageNotify && !IsHandling( m ) )
-					m.SendMessage( "A new page has been placed in the queue." );
+//originaly here					m.SendMessage( "A new page has been placed in the queue." );
+//**********Tintamar's Page In Queue Edit***************
+				{
+					m.CloseGump( typeof ( TintamarsPageInQueue ) );
+					m.SendGump( new TintamarsPageInQueue( m ) );
+					//m.SendMessage( "A new page has been placed in the queue." );
+					m.PlaySound( 130 );
+				}
+//*************************************************************
+					
 
 				if ( m != null && m.AccessLevel >= AccessLevel.Counselor && m.AutoPageNotify && m.LastMoveTime >= (DateTime.Now - TimeSpan.FromMinutes( 10.0 )) )
 					isStaffOnline = true;

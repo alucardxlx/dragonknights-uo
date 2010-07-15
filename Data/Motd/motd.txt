@@ -9,7 +9,6 @@ If you have any questions please contact our staff.
 
 <BASEFONT COLOR=#006400>PERKS:<BASEFONT COLOR=#000000>
 
-
 <BASEFONT COLOR=#0000FF>Corpse Retrieval Wand<BASEFONT COLOR=#000000> - For a fee, your Corpse will be brought to your location.
 
 <BASEFONT COLOR=#0000FF>Special Craft Menus<BASEFONT COLOR=#000000> - Beside having custome added items in the craft menus, there are options where you can do AUTO LOOP, MAKE COUNT, and Smelt Item for the tailor and blacksmith.
@@ -37,6 +36,7 @@ You can make your own, (Via the House Placement Tool), which each account has a 
 <BASEFONT COLOR=#0000FF>Special Storage Keys<BASEFONT COLOR=#000000> - Which help a great deal with holding a lot of different items, giving you easy access to the stored items anywhere in the world.
 
 <BASEFONT COLOR=#006400>ADDONS:<BASEFONT COLOR=#000000>
+
 <BASEFONT COLOR=#0000FF>Battle Chess<BASEFONT COLOR=#000000>: Like the movie Harry Potter's Wizard's Chess.
 
 <BASEFONT COLOR=#0000FF>JunkBuyer<BASEFONT COLOR=#000000>: NPC buys a lot of odds and end items that you may consider is junk. He is located in MoonGlow. If there is an Item that he does not buy from you, and you feel that he should, there is a Metal Chest next to him that you may place the item in so that I could add it to his shopping list. **NOTE: NPCs will never buy Blessed Items."
@@ -56,7 +56,7 @@ You can make your own, (Via the House Placement Tool), which each account has a 
 
 <BASEFONT COLOR=#006400>COMMANDS:<BASEFONT COLOR=#000000>
 
-<BASEFONT COLOR=#0000FF>PLAYER'S COMMANDS:<BASEFONT COLOR=#000000>
+<BASEFONT COLOR=#006400>PLAYER'S COMMANDS:<BASEFONT COLOR=#000000>
 
 <BASEFONT COLOR=#0000FF>MyAuction<BASEFONT COLOR=#000000> - brings up a limited auction gump. Players can only access auctions they're already participating in. They can't use this menu to create new auctions or to place bids on items they haven't bid on before. There is a Auctioner in MoonGlow.
 

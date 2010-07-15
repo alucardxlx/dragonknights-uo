@@ -341,6 +341,12 @@ namespace Server.Engines.Craft
 				index = AddCraft( typeof( SpellbookEngraver ), 1044294, 1072151, 75.0, 100.0, typeof( Feather ), 1044562, 1, 1044563 );
 				AddRes( index, typeof( BlackPearl ), 1015001, 7, 1044253 );
 				SetNeededExpansion( index, Expansion.ML );
+//I ADDED
+				index = AddCraft( typeof( ContainerReNameTool ), 1044294, "Container Re-Name Tool", 100.0, 140.0, typeof( MarkScroll ), "Mark Scrolls", 10, "You do not have sufficent Mark scrolls to make that." );
+				AddRes( index, typeof( MalletAndChisel ), "Mallet And Chisel", 10, "You do not have sufficent mallets and chisels to make that." );
+				AddRes( index, typeof( TinkerTools ), "Tool Kit", 10, "You do not have sufficent tool kits to make that." );
+				AddRes( index, typeof( SilverEtchedMace ), "Silver-Etched Mace", 1, "You do not have a Silver-Etched Mace to make that." );
+//FinADD
 			}
 			#endregion
 

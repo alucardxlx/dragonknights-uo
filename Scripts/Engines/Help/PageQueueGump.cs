@@ -61,7 +61,8 @@ namespace Server.Engines.Help
 			{
 				PageEntry e = (PageEntry)list[i];
 
-				if ( e.Sender.Deleted || e.Sender.NetState == null )
+//**********Tintamars Page In Queue**********
+				if ( e.Sender.Deleted ) // Removed from line ---->   || e.Sender.NetState == null )
 				{
 					e.AddResponse( e.Sender, "[Logout]" );
 					PageQueue.Remove( e );
