@@ -58,7 +58,7 @@ You can make your own, (Via the House Placement Tool), which each account has a 
 
 <BASEFONT COLOR=#006400>PLAYER'S COMMANDS:<BASEFONT COLOR=#000000>
 
-<BASEFONT COLOR=#0000FF>MyAuction<BASEFONT COLOR=#000000> - brings up a limited auction gump. Players can only access auctions they're already participating in. They can't use this menu to create new auctions or to place bids on items they haven't bid on before. There is a Auctioner in MoonGlow.
+<BASEFONT COLOR=#0000FF>[MyAuction<BASEFONT COLOR=#000000> - brings up a limited auction gump. Players can only access auctions they're already participating in. They can't use this menu to create new auctions or to place bids on items they haven't bid on before. There is a Auctioner in MoonGlow.
 
 <BASEFONT COLOR=#0000FF>[grab options<BASEFONT COLOR=#000000> - to setup your grab options.
 

@@ -26,7 +26,7 @@ namespace Server.Items
 		[Constructable]
 		public TrashPack() : base( 0x9B2 )
 		{
-            Name = "Trash Bag";
+            Name = "TRASH BAG";
 			Hue = 1161;
 			Movable = true;
 			LootType=LootType.Blessed;
@@ -67,7 +67,7 @@ namespace Server.Items
 			}
 			else
 			{
-				from.SendMessage( "WARNING~! Items placed in Trash Bag will be deleted in 30 seconds!" ); // The item will be deleted in three minutes
+				from.SendMessage( 38,"WARNING~! Items placed in Trash Bag will be deleted in 30 seconds!" ); // The item will be deleted in three minutes
 
 				if ( m_Timer != null )
 					m_Timer.Stop();
@@ -91,7 +91,7 @@ namespace Server.Items
 			}
 			else
 			{
-				from.SendMessage( "WARNING~! Items placed in Trash Bag will be deleted in 30 seconds!" ); // The item will be deleted in three minutes
+				from.SendMessage( 38,"WARNING~! Items placed in Trash Bag will be deleted in 30 seconds!" ); // The item will be deleted in three minutes
 
 				if ( m_Timer != null )
 					m_Timer.Stop();
