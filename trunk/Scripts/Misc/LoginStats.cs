@@ -25,6 +25,12 @@ namespace Server.Misc
 				userCount, userCount == 1 ? "" : "s",
 				itemCount, itemCount == 1 ? "" : "s",
 				mobileCount, mobileCount == 1 ? "" : "s" );
+//******Edit: Added in******** added for tints page in queue gump
+            			if ( m.AccessLevel >= AccessLevel.Counselor )
+            			{
+                			Server.Engines.Help.PageQueue.Pages_OnCalled( m );
+            			}
+//******************************add fin			
 		}
 	}
 }
