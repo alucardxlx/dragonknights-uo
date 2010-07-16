@@ -83,8 +83,8 @@ namespace Server.Engines.Craft
 		public override void PlayCraftEffect( Mobile from )
 		{
 			// no animation
-			//if ( from.Body.Type == BodyType.Human && !from.Mounted )
-			//	from.Animate( 9, 5, 1, true, false, 0 );
+			if ( from.Body.Type == BodyType.Human && !from.Mounted )
+				from.Animate( 9, 5, 1, true, false, 0 );
 
 			from.PlaySound( 0x23D );
 		}
@@ -229,6 +229,9 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( WoodenThrone ),				1044291, 1044304,	52.6,  77.6,	typeof( Log ), 1044041, 17, 1044351 );
 			AddCraft( typeof( Throne ),						1044291, 1044305,	73.6,  98.6,	typeof( Log ), 1044041, 19, 1044351 );
 			AddCraft( typeof( Nightstand ),					1044291, 1044306,	42.1,  67.1,	typeof( Log ), 1044041, 17, 1044351 );
+//I added
+			AddCraft( typeof( WoodCounter ),					1044291, "Wood Counter (Turnable)",	42.1,  67.1,	typeof( Log ), 1044041, 17, 1044351 );
+//fin
 			AddCraft( typeof( WritingTable ),				1044291, 1022890,	63.1,  88.1,	typeof( Log ), 1044041, 17, 1044351 );
 			AddCraft( typeof( YewWoodTable ),				1044291, 1044307,	63.1,  88.1,	typeof( Log ), 1044041, 23, 1044351 );
 			AddCraft( typeof( LargeTable ),					1044291, 1044308,	84.2, 109.2,	typeof( Log ), 1044041, 27, 1044351 );

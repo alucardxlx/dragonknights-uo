@@ -60,9 +60,9 @@ namespace Server.Engines.Craft
 		public override void PlayCraftEffect( Mobile from ) 
 		{ 
 			// no effects
-			//if ( from.Body.Type == BodyType.Human && !from.Mounted ) 
-			//	from.Animate( 9, 5, 1, true, false, 0 ); 
-			//new InternalTimer( from ).Start(); 
+			if ( from.Body.Type == BodyType.Human && !from.Mounted ) 
+				from.Animate( 9, 5, 1, true, false, 0 ); 
+			new InternalTimer( from ).Start(); 
 		} 
 
 		// Delay to synchronize the sound with the hit on the anvil 
@@ -131,6 +131,10 @@ namespace Server.Engines.Craft
 			}
 
 			// Furniture
+//i added
+			AddCraft( typeof( MarbleTableSectionable ), 1044502, "Marble Table (Turnable)", 86.7, 140.0, typeof( Granite ), 1044514, 4, 1044513 );
+			AddCraft( typeof( SandstoneTableSectionable ), 1044502, "Sandstone Table (Turnable)", 86.7, 140.0, typeof( Granite ), 1044514, 4, 1044513 );
+//fin
 			AddCraft( typeof( StoneChair ), 1044502, 1024635, 55.0, 105.0, typeof( Granite ), 1044514, 4, 1044513 );
 			AddCraft( typeof( MediumStoneTableEastDeed ), 1044502, 1044508, 65.0, 115.0, typeof( Granite ), 1044514, 6, 1044513 );
 			AddCraft( typeof( MediumStoneTableSouthDeed ), 1044502, 1044509, 65.0, 115.0, typeof( Granite ), 1044514, 6, 1044513 );
