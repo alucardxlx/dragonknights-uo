@@ -117,6 +117,7 @@ namespace Server.Items
         public NewPlayerWelcomeHandbook() : base( false )
         {
         	Hue = 1153;
+                LootType=LootType.Blessed;
         }
 
         public NewPlayerWelcomeHandbook( Serial serial ) : base( serial )
