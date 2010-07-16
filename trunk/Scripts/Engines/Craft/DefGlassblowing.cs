@@ -63,10 +63,10 @@ namespace Server.Engines.Craft
 		{
 			from.PlaySound( 0x2B ); // bellows
 
-			//if ( from.Body.Type == BodyType.Human && !from.Mounted )
-			//	from.Animate( 9, 5, 1, true, false, 0 );
+			if ( from.Body.Type == BodyType.Human && !from.Mounted )
+				from.Animate( 9, 5, 1, true, false, 0 );
 
-			//new InternalTimer( from ).Start();
+			new InternalTimer( from ).Start();
 		}
 
 		// Delay to synchronize the sound with the hit on the anvil
