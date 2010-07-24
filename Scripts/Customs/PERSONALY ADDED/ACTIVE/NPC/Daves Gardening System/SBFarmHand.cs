@@ -19,27 +19,10 @@ namespace Server.Mobiles
 
 		public class InternalBuyInfo : ArrayList 
 		{ 
-			public InternalBuyInfo() 
-			{ 
-				Add( new GenericBuyInfo( typeof( Apple ), 3, 20, 0x9D0, 0 ) );
-				Add( new GenericBuyInfo( typeof( Grapes ), 3, 20, 0x9D1, 0 ) );
-				Add( new GenericBuyInfo( typeof( Watermelon ), 7, 20, 0xC5C, 0 ) );
-				Add( new GenericBuyInfo( typeof( YellowGourd ), 3, 20, 0xC64, 0 ) );
-				Add( new GenericBuyInfo( typeof( Pumpkin ), 11, 20, 0xC6A, 0 ) );
-				Add( new GenericBuyInfo( typeof( Onion ), 3, 20, 0xC6D, 0 ) );
-				Add( new GenericBuyInfo( typeof( Lettuce ), 5, 20, 0xC70, 0 ) );
-				Add( new GenericBuyInfo( typeof( Squash ), 3, 20, 0xC72, 0 ) );
-				Add( new GenericBuyInfo( typeof( HoneydewMelon ), 7, 20, 0xC74, 0 ) );
-				Add( new GenericBuyInfo( typeof( Carrot ), 3, 20, 0xC77, 0 ) );
-				Add( new GenericBuyInfo( typeof( Cantaloupe ), 6, 20, 0xC79, 0 ) );
-				Add( new GenericBuyInfo( typeof( Cabbage ), 5, 20, 0xC7B, 0 ) );
-				//Add( new GenericBuyInfo( typeof( EarOfCorn ), 3, 20, XXXXXX, 0 ) );
-				//Add( new GenericBuyInfo( typeof( Turnip ), 6, 20, XXXXXX, 0 ) );
-				//Add( new GenericBuyInfo( typeof( SheafOfHay ), 2, 20, XXXXXX, 0 ) );
-				Add( new GenericBuyInfo( typeof( Lemon ), 3, 20, 0x1728, 0 ) );
-				Add( new GenericBuyInfo( typeof( Lime ), 3, 20, 0x172A, 0 ) );
-				Add( new GenericBuyInfo( typeof( Peach ), 3, 20, 0x9D2, 0 ) );
-				Add( new GenericBuyInfo( typeof( Pear ), 3, 20, 0x994, 0 ) );
+			public InternalBuyInfo()
+			{
+				Add( new GenericBuyInfo( "Cheese Form", typeof( CheeseForm ), 150, 20, 0xE78, 0x481 ) );
+				Add( new GenericBuyInfo( "Milk Bucket", typeof( MilkBucket ), 150, 20, 0xFFA, 0x3E9 ) );
 				Add( new GenericBuyInfo( "Bloodmoss Seed", typeof( BloodmossSeed ), 150, 20, 0xF27, 0x5E2 ) );
 				Add( new GenericBuyInfo( "Cabbage Seed", typeof( CabbageSeed ), 150, 20, 0xF27, 0x5E2 ) );
 				Add( new GenericBuyInfo( "Carrot Seed", typeof( CarrotSeed ), 150, 20, 0xF27, 0x5E2 ) );
@@ -55,9 +38,26 @@ namespace Server.Mobiles
 				Add( new GenericBuyInfo( "Onion Seed", typeof( OnionSeed ), 150, 20, 0xF27, 0x5E2 ) );
 				Add( new GenericBuyInfo( "Pumpkin Seed", typeof( PumpkinSeed ), 150, 20, 0xF27, 0x5E2 ) );
 				Add( new GenericBuyInfo( "Wheat Seed", typeof( WheatSeed ), 150, 20, 0xF27, 0x5E2 ) );
-				
-				
-			} 
+				//Add( new GenericBuyInfo( typeof( EarOfCorn ), 3, 20, XXXXXX, 0 ) );
+				//Add( new GenericBuyInfo( typeof( SheafOfHay ), 2, 20, XXXXXX, 0 ) );
+				//Add( new GenericBuyInfo( typeof( Turnip ), 6, 20, XXXXXX, 0 ) );
+				Add( new GenericBuyInfo( typeof( Apple ), 3, 20, 0x9D0, 0 ) );
+				Add( new GenericBuyInfo( typeof( Cabbage ), 5, 20, 0xC7B, 0 ) );
+				Add( new GenericBuyInfo( typeof( Cantaloupe ), 6, 20, 0xC79, 0 ) );
+				Add( new GenericBuyInfo( typeof( Carrot ), 3, 20, 0xC77, 0 ) );
+				Add( new GenericBuyInfo( typeof( Grapes ), 3, 20, 0x9D1, 0 ) );
+				Add( new GenericBuyInfo( typeof( HoneydewMelon ), 7, 20, 0xC74, 0 ) );
+				Add( new GenericBuyInfo( typeof( Lemon ), 3, 20, 0x1728, 0 ) );
+				Add( new GenericBuyInfo( typeof( Lettuce ), 5, 20, 0xC70, 0 ) );
+				Add( new GenericBuyInfo( typeof( Lime ), 3, 20, 0x172A, 0 ) );
+				Add( new GenericBuyInfo( typeof( Onion ), 3, 20, 0xC6D, 0 ) );
+				Add( new GenericBuyInfo( typeof( Peach ), 3, 20, 0x9D2, 0 ) );
+				Add( new GenericBuyInfo( typeof( Pear ), 3, 20, 0x994, 0 ) );
+				Add( new GenericBuyInfo( typeof( Pumpkin ), 11, 20, 0xC6A, 0 ) );
+				Add( new GenericBuyInfo( typeof( Squash ), 3, 20, 0xC72, 0 ) );
+				Add( new GenericBuyInfo( typeof( Watermelon ), 7, 20, 0xC5C, 0 ) );
+				Add( new GenericBuyInfo( typeof( YellowGourd ), 3, 20, 0xC64, 0 ) );
+			}
 		} 
 
 		public class InternalSellInfo : GenericSellInfo 

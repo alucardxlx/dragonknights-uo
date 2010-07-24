@@ -29,6 +29,8 @@ namespace Server.Misc
             			if ( m.AccessLevel >= AccessLevel.Counselor )
             			{
                 			Server.Engines.Help.PageQueue.Pages_OnCalled( m );
+					m.Send( SpeedControl.MountSpeed );
+					m.SendMessage( 38,"Speed boost has been enabled." );
             			}
 //******************************add fin			
 		}

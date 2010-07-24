@@ -19,7 +19,9 @@ namespace Server.Mobiles
 		public class InternalBuyInfo : ArrayList 
 		{ 
 			public InternalBuyInfo() 
-			{ 
+			{
+				Add( new GenericBuyInfo( "Cheese Form", typeof( CheeseForm ), 150, 20, 0xE78, 0x481 ) );
+				Add( new GenericBuyInfo( "Milk Bucket", typeof( MilkBucket ), 150, 20, 0xFFA, 0x3E9 ) );				
 				Add( new GenericBuyInfo( typeof( BreadLoaf ), 6, 20, 0x103B, 0 ) );
 				Add( new GenericBuyInfo( typeof( BreadLoaf ), 5, 20, 0x103C, 0 ) );
 				Add( new GenericBuyInfo( typeof( ApplePie ), 7, 20, 0x1041, 0 ) ); //OSI just has Pie, not Apple/Fruit/Meat
