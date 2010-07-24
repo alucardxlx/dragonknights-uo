@@ -386,7 +386,7 @@ namespace Server.Network {
 		}
 
 		public void WriteConsole( string text ) {
-			Console.WriteLine( "Client: {0}: {1}", this, text );
+			Console.WriteLine( "Client: {0}: {1} - {2}", this, text, DateTime.Now );
 		}
 
 		public void WriteConsole( string format, params object[] args ) {

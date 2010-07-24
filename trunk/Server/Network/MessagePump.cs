@@ -97,7 +97,7 @@ namespace Server.Network
 					ns.Start();
 
 					if ( ns.Running )
-						Console.WriteLine( "Client: {0}: Connected. [{1} Online]", ns, NetState.Instances.Count );
+						Console.WriteLine( "Client: {0}: Connected. [{1} Online] - {2}", ns, NetState.Instances.Count, DateTime.Now );
 				}
 			}
 		}
