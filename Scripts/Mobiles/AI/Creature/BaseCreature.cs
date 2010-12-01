@@ -31,7 +31,8 @@ namespace Server.Mobiles
         Strongest,		// Attack the strongest
         Weakest,		// Attack the weakest
         Closest, 		// Attack the closest
-        Evil			// Only attack aggressor -or- negative karma
+        Evil,			// Only attack aggressor -or- negative karma
+        Good			// Only attack aggressor -or- Positive Karma
     }
 
     public enum OrderType

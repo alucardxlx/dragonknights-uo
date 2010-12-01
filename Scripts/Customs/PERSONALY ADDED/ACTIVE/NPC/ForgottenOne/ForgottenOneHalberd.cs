@@ -12,7 +12,7 @@ namespace Server.Mobiles
 	public class ForgottenOneHalberd : BaseCreature 
 	{ 
 		[Constructable] 
-		public ForgottenOneHalberd() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 ) 
+		public ForgottenOneHalberd() : base( AIType.AI_Melee, FightMode.Good, 10, 1, 0.2, 0.4 ) 
 		{ 	
 			Title = "a ForgottenOne Fighter";
 			Name = NameList.RandomName( "male" );

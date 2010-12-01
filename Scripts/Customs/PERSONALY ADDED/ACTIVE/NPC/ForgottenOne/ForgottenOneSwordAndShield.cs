@@ -12,7 +12,7 @@ namespace Server.Mobiles
 	public class ForgottenOneSwordAndShield : BaseCreature 
 	{ 
 		[Constructable] 
-		public ForgottenOneSwordAndShield() : base( AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4 ) 
+		public ForgottenOneSwordAndShield() : base( AIType.AI_Melee, FightMode.Good, 10, 1, 0.2, 0.4 ) 
 		{ 	
 			Title = "a ForgottenOne Swordsman";
 			Name = NameList.RandomName( "male" );
@@ -54,9 +54,9 @@ namespace Server.Mobiles
 			vikingsword.Movable = false;
    			AddItem(vikingsword);
 
-   			OrderShield ordershield = new OrderShield();
-			ordershield.Movable = false;
-   			AddItem(ordershield);
+   			ChaosShield chaosshield = new ChaosShield();
+			chaosshield.Movable = false;
+   			AddItem(chaosshield);
    			//AddItem(new Bolt(100));
    			
    			HumilityCloak cloak = new HumilityCloak();
@@ -110,7 +110,7 @@ namespace Server.Mobiles
         	
         	//new VampiriacSteed().Rider = this;
 			vikingsword.Hue = 2412;
-			ordershield.Hue = 2412;
+			chaosshield.Hue = 2412;
    			cloak.Hue = 2412;
 			spiritualityhelm.Hue = 137;
 			honestygorget.Hue = 137;

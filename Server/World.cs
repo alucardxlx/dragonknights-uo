@@ -775,9 +775,9 @@ namespace Server {
 				Broadcast( 0x35, true, "The world is saving, please wait." );
 
 			SaveStrategy strategy = SaveStrategy.Acquire();
-			Console.WriteLine( "Core: Using {0} save strategy", strategy.Name.ToLowerInvariant() );
+			Console.WriteLine( "Core: Using {0} save strategy {1}", strategy.Name.ToLowerInvariant(), DateTime.Now );
 
-			Console.Write( "World: Saving..." );
+			Console.Write( "World: Saving... {0}", DateTime.Now );
 
 			Stopwatch watch = Stopwatch.StartNew();
 
@@ -807,7 +807,7 @@ namespace Server {
 
 			strategy.ProcessDecay();
 
-			Console.WriteLine( "done in {0:F2} seconds.", watch.Elapsed.TotalSeconds );
+			Console.WriteLine( "done in {0:F2} seconds. - {1}", watch.Elapsed.TotalSeconds, DateTime.Now );
 
 			if ( message )
 				Broadcast( 0x35, true, "World save complete. The entire process took {0:F1} seconds.", watch.Elapsed.TotalSeconds );

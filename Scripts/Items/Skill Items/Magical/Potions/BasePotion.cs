@@ -27,7 +27,7 @@ namespace Server.Items
 		ExplosionLesser,
 		Explosion,
 		ExplosionGreater,
-		
+
 		#region Mondain's Legacy
 		Conflagration,
 		ConflagrationGreater,
@@ -39,6 +39,12 @@ namespace Server.Items
 		Parasitic,
 		Darkglow,
 		#endregion
+//I ADDED POTIONS
+		ManaLesser,
+		Mana,
+		ManaGreater,
+//I ADDED POTIONS
+
 	}
 
 	public abstract class BasePotion : Item, ICraftable

@@ -67,22 +67,25 @@ namespace Server.Gumps
 			this.AddLabel(260, 185, 52, "-Donation"); //#3 Site's Name
 			
 			this.AddButton(228, 205, 4023, 4025, 4, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 205, 52, "-All Around Associate Services"); //#4 Site's Name
+			this.AddLabel(260, 205, 52, "-UO Stratics"); //#4 Site's Name
 			
 			this.AddButton(228, 225, 4023, 4025, 5, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 225, 52, "-Stratics"); //#5 Site's Name
+			this.AddLabel(260, 225, 52, "-UOAM"); //#5 Site's Name
 			
 			this.AddButton(228, 245, 4023, 4025, 6, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 245, 52, "-UOAM"); //#6 Site's Name
+			this.AddLabel(260, 245, 52, "-TeamSpeak Download"); //#6 Site's Name
 
 			this.AddButton(228, 265, 4023, 4025, 7, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 265, 52, "-Jeff6o6-hosting"); //#7 Site's Name
+			this.AddLabel(260, 265, 52, "-Server Status"); //#7 Site's Name
 			
 			this.AddButton(228, 285, 4023, 4025, 8, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 285, 52, "Vote for us Top100"); //#8 Site's Name
+			this.AddLabel(260, 285, 52, "-Vote for us"); //#8 Site's Name
 
 			this.AddButton(228, 305, 4023, 4025, 9, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 305, 52, "Vote for us Top200"); //#9 Site's Name
+			this.AddLabel(260, 305, 52, "-All Around Associate Services"); //#9 Site's Name
+
+			this.AddButton(228, 325, 4023, 4025, 10, GumpButtonType.Reply, 0);
+			this.AddLabel(260, 325, 52, "-Jeff6o6-hosting"); //#10 Site's Name
 			
 			this.AddButton(302, 357, 2453, 4454, 0, GumpButtonType.Reply, 0); // Close Button
 			
@@ -117,34 +120,41 @@ namespace Server.Gumps
 					}
 				case 4: // #4 Site's Url
 					{
-						sender.LaunchBrowser( "http://aaaservices.homeip.net/index.html" );
+						sender.LaunchBrowser( "http://uo.stratics.com/" );
 						break;
 					}
 				case 5: // #5 Site's url
 					{
-						sender.LaunchBrowser( "http://uo.stratics.com/" );
+						sender.LaunchBrowser( "http://www.uoam.net/" );
 						break;
 					}
 				case 6: // #6 Site's url
 					{
-						sender.LaunchBrowser( "http://www.uoam.net/" );
+						sender.LaunchBrowser( "http://aaaservices.homeip.net/temp/ts2client.exe" );
 						break;
 					}
 				case 7: // #7 Site's url
 					{
-						sender.LaunchBrowser( "http://www.jeff6o6-hosting.com/" );
+						sender.LaunchBrowser( "http://aaaservices.homeip.net/UO-status/status.html" );
 						break;
 					}
 					
 				case 8: // #8 Site's url
 					{
 						sender.LaunchBrowser( "http://www.xtremetop100.com/in.php?site=1132300022" );
+						sender.LaunchBrowser( "http://www.gamesites200.com/ultimaonline/in.php?id=1874" );
 						break;
 					}
 
 				case 9: // #9 Site's url
 					{
-						sender.LaunchBrowser( "http://www.gamesites200.com/ultimaonline/in.php?id=1874" );
+						sender.LaunchBrowser( "http://aaaservices.homeip.net/index.html" );
+						break;
+					}
+
+				case 10: // #10 Site's url
+					{
+						sender.LaunchBrowser( "http://www.jeff6o6-hosting.com/" );
 						break;
 					}
 

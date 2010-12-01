@@ -788,6 +788,9 @@ Add( typeof( WraithFormScroll ), 51 );
 Add( typeof( YellowGourd ), 1 );
 Add( typeof( YewWoodTable ), 10 );
 Add( typeof( Yumi ), 15 );
+Add( typeof( LesserManaPotion ), 5 );
+Add( typeof( ManaPotion ), 15 );
+Add( typeof( GreaterManaPotion ), 30 );
 
 
 

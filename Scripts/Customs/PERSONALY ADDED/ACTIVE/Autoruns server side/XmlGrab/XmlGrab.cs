@@ -44,12 +44,12 @@ namespace Server.Commands
 		private const  int FreelyLootableFame = 1000;
 
 		/* minimum reward for corpes */
-		private const  int MinimumReward = 5;
+//		private const  int MinimumReward = 5; //REMED OUT SO THAT REGULAR MOBS WONT GIVE GOLD WHEN USE GRAB COMMAND
 		
 		/* Reward = (((mob fame + |mob karma| + player fame + |player karma|)/1.5) / FameDivisor)
 			Lower divisor yeilds higher reward.  In this formula, it pays to keep your fame
 			and karma high.	 */
-		private  const int FameDivisor = 150;
+//		private  const int FameDivisor = 150;//REMED OUT SO THAT REGULAR MOBS WONT GIVE GOLD WHEN USE GRAB COMMAND
 
 
 		public static void Initialize()
@@ -197,7 +197,7 @@ namespace Server.Commands
                     GetItems(lootoptions, from, lootitems);
 
                     // alrighty then, we have all the items we want, now award gold for this corpse, delete it and increment the body count
-                    AwardGold(from, bod, lootBag);
+//                    AwardGold(from, bod, lootBag); //REMED OUT SO THAT REGULAR MOBS WONT GIVE GOLD WHEN USE GRAB COMMAND
                     bod.Delete();
 
                     // empty lootitems arraylist
@@ -313,18 +313,18 @@ namespace Server.Commands
 			return ( null == lootBag ) ? from.Backpack : lootBag;
 		}
 
-// ================================  reward the player for not leaving those stinking corpses lying about
-		public static void AwardGold( Mobile from, Corpse corpse, Container lootbag )
-		{
-			BaseCreature mob = corpse.Owner as BaseCreature;
-			int mobBasis = ( mob == null ? MinimumReward : mob.Fame + Math.Abs( mob.Karma ) );
-			int playerBasis = ( from.Fame + Math.Abs( from.Karma ) );
-			int amount = Math.Max( (int)((mobBasis + playerBasis) / 1.5) / FameDivisor, MinimumReward );
-			if ( !lootbag.TryDropItem( from, new Gold(amount), false ) )	// Attempt to stack it
-				lootbag.DropItem( new Gold(amount) );
-			from.PlaySound( 0x2E6 ); // drop gold sound
-
-		}
+// ================================  reward the player for not leaving those stinking corpses lying about //REMED OUT SO THAT REGULAR MOBS WONT GIVE GOLD WHEN USE GRAB COMMAND
+//		public static void AwardGold( Mobile from, Corpse corpse, Container lootbag )
+//		{
+//			BaseCreature mob = corpse.Owner as BaseCreature;
+//			int mobBasis = ( mob == null ? MinimumReward : mob.Fame + Math.Abs( mob.Karma ) );
+//			int playerBasis = ( from.Fame + Math.Abs( from.Karma ) );
+//			int amount = Math.Max( (int)((mobBasis + playerBasis) / 1.5) / FameDivisor, MinimumReward );
+//			if ( !lootbag.TryDropItem( from, new Gold(amount), false ) )	// Attempt to stack it
+//				lootbag.DropItem( new Gold(amount) );
+//			from.PlaySound( 0x2E6 ); // drop gold sound
+//
+//		}
 
 // ================================   Is someone too close for comfort?
 		public static bool BlockingMobilesInRange( Mobile from, int range )
