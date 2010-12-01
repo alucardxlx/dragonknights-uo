@@ -9,7 +9,7 @@ namespace Server.Misc
 {
 	public class StatusPage : Timer
 	{
-		public static bool Enabled = false;
+		public static bool Enabled = true;
 
 		public static void Initialize()
 		{
@@ -40,18 +40,26 @@ namespace Server.Misc
 			if ( !Directory.Exists( "web" ) )
 				Directory.CreateDirectory( "web" );
 
-			using ( StreamWriter op = new StreamWriter( "web/status.html" ) )
+			using ( StreamWriter op = new StreamWriter( "s:/status.html" ) )
 			{
 				op.WriteLine( "<html>" );
+
+
+
 				op.WriteLine( "   <head>" );
-				op.WriteLine( "      <title>RunUO Server Status</title>");
+				op.WriteLine( "      <title>DragonKnights UO Server Status</title>");
 				op.WriteLine( "   </head>" );
-				op.WriteLine( "   <body bgcolor=\"white\">" );
-				op.WriteLine( "      <h1>RunUO Server Status</h1>" );
-				op.WriteLine( "      Online clients:<br>" );
-				op.WriteLine( "      <table width=\"100%\">" );
-				op.WriteLine( "         <tr>" );
-				op.WriteLine( "            <td bgcolor=\"black\"><font color=\"white\">Name</font></td><td bgcolor=\"black\"><font color=\"white\">Location</font></td><td bgcolor=\"black\"><font color=\"white\">Kills</font></td><td bgcolor=\"black\"><font color=\"white\">Karma / Fame</font></td>" );
+				op.WriteLine( "   <body bgcolor=\"black\">" );
+				op.WriteLine( " <img src= http://dragonknights.kicks-ass.net/themes/Black_Enuff_Yellow/images/logo.jpg <br> " );
+				op.WriteLine( "      <h1><font color =\"gold\">UltimaOnline Server Status</font></h1>" );
+				op.WriteLine( "<b><font color =\"gold\">Last Updated:</font></b><font color=\"green\"> "+DateTime.Now.ToString() + "</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Total World Items:</font></b><font color=\"green\"> "+World.Items.Count.ToString()+"</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Total World Mobiles:</font></b><font color=\"green\"> " + World.Mobiles.Count.ToString() + "</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Total Online:</font></b><font color=\"green\"> " + NetState.Instances.Count.ToString() + "</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Online clients:</font></b><br>" );
+				op.WriteLine( "<font color=\"green\">      <table width=\"100%\">" );
+				op.WriteLine( "         <tr></font>" );
+				op.WriteLine( "            <td bgcolor=\"white\"><font color=\"black\">Name</font></td><td bgcolor=\"white\"><font color=\"black\">Location</font></td><td bgcolor=\"white\"><font color=\"black\">Kills</font></td><td bgcolor=\"white\"><font color=\"black\">Karma / Fame</font></td>" );
 				op.WriteLine( "         </tr>" );
 
 				foreach ( NetState state in NetState.Instances )
@@ -64,10 +72,39 @@ namespace Server.Misc
 
 						op.Write( "         <tr><td>" );
 
+
+						switch (m.AccessLevel)
+						{
+						case AccessLevel.Player:
+						op.Write( "<font color = FFFFFF><b>Player</b> - " );
+						break; 
+						case AccessLevel.Counselor:
+						op.Write( "<font color = 008000><b>Counselor</b> - " );
+						break; 
+						case AccessLevel.GameMaster:
+						op.Write( "<font color = FF0000><b>GameMaster</b> - " );
+						break; 
+						case AccessLevel.Seer:
+						op.Write( "<font color = FF0000><b>Seer</b> - " );
+						break; 
+						case AccessLevel.Administrator:
+						op.Write( "<font color = FF0000><b>Administrator</b> - " );
+						break; 
+						case AccessLevel.Developer:
+						op.Write( "<font color = FF0000><b>Developer</b> - " );
+						break; 
+						case AccessLevel.Owner:
+						op.Write( "<font color = 0000FF><b>Owner</b> - " );
+						break; 
+						} 
+
+
+
+
 						if ( g != null )
 						{
 							op.Write( Encode( m.Name ) );
-							op.Write( " [" );
+							op.Write( " [ " );
 
 							string title = m.GuildTitle;
 
@@ -91,7 +128,7 @@ namespace Server.Misc
 							op.Write( Encode( m.Name ) );
 						}
 
-						op.Write( "</td><td>" );
+						op.Write( "</td><td><font color = 008000>" );
 						op.Write( m.X );
 						op.Write( ", " );
 						op.Write( m.Y );
@@ -99,9 +136,9 @@ namespace Server.Misc
 						op.Write( m.Z );
 						op.Write( " (" );
 						op.Write( m.Map );
-						op.Write( ")</td><td>" );
+						op.Write( ")</td><td><font color = FF0000>" );
 						op.Write( m.Kills );
-						op.Write( "</td><td>" );
+						op.Write( "</td><td><font color = 800080>" );
 						op.Write( m.Karma );
 						op.Write( " / " );
 						op.Write( m.Fame );

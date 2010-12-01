@@ -20,6 +20,10 @@ namespace Server.Mobiles
 		{
 			public InternalBuyInfo()
 			{
+				Add( new GenericBuyInfo( typeof( LesserManaPotion ), 10, 50, 0xF0C, 98 ) );
+				Add( new GenericBuyInfo( typeof( ManaPotion ), 30, 50, 0xF0C, 93 ) );
+				Add( new GenericBuyInfo( typeof( GreaterManaPotion ), 60, 50, 0xF0C, 88 ) );
+
 				Add( new GenericBuyInfo( typeof( Bandage ), 5, 20, 0xE21, 0 ) );
 				Add( new GenericBuyInfo( typeof( LesserHealPotion ), 15, 20, 0xF0C, 0 ) );
 				Add( new GenericBuyInfo( typeof( Ginseng ), 3, 20, 0xF85, 0 ) );
@@ -32,6 +36,10 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
+				Add( typeof( LesserManaPotion ), 5 );
+				Add( typeof( ManaPotion ), 15 );
+				Add( typeof( GreaterManaPotion ), 30 );
+
 				Add( typeof( Bandage ), 1 );
 				Add( typeof( LesserHealPotion ), 7 );
 				Add( typeof( RefreshPotion ), 7 );

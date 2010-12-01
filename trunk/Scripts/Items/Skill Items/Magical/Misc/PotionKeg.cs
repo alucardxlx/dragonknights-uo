@@ -231,11 +231,28 @@ namespace Server.Items
 				else if ( m_Held == 0 )
 				{
 					#region Mondain's Legacy
-					if ( (int) pot.PotionEffect >= (int) PotionEffect.Invisibility )
-					{
-						from.SendLocalizedMessage( 502232 ); // The keg is not designed to hold that type of object.
-						return false;
-					}
+//					if ( (int) pot.PotionEffect >= (int) PotionEffect.Invisibility )
+//					{
+//						from.SendLocalizedMessage( 502232 ); // The keg is not designed to hold that type of object.
+//						return false;
+//					}
+////I added for mana potions
+//					if ( (int) pot.PotionEffect >= (int) PotionEffect.Mana )
+//					{
+//						from.SendMessage( 38,"Mana can not be stored in a keg." ); // The keg is not designed to hold that type of object.
+//						return false;
+//					}
+//					if ( (int) pot.PotionEffect >= (int) PotionEffect.ManaLesser )
+//					{
+//						from.SendMessage( 38,"Mana can not be stored in a keg." ); // The keg is not designed to hold that type of object.
+//						return false;
+//					}
+//					if ( (int) pot.PotionEffect >= (int) PotionEffect.ManaGreater )
+//					{
+//						from.SendMessage( 38,"Mana can not be stored in a keg." ); // The keg is not designed to hold that type of object.
+//						return false;
+//					}
+////I added for mana potions
 					#endregion
 					
 					if ( GiveBottle( from, toHold ) )
@@ -343,7 +360,10 @@ namespace Server.Items
 				case PotionEffect.ExplosionLesser:	return new LesserExplosionPotion();
 				case PotionEffect.Explosion:		return new ExplosionPotion();
 				case PotionEffect.ExplosionGreater:	return new GreaterExplosionPotion();
-				
+
+//				case PotionEffect.ManaLesser: return new LesserManaPotion();
+//				case PotionEffect.Mana: return new ManaPotion();
+//				case PotionEffect.ManaGreater: return new GreaterManaPotion();
 				#region Mondain's Legacy
 				case PotionEffect.Conflagration:			return new ConflagrationPotion();
 				case PotionEffect.ConflagrationGreater:		return new GreaterConflagrationPotion();
@@ -351,6 +371,9 @@ namespace Server.Items
 				//case PotionEffect.MaskOfDeathGreater:		return new MaskOfDeathGreaterPotion();
 				case PotionEffect.ConfusionBlast:			return new ConfusionBlastPotion();
 				case PotionEffect.ConfusionBlastGreater:	return new GreaterConfusionBlastPotion();
+				case PotionEffect.ManaLesser:		return new LesserManaPotion();
+				case PotionEffect.Mana:				return new ManaPotion();
+				case PotionEffect.ManaGreater:		return new GreaterManaPotion();
 				#endregion
 			}
 		}

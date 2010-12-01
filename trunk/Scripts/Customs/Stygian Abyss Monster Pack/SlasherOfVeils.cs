@@ -44,6 +44,13 @@ namespace Server.Mobiles
 			SetSkill( SkillName.Wrestling, 118.9, 128.6 );
 		}
 
+		public override void GenerateLoot()
+		{			
+			AddLoot( LootPack.UltraRich, 5 );
+			AddLoot( LootPack.MedScrolls, 2 );
+			AddLoot( LootPack.Gems, 5 ); 
+		}
+
 		public override int GetIdleSound() { return 1589; } 
 		public override int GetAngerSound() { return 1586; } 
 		public override int GetHurtSound() { return 1588; } 

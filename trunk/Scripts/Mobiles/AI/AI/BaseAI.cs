@@ -2555,7 +2555,7 @@ namespace Server.Mobiles
 					if ( m is PlayerMobile && ( (PlayerMobile)m ).HonorActive )
 						continue;
 
-					if( acqType == FightMode.Aggressor || acqType == FightMode.Evil )
+					if( acqType == FightMode.Aggressor || acqType == FightMode.Evil || acqType == FightMode.Good )
 					{
 						// Only acquire this mobile if it attacked us, or if it's evil.
 						bool bValid = false;
@@ -2577,6 +2577,12 @@ namespace Server.Mobiles
 							bValid = ( ((BaseCreature)m).ControlMaster.Karma < 0 );
 							else
 							bValid = ( m.Karma < 0 );
+						}
+						if ( acqType == FightMode.Good && !bValid )
+						{
+							if( m is BaseCreature && ((BaseCreature)m).Controlled && ((BaseCreature)m).ControlMaster != null )
+							bValid = ( ((BaseCreature)m).ControlMaster.Karma > 0 );
+							else bValid = ( m.Karma > 0 );
 						}
 
 						if ( !bValid )

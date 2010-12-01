@@ -26,7 +26,7 @@ namespace Server.Gumps
                 "[grab",
 //                "[grab bag",
                 "[grab options",
-//                // bag management
+                // bag management
 //                "[own",
 //                "[own bag",
                 "[dump",
@@ -38,7 +38,7 @@ namespace Server.Gumps
 //                "quest",
 //                "[myquest",
 //                "[dropquest",
-                "[rp",
+//                "[rp",
 //                "[rewardcheck <number>",
 //                // player town guard
 //                "promote",
@@ -46,20 +46,20 @@ namespace Server.Gumps
 //                "retire",
 //                "[deployguard <guard type>",
 //                "[releaseGuard",
-//                // henchmen
-//                "hire",
-//                "<name / all> help",
-//                "<name / all> dress",
-//                "<name / all> undress",
-//                "<name / all> arm",
-//                "<name / all> disarm",
-//                "<name / all> mount",
-//                "<name / all> dismount",
-//                "<name / all> stats",
-//                "<name / all> pow",
-//                "<name / all> grab",
-//                "<name / all> unload",
-//                "<name / all> heal",
+                // henchmen
+                "hire",
+                "<name / all> help",
+                "<name / all> dress",
+                "<name / all> undress",
+                "<name / all> arm",
+                "<name / all> disarm",
+                "<name / all> mount",
+                "<name / all> dismount",
+                "<name / all> stats",
+                "<name / all> pow",
+                "<name / all> grab",
+                "<name / all> unload",
+                "<name / all> heal",
 //                // Craft
 //                "[BODPoint",
 //                // Misc
@@ -152,34 +152,34 @@ namespace Server.Gumps
 //
 //                "When you are a guard captain, use this command and target a NPC guard to release him from his duty. It is actually a good practice to remove town guards whenever you don't need them anymore, so other players can use them when such need rises elsewhere in the town.",
 //
-//                // henchmen
-//                "Say this keyword next to a henchman not in employment yet, and he will tell you how much he charges per UO day (which is 2 real life hours). Drop a pile of gold on him to hire him. ",
-//
-//                "A keyword command you speak to your henchmen. This list all the special commands the henchman will follow.",
-//                
-//                "A keyword command you speak to your henchmen. The henchman will attempt to equip himself from the top layer of his backpack. Equipments include clothing, armors, shields, jewelries - pretty much anything a player can wear. " +
-//                "<br>This is probably the most important command to remember, as when your henchman is dressed up with something you gave him and then dies, once you ressurect him, he will not attempt to re-dress, until you told him to. When you are still in a hostile environment, you want to issue this command quickly to bring him back under protection.",
-//
-//                "A keyword command you speak to your henchmen. The henchman will get everything undressed into his backpack, including weapons. ",
-//                
-//                "A keyword command you speak to your henchmen. The henchman will attempt to equip himself with weapon/shield from the top layer of his backpack. If there are multiple weapons/shields in his backpack, re-issuing the command will make him cycle through each one of them.",
-//                
-//                "A keyword command you speak to your henchmen. The henchman will put any weapons/shield he wields into his backpack. ",
-//                
-//                "A keyword command you speak to your henchmen. Have the henchman ride a mount you designate to him. ",
-//                
-//                "A keyword command you speak to your henchmen. Have the henchman dismount. ",
-//                
-//                "A keyword command you speak to your henchmen. This will bring up a gump that shows the vital stats and skills of the henchman. This is a gump similar to the animal lore gump, and tailored for henchman. ",
-//                
-//                "A keyword command you speak to your henchmen. This will command the henchman to use special attack ability for his next attack, more or less like a player. If the henchman has enough mana, he will charge it and use it. Otherwise he will wait until he has enough mana. This is only useful for fighter and archer, as currently the mage AI is bare handed and will not try engage the mob and use the only possible special attack \"disarm\". ",
-//                
-//                "A keyword command you speak to your henchmen. The henchman will try grab anything around him on the ground, and try loot any corpse around him that he has looting right to. The henchman's looting right is the same as your looting right. There is a special bag called lootbag in every henchman's backpack. Anything he picked up will be dumped into his lootbag.",
-//
-//                "A keyword command you speak to your henchmen. The henchman will unload everything in his lootbag as well as anything in his backpack top layer (saving supplies and his original gear) to your backpack.",
-//
-//                "A keyword command you speak to your henchmen. The henchman will try to heal you with bandages if he is not occupied with healing himself, and you are close enough.",
-//
+                // henchmen
+                "Say this keyword next to a henchman not in employment yet, and he will tell you how much he charges per UO day (which is 2 real life hours). Drop a pile of gold on him to hire him. ",
+
+                "A keyword command you speak to your henchmen. This list all the special commands the henchman will follow.",
+                
+                "A keyword command you speak to your henchmen. The henchman will attempt to equip himself from the top layer of his backpack. Equipments include clothing, armors, shields, jewelries - pretty much anything a player can wear. " +
+                "<br>This is probably the most important command to remember, as when your henchman is dressed up with something you gave him and then dies, once you ressurect him, he will not attempt to re-dress, until you told him to. When you are still in a hostile environment, you want to issue this command quickly to bring him back under protection.",
+
+                "A keyword command you speak to your henchmen. The henchman will get everything undressed into his backpack, including weapons. ",
+                
+                "A keyword command you speak to your henchmen. The henchman will attempt to equip himself with weapon/shield from the top layer of his backpack. If there are multiple weapons/shields in his backpack, re-issuing the command will make him cycle through each one of them.",
+                
+                "A keyword command you speak to your henchmen. The henchman will put any weapons/shield he wields into his backpack. ",
+                
+                "A keyword command you speak to your henchmen. Have the henchman ride a mount you designate to him. ",
+                
+                "A keyword command you speak to your henchmen. Have the henchman dismount. ",
+                
+                "A keyword command you speak to your henchmen. This will bring up a gump that shows the vital stats and skills of the henchman. This is a gump similar to the animal lore gump, and tailored for henchman. ",
+                
+                "A keyword command you speak to your henchmen. This will command the henchman to use special attack ability for his next attack, more or less like a player. If the henchman has enough mana, he will charge it and use it. Otherwise he will wait until he has enough mana. This is only useful for fighter and archer, as currently the mage AI is bare handed and will not try engage the mob and use the only possible special attack \"disarm\". ",
+                
+                "A keyword command you speak to your henchmen. The henchman will try grab anything around him on the ground, and try loot any corpse around him that he has looting right to. The henchman's looting right is the same as your looting right. There is a special bag called lootbag in every henchman's backpack. Anything he picked up will be dumped into his lootbag.",
+
+                "A keyword command you speak to your henchmen. The henchman will unload everything in his lootbag as well as anything in his backpack top layer (saving supplies and his original gear) to your backpack.",
+
+                "A keyword command you speak to your henchmen. The henchman will try to heal you with bandages if he is not occupied with healing himself, and you are close enough.",
+
 //                // Craft
 //                "Gives you a target cursor, then you can target a BOD (any type) to evaluate its reward point, which will decide what reward you can get when you do fill and return said BOD.",
 //
@@ -463,9 +463,9 @@ namespace Server.Gumps
     }
 
     public enum CommandName
-    {
-        // communication
-        C,
+    	{
+    	// communication
+    	C,
         CMessage,
         Pm,
         Mail,
@@ -477,47 +477,47 @@ namespace Server.Gumps
         // hunting useful
         BandSelf,
         Grab,
-//        GrabBag,
+        //GrabBag,
         GrabOptions,
         // bag management
-//        Own,
-//        OwnBag,
+        //Own,
+        //OwnBag,
         Dump,
-        Sort,
+        //Sort,
         CraftBag,
         SellBag,
         SellOptions,
         // adventurer's quest
-//        Quest,
-//        MyQuest,
-//        DropQuest,
-//        Rp,
-//        RewardCheck,
-//        // player town guard
-//        Promote,
-//        Reputation,
-//        Retire,
-//        DeployGuard,
-//        ReleaseGuard,
-//        // henchmen
-//        Hire,
-//        HHelp,
-//        HDress,
-//        HUndress,
-//        HArm,
-//        HDisarm,
-//        HMount,
-//        HDismount,
-//        HStats,
-//        HPow,
-//        HGrab,
-//        HUnload,
-//        HHeal,
-//        // Craft
-//        BODPoint,
-//        // Misc
-//        MP,
-//        Door,
+		//Quest,
+		//MyQuest,
+		//DropQuest,
+		//Rp,
+		//RewardCheck,
+		//// player town guard
+		//Promote,
+		//Reputation,
+		//Retire,
+		//DeployGuard,
+		//ReleaseGuard,
+        // henchmen
+        Hire,
+        HHelp,
+        HDress,
+        HUndress,
+        HArm,
+        HDisarm,
+        HMount,
+        HDismount,
+        HStats,
+        HPow,
+        HGrab,
+        HUnload,
+        HHeal,
+        //// Craft
+		//BODPoint,
+		//// Misc
+		//MP,
+		//Door,
     }
 
     public class CommandsGumpGroup
@@ -555,84 +555,89 @@ namespace Server.Gumps
         }
 
         private static CommandsGumpGroup[] m_Groups = new CommandsGumpGroup[]
-			{
-				new CommandsGumpGroup( "Communication", new CommandName[]
-				{
-                    CommandName.C,
-                    CommandName.CMessage,
-                    CommandName.Pm,
-                    CommandName.Mail,
-                    CommandName.Point,
-				} ),
-				new CommandsGumpGroup( "Quick Communication", new CommandName[]
-				{
-                    CommandName.Msg,
-                    CommandName.Reply,
-                    CommandName.Last,
-				} ),
-				new CommandsGumpGroup( "Hunting Usefuls", new CommandName[]
-				{
-                    CommandName.BandSelf,
-                    CommandName.Grab,
-//                    CommandName.GrabBag,
-                    CommandName.GrabOptions,
-				} ),
-//				new CommandsGumpGroup( "Bag Management", new CommandName[]
-//				{
-//                    CommandName.Own,
-//                    CommandName.OwnBag,
-//                    CommandName.Dump,
-//                    CommandName.Sort,
-//                    CommandName.CraftBag,
-//                    CommandName.SellBag,
-//                    CommandName.SellOptions,
-//                } ),
-//				new CommandsGumpGroup( "Adventurer's Quest", new CommandName[]
-//				{
-//                    CommandName.Quest,
-//                    CommandName.MyQuest,
-//                    CommandName.DropQuest,
-//                    CommandName.Rp,
-//                    CommandName.RewardCheck,
-//                } ),
-//				new CommandsGumpGroup( "Player Town Guard", new CommandName[]
-//				{
-//                    CommandName.Promote,
-//                    CommandName.Reputation,
-//                    CommandName.Retire,
-//                    CommandName.DeployGuard,
-//                    CommandName.ReleaseGuard,
-//				} ),
-//				new CommandsGumpGroup( "Henchmen", new CommandName[]
-//				{
-//                    CommandName.Hire,
-//                    CommandName.HHelp,
-//                    CommandName.HDress,
-//                    CommandName.HUndress,
-//                    CommandName.HArm,
-//                    CommandName.HDisarm,
-//                    CommandName.HMount,
-//                    CommandName.HDismount,
-//                    CommandName.HStats,
-//                    CommandName.HPow,
-//                    CommandName.HGrab,
-//                    CommandName.HUnload,
-//                    CommandName.HHeal,
-//				} ),
-//				new CommandsGumpGroup( "Craft Related", new CommandName[]
-//				{
-//                    CommandName.BODPoint,
-//				} ),
-//				new CommandsGumpGroup( "Misc", new CommandName[]
-//				{
-//                    CommandName.MP,
-//                    CommandName.Door,
-//				} ),
-            };
-
+        	{
+        	new CommandsGumpGroup( "Communication", new CommandName[]
+        	                      {
+        	                      	CommandName.C,
+        	                      	CommandName.CMessage,
+        	                      	CommandName.Pm,
+        	                      	CommandName.Mail,
+        	                      	CommandName.Point,
+        	                      	}
+        	                     ),
+        	new CommandsGumpGroup( "Quick Communication", new CommandName[]
+        	                      {
+        	                      	CommandName.Msg,
+        	                      	CommandName.Reply,
+        	                      	CommandName.Last,
+        	                      	}
+        	                     ),
+        	new CommandsGumpGroup( "Hunting Usefuls", new CommandName[]
+        	                      {
+        	                      	CommandName.BandSelf,
+        	                      	CommandName.Grab,
+        	                      	//CommandName.GrabBag,
+        	                      	CommandName.GrabOptions,
+        	                      	}
+        	                     ),
+        	new CommandsGumpGroup( "Bag Management", new CommandName[]
+        	                      {
+        	                      	//CommandName.Own,
+        	                      	//CommandName.OwnBag,
+        	                      	CommandName.Dump,
+        	                      	//CommandName.Sort,
+        	                      	//CommandName.CraftBag,
+        	                      	CommandName.SellBag,
+        	                      	CommandName.SellOptions,
+        	                      	}
+        	                     ),
+        	//new CommandsGumpGroup( "Adventurer's Quest", new CommandName[]
+        	//				{
+			//                    CommandName.Quest,
+			//                    CommandName.MyQuest,
+			//                    CommandName.DropQuest,
+			//                    CommandName.Rp,
+			//                    CommandName.RewardCheck,
+			//                } ),
+			//				new CommandsGumpGroup( "Player Town Guard", new CommandName[]
+			//				{
+			//                    CommandName.Promote,
+			//                    CommandName.Reputation,
+			//                    CommandName.Retire,
+			//                    CommandName.DeployGuard,
+			//                    CommandName.ReleaseGuard,
+			//				} ),
+			new CommandsGumpGroup( "Henchmen", new CommandName[]
+			                      {
+			                      	CommandName.Hire,
+			                      	CommandName.HHelp,
+			                      	CommandName.HUndress,
+			                      	CommandName.HArm,
+			                      	CommandName.HDisarm,
+			                      	CommandName.HMount,
+			                      	CommandName.HDismount,
+			                      	CommandName.HStats,
+			                      	CommandName.HPow,
+			                      	CommandName.HGrab,
+			                      	CommandName.HUnload,
+			                      	CommandName.HHeal,
+			                      }
+			                     ),
+			//				new CommandsGumpGroup( "Craft Related", new CommandName[]
+			//				{
+			//                    CommandName.BODPoint,
+			//				} ),
+			//				new CommandsGumpGroup( "Misc", new CommandName[]
+			//				{
+			//                    CommandName.MP,
+			//                    CommandName.Door,
+			//				} ),
+			};
+        
         public static CommandsGumpGroup[] Groups
-        {
-            get { return m_Groups; }
+        	{
+        	get { return m_Groups; }
+        	}
         }
     }
-}
+    

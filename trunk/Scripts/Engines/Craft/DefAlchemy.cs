@@ -178,12 +178,27 @@ namespace Server.Engines.Craft
 			// Earthen Mixtures
 			if ( Core.ML )
 			{
-//I added
+//I added start
+
+				//Dirt tile deed
 				index = AddCraft( typeof( DirtTileHouseAddonDeed ), 1074832, "House Tile Dirt Deed", 90.0, 140.0, typeof( FertileDirt ), "Fertile Dirt", 200, "You do not have sufficent dirt to make that." );
 				AddRes( index, typeof ( GreaterCurePotion ), "Greater Cure Potion", 4, "You do not have sufficent greater cure potions to make that." );
 				AddRes( index, typeof ( TotalRefreshPotion ), "Total Refresh Potion", 4, "You do not have sufficent total refresh potions to make that." );
 				AddRes( index, typeof ( GreaterHealPotion ), "Greater Heal Potion", 4, "You do not have sufficent greater heal potions to make that." );
-//I added
+				//Dirt tile deed
+				
+				//mana potions
+				index = AddCraft( typeof( LesserManaPotion ), 1074832, "Lesser Mana Potion", 55.0, 105.0, typeof( MandrakeRoot ), "Mandrake Root", 10, "You do not have sufficent mandrake roots to make that." );
+				AddRes( index, typeof ( Bottle ), 1044529, 1, 500315 );
+
+				index = AddCraft( typeof( ManaPotion ), 1074832, "Mana Potion", 70.0, 120.0, typeof( MandrakeRoot ), "Mandrake Root", 20, "You do not have sufficent mandrake roots to make that." );
+				AddRes( index, typeof ( Bottle ), 1044529, 1, 500315 );
+				
+				index = AddCraft( typeof( GreaterManaPotion ), 1074832, "Greater Mana Potion", 90.0, 120.0, typeof( MandrakeRoot ), "Mandrake Root", 30, "You do not have sufficent mandrake roots to make that." );
+				AddRes( index, typeof ( Bottle ), 1044529, 1, 500315 );
+				//mana potions				
+
+//I added fin
 				index = AddCraft( typeof( InvisibilityPotion ), 1074832, 1074860, 65.0, 115.0, typeof( Bottle ), 1044529, 1, 500315 );
 				AddRes( index, typeof ( Bloodmoss ), 1044354, 4, 1044362 );
 				AddRes( index, typeof ( Nightshade ), 1044358, 4, 1044366 );

@@ -28,6 +28,10 @@ namespace Server.Mobiles
 
 				Add( new GenericBuyInfo( typeof( RecallRune ), 15, 10, 0x1f14, 0 ) );
 
+				Add( new GenericBuyInfo( typeof( LesserManaPotion ), 10, 50, 0xF0C, 98 ) );
+				Add( new GenericBuyInfo( typeof( ManaPotion ), 30, 50, 0xF0C, 93 ) );
+				Add( new GenericBuyInfo( typeof( GreaterManaPotion ), 60, 50, 0xF0C, 88 ) );
+
 				Add( new GenericBuyInfo( typeof( RefreshPotion ), 15, 20, 0xF0B, 0 ) );
 				Add( new GenericBuyInfo( typeof( AgilityPotion ), 15, 20, 0xF08, 0 ) );
 				Add( new GenericBuyInfo( typeof( NightSightPotion ), 15, 20, 0xF06, 0 ) ); 
@@ -64,7 +68,11 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
-				Add( typeof( BlackPearl ), 3 ); 
+				Add( typeof( LesserManaPotion ), 5 );
+				Add( typeof( ManaPotion ), 15 );
+				Add( typeof( GreaterManaPotion ), 30 );
+
+				Add( typeof( BlackPearl ), 3 );
 				Add( typeof( Bloodmoss ), 3 ); 
 				Add( typeof( MandrakeRoot ), 2 ); 
 				Add( typeof( Garlic ), 2 ); 
