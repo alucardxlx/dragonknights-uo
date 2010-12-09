@@ -6,9 +6,9 @@ Public Release: 05/07/05
 Purpose:  A more effective way of storing huge amounts of gold.
 
 Description: 		Gold bars are an effective way of storing large amounts of gold for players.
-			Basically when attempting to create a bank check larger then 500,000 gp, a
-			gold bar will be created for every 500,000 gp. Gold bars when double clicked
-			in a players bank box will change into a 500,000 gp check again. The advantage
+			Basically when attempting to create a bank check larger then 1000000, a
+			gold bar will be created for every 1000000. Gold bars when double clicked
+			in a players bank box will change into a 1000000 check again. The advantage
 			of gold bars to players is that gold bars are stackable, where checks are not.
 			(Because checks have variable values you can't really make them stackable)
 			Rather then increasing the size checks can be, this system provides a more 
@@ -27,7 +27,6 @@ using Server.Network;
 
 namespace Server.Items
 {
-	[FlipableAttribute( 0x1BE9, 0x1BEC )]
 	public class GoldBar : Item 
 	{
 		[Constructable]
@@ -40,7 +39,7 @@ namespace Server.Items
 		{
 			Stackable = true;
 			Amount = amount;
-			Weight = 5.0;
+			Weight = 52.0;
 		}
 
 		public override void AddNameProperty( ObjectPropertyList list )
@@ -51,7 +50,7 @@ namespace Server.Items
 		{
 			base.GetProperties( list );
 
-			list.Add( 1060738, "{0}", Amount * 500000 ); // value: ~1_val~
+			list.Add( 1060738, "{0}", Amount * 1000000 ); // value: ~1_val~
 		}
 		public override void OnSingleClick( Mobile from )
 		{
@@ -74,29 +73,29 @@ namespace Server.Items
 
 				if( this.Amount == 1 )
 				{
-					check = new BankCheck( 500000 );
+					check = new BankCheck( 1000000 );
 					
 					this.Delete();
 
 					if ( box.TryDropItem( pm, check, false ) )
 					{
-						pm.SendMessage("You return your gold bar to the bank and receive a 500,000 gp check.");
+						pm.SendMessage("You return your gold bar to the bank and receive a 1,000,000 check.");
 					}
 					else
 					{
 						check.Delete();
-						pm.AddToBackpack( new BankCheck( 500000 ) );
-						pm.SendMessage("You return your gold bar to the bank and receive a 500,000 gp check.");
+						pm.AddToBackpack( new BankCheck( 1000000 ) );
+						pm.SendMessage("You return your gold bar to the bank and receive a 1,000,000 check.");
 					}
 				}
 				else if( this.Amount >= 2 )
 					{
-					check = new BankCheck( 500000 );
+					check = new BankCheck( 1000000 );
                                 
 					if ( box.TryDropItem( pm, check, false ) )
 					{
 						this.Amount -= 1;
-						pm.SendMessage("You return your gold bar to the bank and receive a 500,000 gp check.");
+						pm.SendMessage("You return your gold bar to the bank and receive a 1,000,000 check.");
 					}
 					else
 					{

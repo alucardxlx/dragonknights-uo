@@ -25,23 +25,24 @@ namespace Server.Items
 		public enum Pages
 		{
 			Start,
-			Logs,
 			Boards,
-			Ingots,
+			Gems,
 			Granites,
-			Scales,
+			Ingots,
 			Leathers,
+			Logs,
 			Misc,
 			Reagents,
-
-			MoreLogs,
+			Scales,
 			MoreBoards,
-			MoreIngots,
+			MoreGems,
 			MoreGranites,
-			MoreScales,
+			MoreIngots,
 			MoreLeathers,
+			MoreLogs,
 			MoreMisc,
-			MoreReagents
+			MoreReagents,
+			MoreScales,
 		}
 
 		public ResourceBoxGump( Mobile from, ResourceBox box, Pages page ) : base( 25, 25 )
@@ -52,9 +53,9 @@ namespace Server.Items
 
 			AddPage( 0 );
 
-			AddBackground( 50, 10, 455, 280, 83 );
-			AddImageTiled( 58, 20, 438, 262, 2624 );
-			AddAlphaRegion( 58, 20, 438, 262 );
+			AddBackground( 50, 10, 455, 305, 83 );
+			AddImageTiled( 58, 20, 438, 287, 2624 );
+			AddAlphaRegion( 58, 20, 438, 287 );
 
 			AddButton( 75, 25, 4026, 4027, 1, GumpButtonType.Reply, 0 );
 			AddLabel( 110, 25, 0x8AB, "Add Resource" );
@@ -65,62 +66,69 @@ namespace Server.Items
 			{
 				AddLabel( 225, 25, 0x480, "Choose Resource" );
 
-				AddLabel( 110, 75, 1152, "Logs" );
+				AddLabel( 110, 75, 1152, "Boards" );
 				AddButton( 75, 75, 4005, 4007, 10, GumpButtonType.Reply, 0 );
-				AddLabel( 110, 100, 1152, "Boards" );
+				AddLabel( 110, 100, 1152, "Gems" );
 				AddButton( 75, 100, 4005, 4007, 11, GumpButtonType.Reply, 0 );
-				AddLabel( 110, 125, 1152, "Ingots" );
+				AddLabel( 110, 125, 1152, "Granites" );
 				AddButton( 75, 125, 4005, 4007, 12, GumpButtonType.Reply, 0 );
-				AddLabel( 110, 150, 1152, "Granites" );
+				AddLabel( 110, 150, 1152, "Ingots" );
 				AddButton( 75, 150, 4005, 4007, 13, GumpButtonType.Reply, 0 );
-				AddLabel( 110, 175, 1152, "Scales" );
+				AddLabel( 110, 175, 1152, "Leathers" );
 				AddButton( 75, 175, 4005, 4007, 14, GumpButtonType.Reply, 0 );
-				AddLabel( 110, 200, 1152, "Leathers" );
+				AddLabel( 110, 200, 1152, "Logs" );
 				AddButton( 75, 200, 4005, 4007, 15, GumpButtonType.Reply, 0 );
 				AddLabel( 110, 225, 1152, "Misc" );
 				AddButton( 75, 225, 4005, 4007, 16, GumpButtonType.Reply, 0 );
 				AddLabel( 110, 250, 1152, "Reagents" );
 				AddButton( 75, 250, 4005, 4007, 17, GumpButtonType.Reply, 0 );
+				AddLabel( 110, 275, 1152, "Scales" );
+				AddButton( 75, 275, 4005, 4007, 18, GumpButtonType.Reply, 0 );
 
-				if( StorageTypes.Logs.Length > 16 )
-				{
-					AddLabel( 310, 75, 1152, "More Woods" );
-					AddButton( 275, 75, 4005, 4007, 18, GumpButtonType.Reply, 0 );
-				}
 				if( StorageTypes.Boards.Length > 16 )
 				{
-					AddLabel( 310, 100, 1152, "More Boards" );
-					AddButton( 275, 100, 4005, 4007, 19, GumpButtonType.Reply, 0 );
+					AddLabel( 310, 75, 1152, "More Boards" );
+					AddButton( 275, 75, 4005, 4007, 19, GumpButtonType.Reply, 0 );
 				}
-				if( StorageTypes.Ingots.Length > 16 )
+				if( StorageTypes.Gems.Length > 16 )
 				{
-					AddLabel( 310, 125, 1152, "More Ingots" );
-					AddButton( 275, 125, 4005, 4007, 20, GumpButtonType.Reply, 0 );
+					AddLabel( 310, 100, 1152, "More Gems" );
+					AddButton( 275, 100, 4005, 4007, 20, GumpButtonType.Reply, 0 );
 				}
 				if( StorageTypes.Granites.Length > 16 )
 				{
-					AddLabel( 310, 150, 1152, "More Granites" );
-					AddButton( 275, 150, 4005, 4007, 21, GumpButtonType.Reply, 0 );
+					AddLabel( 310, 125, 1152, "More Granites" );
+					AddButton( 275, 125, 4005, 4007, 21, GumpButtonType.Reply, 0 );
 				}
-				if( StorageTypes.Scales.Length > 16 )
+				if( StorageTypes.Ingots.Length > 16 )
 				{
-					AddLabel( 310, 175, 1152, "More Scales" );
-					AddButton( 275, 175, 4005, 4007, 22, GumpButtonType.Reply, 0 );
+					AddLabel( 310, 150, 1152, "More Ingots" );
+					AddButton( 275, 150, 4005, 4007, 22, GumpButtonType.Reply, 0 );
 				}
 				if( StorageTypes.Leathers.Length > 16 )
 				{
-					AddLabel( 310, 200, 1152, "More Leathers" );
-					AddButton( 275, 200, 4005, 4007, 23, GumpButtonType.Reply, 0 );
+					AddLabel( 310, 175, 1152, "More Leathers" );
+					AddButton( 275, 175, 4005, 4007, 23, GumpButtonType.Reply, 0 );
+				}
+				if( StorageTypes.Logs.Length > 16 )
+				{
+					AddLabel( 310, 200, 1152, "More Logs" );
+					AddButton( 275, 200, 4005, 4007, 24, GumpButtonType.Reply, 0 );
 				}
 				if( StorageTypes.Misc.Length > 16 )
 				{
 					AddLabel( 310, 225, 1152, "More Misc" );
-					AddButton( 275, 225, 4005, 4007, 24, GumpButtonType.Reply, 0 );
+					AddButton( 275, 225, 4005, 4007, 25, GumpButtonType.Reply, 0 );
 				}
 				if( StorageTypes.Reagents.Length > 16 )
 				{
 					AddLabel( 310, 250, 1152, "More Reagents" );
-					AddButton( 275, 250, 4005, 4007, 25, GumpButtonType.Reply, 0 );
+					AddButton( 275, 250, 4005, 4007, 26, GumpButtonType.Reply, 0 );
+				}
+				if( StorageTypes.Scales.Length > 16 )
+				{
+					AddLabel( 310, 275, 1152, "More Scales" );
+					AddButton( 275, 275, 4005, 4007, 27, GumpButtonType.Reply, 0 );
 				}
 			}
 
@@ -139,23 +147,25 @@ namespace Server.Items
 			int Offset = 0;
 			switch( (int)m_Page )
 			{
-				case (int)Pages.Logs:			{m_Types = StorageTypes.Logs;			Label = "Logs";		Offset = 0;		break;}
 				case (int)Pages.Boards:			{m_Types = StorageTypes.Boards;		Label = "Boards";		Offset = 0;		break;}
-				case (int)Pages.Ingots:			{m_Types = StorageTypes.Ingots;		Label = "Ingots";		Offset = 0;		break;}
+				case (int)Pages.Gems: 		{m_Types = StorageTypes.Gems;	Label = "Gems";	Offset = 0;		break;}
 				case (int)Pages.Granites:		{m_Types = StorageTypes.Granites;	Label = "Granites";	Offset = 0;		break;}
-				case (int)Pages.Scales:			{m_Types = StorageTypes.Scales;		Label = "Scales";		Offset = 0;		break;}
+				case (int)Pages.Ingots:			{m_Types = StorageTypes.Ingots;		Label = "Ingots";		Offset = 0;		break;}
 				case (int)Pages.Leathers: 		{m_Types = StorageTypes.Leathers;	Label = "Leathers";	Offset = 0;		break;}
+				case (int)Pages.Logs:			{m_Types = StorageTypes.Logs;			Label = "Logs";		Offset = 0;		break;}
 				case (int)Pages.Misc: 			{m_Types = StorageTypes.Misc;			Label = "Misc";		Offset = 0;		break;}
 				case (int)Pages.Reagents: 		{m_Types = StorageTypes.Reagents;	Label = "Reagents";	Offset = 0;		break;}
+				case (int)Pages.Scales:			{m_Types = StorageTypes.Scales;		Label = "Scales";		Offset = 0;		break;}
 
-				case (int)Pages.MoreLogs: 		{m_Types = StorageTypes.Logs;			Label = "More Logs";		Offset = 16;	break;}
 				case (int)Pages.MoreBoards: 	{m_Types = StorageTypes.Boards;		Label = "More Boards";	Offset = 16;	break;}
-				case (int)Pages.MoreIngots:	{m_Types = StorageTypes.Ingots;		Label = "More Ingots";	Offset = 16;	break;}
+				case (int)Pages.MoreGems:	{m_Types = StorageTypes.Gems;	Label = "More Gems";Offset = 16;	break;}
 				case (int)Pages.MoreGranites:	{m_Types = StorageTypes.Granites;	Label = "More Granites";Offset = 16;	break;}
-				case (int)Pages.MoreScales:	{m_Types = StorageTypes.Scales;		Label = "More Scales";	Offset = 16;	break;}
+				case (int)Pages.MoreIngots:	{m_Types = StorageTypes.Ingots;		Label = "More Ingots";	Offset = 16;	break;}
 				case (int)Pages.MoreLeathers:	{m_Types = StorageTypes.Leathers;	Label = "More Leathers";Offset = 16;	break;}
+				case (int)Pages.MoreLogs: 		{m_Types = StorageTypes.Logs;			Label = "More Logs";		Offset = 16;	break;}
 				case (int)Pages.MoreMisc:		{m_Types = StorageTypes.Misc;			Label = "More Misc";		Offset = 16;	break;}
 				case (int)Pages.MoreReagents:	{m_Types = StorageTypes.Reagents;	Label = "More Reagents";Offset = 16;	break;}
+				case (int)Pages.MoreScales:	{m_Types = StorageTypes.Scales;		Label = "More Scales";	Offset = 16;	break;}
 			}
 
 			for( int i = Offset; i < m_Types.Length && i < 16 + Offset; i++ )
@@ -193,7 +203,7 @@ namespace Server.Items
 			private ResourceBox m_Box;
 			private Pages m_Page;
 
-			public ResourceBoxTarget( ResourceBox box, Pages page ) : base( 18, false, TargetFlags.None )
+			public ResourceBoxTarget( ResourceBox box, Pages page ) : base( 19, false, TargetFlags.None )//was 18 changed to 19
 			{
 					m_Box = box;
 					m_Page = page;

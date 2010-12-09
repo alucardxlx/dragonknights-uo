@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<!--
+     ___|========================|___
+     \  |  Written by Felladrin  |  /	This code was released on RunUO Forums.
+      > |      December 2010     | <
+     /__|========================|__\	[Online Book CodeGen] - Current version: 1.0.0 (December 08, 2010)
+-->
+<html>
+	<head>
+		<title>Online Book Code Generator for RunUO</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QAAAAAAAD5Q7t/AAABzklEQVQ4y8WSMWtTYRSGn8hNDSFNrohWYhSRXMTQSXEpAemi4KI/oWAnBwd/h5MgIgoOziIdKlQHEUTUoQQjKAmFSAaHZMk1Q+53zrmfw00uLWTvWV/O+z7n5cBxTwFg+8U3f/F0mTQ1zFJSMxInPN7aKAA8ePrB4w1VRUVQVX4e/GX/5cNC4f7zL57CCZ5tXctd0zRlb/8PdzeuFADefv7l79y4fCT5+vYTKpUKAYCZAdDtdjHLkjbX1/nx+8Cvrla5sHaKTqeDmTGdTmm32ziXIG4lM1BVAKIowswQEYbDIcPBgFarRZKUiaIIESGOYwBckuBOrhB4DyoCQK/XI01TRIRarUYcxyRJkmuqynQ6pV6v45xDnCNITZG5QRRFWVGqjEYjvPf5zc1mE1VlMpkAIM4hIgSqijiH955+v593UK1W8+WFtiBoNBqZgTtkcJjAOcd4PMZ7n1MsCBYdiAgqjkAlWwAolUp5YrlcJgxDwjAkCAKKxeIRw8WpgYjDJQk3H71CnCDicrx77at473n97muWqIrNF80MFSUQES6dP7P0Td98+o6KcvvW5lJ9Z2eXYDabMYj/zZOPEpxbO4uZsff+41KCdP6Axzv/AeQCZUH19fmZAAAAAElFTkSuQmCC" rel="icon" type="image/x-icon" />
+	</head>
+
+	<body>
+		<center>
+			<h1>Online Book Code Generator for RunUO</h1>
+			<form name="form">
+				<div id="edition">
+					<table>
+					<tr>
+					<td>Book Title</td><td><input name="title" type="text" size="25" maxlength="24" onblur="document.form.file.value = 'CBook' + this.value.replace(/ /g,'')"></td><td> Max: 24 Characters</td>
+					</tr>
+					<tr>
+					<td>Book Author</td><td><input name="author" type="text" size="25" maxlength="24" onblur="document.form.cover.value = Math.floor(Math.random()*1001)"></td><td> Max: 24 Characters</td>
+					</tr>
+					<tr>
+					<td>File Name</td><td><input name="file" type="text" size="25" maxlength="30"></td><td> Max: 30 Characters</td>
+					</tr>
+					<tr>
+					<td>Cover Hue</td><td><input name="cover" type="text" size="25" maxlength="4"></td><td> From 0 to 1000</td>
+					</tr>
+					</table>
+					<br>---- Book Content ----<br>
+					<textarea name="text" rows="10" cols="60"></textarea><br>
+					<input type="button" value="Show me the code!" onclick="showCode()">
+				</div>
+				<div id="result" style="display:none">
+					<textarea name="thecode" rows="25" cols="100"></textarea><br>
+					<input type="button" value="Back to Edition" onclick="backToEdition()">
+					<input type="button" value="Compress!" onclick="compress(document.form.thecode.value)">
+				</div>
+			</form>
+		</center>
+
+		<script language="JavaScript">
+		function genCode() //collects the data and generates the code.
+		{
+			var bookTitle = document.form.title.value;
+			var bookAuthor = document.form.author.value;
+			var coverHue = document.form.cover.value;
+			var fileName = document.form.file.value;
+			var content = document.form.text.value;
+
+			content = content.replace(/"/g,"'"); //replaces all double quotes by single quotes to avoid errors on the generated code.
+			content = content.replace(/\n/g,' '); //replaces all breaklines with a space to avoid errors on the generated code.
+			content = content.replace(/(^\s*)|(\s*$)/gi,""); //removes spaces at the start and at the end. 
+			content = content.replace(/[ ]{2,}/gi," "); //makes a recursive scan to remove multiple spaces.
+			content = splitText(content,24); //splits the book content in 24 characters per line and 8 lines per page.
+
+			var heading = 'using System;\nusing Server;\n\nnamespace Server.Items\n{\n\tpublic class ' + fileName + ' : BlueBook\n\t{\n\t\tpublic static readonly BookContent Content = new BookContent\n\t\t(\n\t\t\t"' + bookTitle + '", "' + bookAuthor + '",\n\n\t\t\tnew BookPageInfo\n\t\t\t(\n\t\t\t\t"';
+			var footer = '"\n\t\t\t)\n\t\t);\n\n\t\tpublic override BookContent DefaultContent{ get{ return Content; } }\n\n\t\t[Constructable]\n\t\tpublic ' + fileName + '() : base( false )\n\t\t{\n\t\t\tHue = ' + coverHue + ';\n\t\t}\n\n\t\tpublic ' + fileName + '( Serial serial ) : base( serial )\n\t\t{\n\t\t}\n\n\t\tpublic override void Serialize( GenericWriter writer )\n\t\t{\n\t\t\tbase.Serialize( writer );\n\t\t\twriter.WriteEncodedInt( (int)0 );\n\t\t}\n\n\t\tpublic override void Deserialize( GenericReader reader )\n\t\t{\n\t\t\tbase.Deserialize( reader );\n\t\t\tint version = reader.ReadEncodedInt();\n\t\t}\n\t}\n}';
+
+			document.form.thecode.value = heading + content + footer;
+		}
+
+		function splitText(text, characters) //makes the dirty job, analysing the text and putting it in runuo code format.
+		{
+			var splited = '';
+			var rest = text;
+			var page = 1;
+
+			while (rest.length > characters)
+			{
+				var line = rest.substring(0, characters);
+				var lineEnd = line.lastIndexOf(' ');
+				var pageEnd = line.lastIndexOf('",\n\t\t\t\t"');
+
+				if (pageEnd != -1)
+					lineEnd = pageEnd;
+
+				if (lineEnd == -1)
+					lineEnd = characters;
+
+				if ((page % 8) == 0)
+				{
+					splited += line.substring(0, lineEnd) + '"\n\t\t\t),\n\t\t\tnew BookPageInfo\n\t\t\t(\n\t\t\t\t"';
+					page++;
+				}
+				else
+				{
+					splited += line.substring(0, lineEnd) + '",\n\t\t\t\t"';
+					page++;
+				}
+
+				rest = rest.substring(lineEnd + 1);
+			}
+
+			return splited + rest;
+		}
+
+		function showCode() //generates the code, hide the edition, and show the result block.
+		{
+			if ( checkFileName(document.form.file.value) ) //only proceeds if the file name is ok.
+			{
+				genCode();
+				document.getElementById('edition').style.display = 'none';
+				document.getElementById('result').style.display = 'block';
+			}
+		}
+
+		function backToEdition() //hides the result, and show the edition block.
+		{
+			document.getElementById('result').style.display = 'none';
+			document.getElementById('edition').style.display = 'block';
+		}
+
+		function compress(code) //removes all tabs, braklines and useless blank spaces.
+		{
+			code = code.replace(/\n/g,' ').replace(/\t/g,' ');
+			while(code.indexOf('  ') >= 0) code = code.replace(/  /g,' ');
+			document.form.thecode.value = code;
+		}
+
+		function checkFileName(name) //checks if the file name has special characters or accents.
+		{
+			var sChars = "%^!&*()+=-:<>[]\\\';@#$,./{}|\"?~_";
+
+			for(var i = 0; i < name.length; i++)
+			{
+				if(name.charCodeAt(i) > 127 || sChars.indexOf(name.charAt(i)) >= 0)
+				{
+					alert ("The file name has some special characters.\nPlease remove them before continuing.");
+					return false;
+				}
+			}
+
+			return true;
+		}
+		</script>
+	</body>
+</html>
