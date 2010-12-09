@@ -45,8 +45,11 @@ namespace Server.Items
 			get { return 10.0; }
 		}
 
-		public BaseGranite( CraftResource resource ) : base( 0x1779 )
+//Modded from - 		public BaseGranite( CraftResource resource ) : base( 0x1779 ) - to what it is below
+		public BaseGranite( CraftResource resource, int amount ) : base( 0x1779 )
 		{
+			Stackable = true;//I ADDED
+			Amount = amount;//I ADDED
 			Hue = CraftResources.GetHue( resource );
 
 			m_Resource = resource;
@@ -78,7 +81,12 @@ namespace Server.Items
 	public class Granite : BaseGranite
 	{
 		[Constructable]
-		public Granite() : base( CraftResource.Iron )
+		public Granite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public Granite( int amount ) : base( CraftResource.Iron, amount )
 		{
 		}
 
@@ -99,12 +107,25 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+		
+		
+		
+//		public override BaseGranite GetGranite()
+//		{
+//			return new Granite();
+//		}
 	}
+
 
 	public class DullCopperGranite : BaseGranite
 	{
 		[Constructable]
-		public DullCopperGranite() : base( CraftResource.DullCopper )
+		public DullCopperGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public DullCopperGranite( int amount ) : base( CraftResource.DullCopper, amount )
 		{
 		}
 
@@ -125,12 +146,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new DullCopperGranite();
+//		}
 	}
 
 	public class ShadowIronGranite : BaseGranite
 	{
 		[Constructable]
-		public ShadowIronGranite() : base( CraftResource.ShadowIron )
+		public ShadowIronGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public ShadowIronGranite( int amount ) : base( CraftResource.ShadowIron, amount )
 		{
 		}
 
@@ -151,12 +181,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new ShadowIronGranite();
+//		}
 	}
 
 	public class CopperGranite : BaseGranite
 	{
 		[Constructable]
-		public CopperGranite() : base( CraftResource.Copper )
+		public CopperGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public CopperGranite( int amount ) : base( CraftResource.Copper, amount )
 		{
 		}
 
@@ -177,12 +216,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new CopperGranite();
+//		}
 	}
 
 	public class BronzeGranite : BaseGranite
 	{
 		[Constructable]
-		public BronzeGranite() : base( CraftResource.Bronze )
+		public BronzeGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public BronzeGranite( int amount ) : base( CraftResource.Bronze, amount )
 		{
 		}
 
@@ -203,12 +251,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new BronzeGranite();
+//		}
 	}
 
 	public class GoldGranite : BaseGranite
 	{
 		[Constructable]
-		public GoldGranite() : base( CraftResource.Gold )
+		public GoldGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public GoldGranite( int amount ) : base( CraftResource.Gold, amount )
 		{
 		}
 
@@ -229,12 +286,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new GoldGranite();
+//		}
 	}
 
 	public class AgapiteGranite : BaseGranite
 	{
 		[Constructable]
-		public AgapiteGranite() : base( CraftResource.Agapite )
+		public AgapiteGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public AgapiteGranite( int amount ) : base( CraftResource.Agapite, amount )
 		{
 		}
 
@@ -255,12 +321,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new AgapiteGranite();
+//		}
 	}
 
 	public class VeriteGranite : BaseGranite
 	{
 		[Constructable]
-		public VeriteGranite() : base( CraftResource.Verite )
+		public VeriteGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public VeriteGranite( int amount ) : base( CraftResource.Verite, amount )
 		{
 		}
 
@@ -281,12 +356,21 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new VeriteGranite();
+//		}
 	}
 
 	public class ValoriteGranite : BaseGranite
 	{
 		[Constructable]
-		public ValoriteGranite() : base( CraftResource.Valorite )
+		public ValoriteGranite() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public ValoriteGranite( int amount ) : base( CraftResource.Valorite, amount )
 		{
 		}
 
@@ -307,5 +391,11 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
+//		public override BaseGranite GetGranite()
+//		{
+//			return new Granite();
+//		}
 	}
 }
+	
+	

@@ -20,14 +20,15 @@ namespace Server.Items
 	{
 		private static Type[][] m_AllTypes = new Type[][]
 		{
-			StorageTypes.Logs,
 			StorageTypes.Boards,
-			StorageTypes.Ingots,
+			StorageTypes.Gems,
 			StorageTypes.Granites,
-			StorageTypes.Scales,
+			StorageTypes.Ingots,
 			StorageTypes.Leathers,
+			StorageTypes.Logs,
 			StorageTypes.Misc,
 			StorageTypes.Reagents,
+			StorageTypes.Scales,
 		};
 		public Type[][] AllTypes{ get{ return m_AllTypes; } }
 

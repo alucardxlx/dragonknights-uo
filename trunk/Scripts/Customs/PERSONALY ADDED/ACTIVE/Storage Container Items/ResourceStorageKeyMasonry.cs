@@ -187,7 +187,7 @@ namespace Server.Items
             Name = "Masonry Worker's Keys";
             LootType = LootType.Blessed;
             StorageLimit = 60000;
-            WithdrawIncrement = 1;
+            WithdrawIncrement = 100;
         }
 
         [Constructable]
@@ -451,47 +451,54 @@ namespace Server.Items
 
             AddPage(0);
 
-            AddBackground(50, 10, 455, 260, 5054);
-            AddImageTiled(58, 20, 438, 241, 2624);
-            AddAlphaRegion(58, 20, 438, 241);
+            AddBackground(50, 10, 455, 260 + 100, 5054);
+            AddImageTiled(58, 20, 438, 241 + 100, 2624);
+            AddAlphaRegion(58, 20, 438, 241 + 100);
 
-            AddLabel(200, 25, 88, "Masonry Warehouse");
+            AddLabel(227, 25, 88, "Masonry Warehouse");
+// Kazuha 
+	    AddLabel(125, 50, 0x486, "Withdraw Increment:");
+	    AddLabel(275, 50, 0x480, key.WithdrawIncrement.ToString());
+	    AddButton(330, 50, 4011, 4012, 26, GumpButtonType.Reply, 0);
+	    AddButton(360, 50, 4011, 4012, 27, GumpButtonType.Reply, 0);
+	    AddButton(390, 50, 4011, 4012, 28, GumpButtonType.Reply, 0);
+// /Kazuha
 
-            AddLabel(125, 50, 0x486, "Granite");
-            AddLabel(225, 50, 0x480, key.Granite.ToString());
-            AddButton(75, 50, 4005, 4007, 1, GumpButtonType.Reply, 0);
+            AddLabel(125, 75, 0x486, "Granite");
+            AddLabel(225, 75, 0x480, key.Granite.ToString());
+            AddButton(75, 75, 4005, 4007, 1, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 75, 0x486, "Dull Copper");
-            AddLabel(225, 75, 0x480, key.DullCopper.ToString());
-            AddButton(75, 75, 4005, 4007, 2, GumpButtonType.Reply, 0);
+            AddLabel(125, 100, 0x486, "Dull Copper");
+            AddLabel(225, 100, 0x480, key.DullCopper.ToString());
+            AddButton(75, 100, 4005, 4007, 2, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 100, 0x486, "Shadow Iron");
-            AddLabel(225, 100, 0x480, key.ShadowIron.ToString());
-            AddButton(75, 100, 4005, 4007, 3, GumpButtonType.Reply, 0);
+            AddLabel(125, 125, 0x486, "Shadow Iron");
+            AddLabel(225, 125, 0x480, key.ShadowIron.ToString());
+            AddButton(75, 125, 4005, 4007, 3, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 125, 0x486, "Copper");
-            AddLabel(225, 125, 0x480, key.Copper.ToString());
-            AddButton(75, 125, 4005, 4007, 4, GumpButtonType.Reply, 0);
+            AddLabel(125, 150, 0x486, "Copper");
+            AddLabel(225, 150, 0x480, key.Copper.ToString());
+            AddButton(75, 150, 4005, 4007, 4, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 150, 0x486, "Bronze");
-            AddLabel(225, 150, 0x480, key.Bronze.ToString());
-            AddButton(75, 150, 4005, 4007, 5, GumpButtonType.Reply, 0);
+            AddLabel(125, 175, 0x486, "Bronze");
+            AddLabel(225, 175, 0x480, key.Bronze.ToString());
+            AddButton(75, 175, 4005, 4007, 5, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 175, 0x486, "Gold");
-            AddLabel(225, 175, 0x480, key.Gold.ToString());
-            AddButton(75, 175, 4005, 4007, 6, GumpButtonType.Reply, 0);
+            AddLabel(125, 200, 0x486, "Gold");
+            AddLabel(225, 200, 0x480, key.Gold.ToString());
+            AddButton(75, 200, 4005, 4007, 6, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 200, 0x486, "Agapite");
-            AddLabel(225, 200, 0x480, key.Agapite.ToString());
-            AddButton(75, 200, 4005, 4007, 7, GumpButtonType.Reply, 0);
+            AddLabel(125, 225, 0x486, "Agapite");
+            AddLabel(225, 225, 0x480, key.Agapite.ToString());
+            AddButton(75, 225, 4005, 4007, 7, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 225, 0x486, "Verite");
-            AddLabel(225, 225, 0x480, key.Verite.ToString());
-            AddButton(75, 225, 4005, 4007, 8, GumpButtonType.Reply, 0);
+            AddLabel(125, 250, 0x486, "Verite");
+            AddLabel(225, 250, 0x480, key.Verite.ToString());
+            AddButton(75, 250, 4005, 4007, 8, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 50, 0x486, "Valorite");
-            AddLabel(425, 50, 0x480, key.Valorite.ToString());
-            AddButton(275, 50, 4005, 4007, 9, GumpButtonType.Reply, 0);
+            AddLabel(325, 75, 0x486, "Valorite");
+            AddLabel(425, 75, 0x480, key.Valorite.ToString());
+            AddButton(275, 75, 4005, 4007, 9, GumpButtonType.Reply, 0);
 
 //            AddLabel(325, 75, 0x486, "Fluorite");
 //            AddLabel(425, 75, 0x480, key.Fluorite.ToString());
@@ -501,14 +508,14 @@ namespace Server.Items
 //            AddLabel(425, 100, 0x480, key.Platinum.ToString());
 //            AddButton(275, 100, 4005, 4007, 11, GumpButtonType.Reply, 0);
 			
-            AddLabel(325, 175, 88, "Each Max:");
-            AddLabel(425, 175, 0x480, key.StorageLimit.ToString());
+            AddLabel(325, 275, 88, "Each Max:");
+            AddLabel(425, 275, 0x480, key.StorageLimit.ToString());
 
-            AddLabel(325, 200, 88, "Add Granite");
-            AddButton(275, 200, 4005, 4007, 15, GumpButtonType.Reply, 0);
+            AddLabel(325, 300, 88, "Add Granite");
+            AddButton(275, 300, 4005, 4007, 15, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 225, 88, "Collect all from backpack");
-            AddButton(275, 225, 4005, 4007, 16, GumpButtonType.Reply, 0);
+            AddLabel(325, 325, 88, "Collect all from backpack");
+            AddButton(275, 325, 4005, 4007, 16, GumpButtonType.Reply, 0);
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
@@ -520,12 +527,28 @@ namespace Server.Items
                 m_From.SendMessage("That key must be in your backpack or bankbox for you to use it.");
                 return;
             }
+            else if (info.ButtonID == 26)
+            	{
+            	m_Key.WithdrawIncrement = 100;
+            	m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));
+            	}
+            else if (info.ButtonID == 27)
+            {
+                m_Key.WithdrawIncrement = 500;
+                m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));
+            }
+            else if (info.ButtonID == 28)
+            {
+                m_Key.WithdrawIncrement = 1000;
+                m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));
+            }
+            
             else if (info.ButtonID == 1)
             {
-                if (m_Key.Granite > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Granite > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new Granite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Granite = (m_Key.Granite - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new Granite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Granite = (m_Key.Granite - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Granite > 0)
@@ -543,10 +566,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 2)
             {
-                if (m_Key.DullCopper > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.DullCopper > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new DullCopperGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.DullCopper = (m_Key.DullCopper - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new DullCopperGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.DullCopper = (m_Key.DullCopper - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.DullCopper > 0)
@@ -564,10 +587,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 3)
             {
-                if (m_Key.ShadowIron > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.ShadowIron > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new ShadowIronGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.ShadowIron = (m_Key.ShadowIron - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new ShadowIronGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.ShadowIron = (m_Key.ShadowIron - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.ShadowIron > 0)
@@ -585,10 +608,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 4)
             {
-                if (m_Key.Copper > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Copper > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new CopperGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Copper = (m_Key.Copper - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new CopperGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Copper = (m_Key.Copper - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Copper > 0)
@@ -606,10 +629,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 5)
             {
-                if (m_Key.Bronze > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Bronze > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new BronzeGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Bronze = (m_Key.Bronze - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new BronzeGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Bronze = (m_Key.Bronze - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Bronze > 0)
@@ -627,10 +650,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 6)
             {
-                if (m_Key.Gold > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Gold > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new GoldGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Gold = (m_Key.Gold - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new GoldGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Gold = (m_Key.Gold - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Gold > 0)
@@ -648,10 +671,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 7)
             {
-                if (m_Key.Agapite > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Agapite > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new AgapiteGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Agapite = (m_Key.Agapite - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new AgapiteGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Agapite = (m_Key.Agapite - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Agapite > 0)
@@ -669,10 +692,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 8)
             {
-                if (m_Key.Verite > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Verite > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new VeriteGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Verite = (m_Key.Verite - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new VeriteGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Verite = (m_Key.Verite - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Verite > 0)
@@ -690,10 +713,10 @@ namespace Server.Items
             }
             else if (info.ButtonID == 9)
             {
-                if (m_Key.Valorite > 0)								//if the key currently holds more ot this type than the increment amount
+                if (m_Key.Valorite > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
                 {
-                    m_From.AddToBackpack(new ValoriteGranite());  	//Send the increment amount of this type to players backpack
-                    m_Key.Valorite = (m_Key.Valorite - 1);				//removes that many from the keys count
+                    m_From.AddToBackpack(new ValoriteGranite(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Valorite = (m_Key.Valorite - m_Key.WithdrawIncrement);				//removes that many from the keys count
                     m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
                 }
                 else if (m_Key.Valorite > 0)
@@ -709,6 +732,28 @@ namespace Server.Items
                     m_Key.BeginCombine(m_From);
                 }
             }
+// NOTE CAN BE DONE LIKE THE FOLLOWIING  - CHECK BELOW NUMBER 9 AND NUMBER 10
+//            else if (info.ButtonID == 9)
+//            {
+//                if (m_Key.Valorite > 0)								//if the key currently holds more ot this type than the increment amount
+//                {
+//                    m_From.AddToBackpack(new ValoriteGranite());  	//Send the increment amount of this type to players backpack
+//                    m_Key.Valorite = (m_Key.Valorite - 1);				//removes that many from the keys count
+//                    m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
+//                }
+//                else if (m_Key.Valorite > 0)
+//                {
+//                    m_From.AddToBackpack(new ValoriteGranite(m_Key.Valorite));  					//Sends all stored Valorite of whichever type to players backpack
+//                    m_Key.Valorite = 0;						     						//Sets the count in the key back to 0
+//                    m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));					//Resets the gump with the new info
+//                }
+//                else
+//                {
+//                    m_From.SendMessage("You do not have any of that Granite!");
+//                    m_From.SendGump(new ResourceStorageKeyMasonryGump(m_From, m_Key));
+//                    m_Key.BeginCombine(m_From);
+//                }
+//            }
 //            else if (info.ButtonID == 10)
 //            {
 //                if (m_Key.Fluorite > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount

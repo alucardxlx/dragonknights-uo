@@ -135,7 +135,7 @@ namespace Server.Gumps
 					}
 				case 7: // #7 Site's url
 					{
-						sender.LaunchBrowser( "http://aaaservices.homeip.net/UO-status/status.html" );
+						sender.LaunchBrowser( "http://aaaservices.homeip.net/UO/status.html" );
 						break;
 					}
 					

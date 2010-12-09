@@ -29,7 +29,12 @@ namespace Server.Items
         private int m_FireRuby;
         private int m_DarkSapphire;
         private int m_WhitePearl;
-
+        private int m_BlueDiamond;
+        private int m_EcruCitrine;
+        private int m_Turquoise;
+        private int m_BrilliantAmber;
+        private int m_PerfectEmerald;
+        
         private int m_Gold;
 //        private int m_Apple;
 
@@ -80,6 +85,21 @@ namespace Server.Items
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Gold { get { return m_Gold; } set { m_Gold = value; InvalidateProperties(); } }
+        
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int BlueDiamond { get { return m_BlueDiamond; } set { m_BlueDiamond = value; InvalidateProperties(); } }
+        
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int EcruCitrine { get { return m_EcruCitrine; } set { m_EcruCitrine = value; InvalidateProperties(); } }
+        
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Turquoise { get { return m_Turquoise; } set { m_Turquoise = value; InvalidateProperties(); } }
+        
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int BrilliantAmber { get { return m_BrilliantAmber; } set { m_BrilliantAmber = value; InvalidateProperties(); } }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int PerfectEmerald { get { return m_PerfectEmerald; } set { m_PerfectEmerald = value; InvalidateProperties(); } }
 
 //        [CommandProperty(AccessLevel.GameMaster)]
 //        public int Apple { get { return m_Apple; } set { m_Apple = value; InvalidateProperties(); } }
@@ -94,9 +114,26 @@ namespace Server.Items
                 return;
             }
 
-            Type[] type = new Type[] { typeof(Diamond), typeof(Sapphire), typeof(StarSapphire),
-                typeof(Emerald), typeof(Ruby), typeof(Amethyst), typeof(Citrine), typeof(Tourmaline),
-                typeof(Amber), typeof(FireRuby), typeof(DarkSapphire), typeof(WhitePearl)
+            Type[] type = new Type[] 
+            { 
+            	typeof(Gold),
+            	typeof(Diamond),
+            	typeof(Sapphire),
+            	typeof(StarSapphire),
+            	typeof(Emerald),
+            	typeof(Ruby),
+            	typeof(Amethyst),
+            	typeof(Citrine),
+            	typeof(Tourmaline),
+            	typeof(Amber),
+            	typeof(FireRuby),
+            	typeof(DarkSapphire),
+            	typeof(WhitePearl),
+            	typeof (BlueDiamond),
+            	typeof(EcruCitrine),
+            	typeof(Turquoise),
+            	typeof(BrilliantAmber),
+            	typeof(PerfectEmerald)
             };
             Item[] items = from.Backpack.FindItemsByType(type, true);
             for (int j = 0; j < items.Length; j++)
@@ -134,6 +171,16 @@ namespace Server.Items
                 	currentAmount = m_WhitePearl;
                 else if (item is Gold)
                     currentAmount = m_Gold;
+                else if (item is BlueDiamond)
+                    currentAmount = m_BlueDiamond;
+                else if (item is EcruCitrine)
+                    currentAmount = m_EcruCitrine;
+                else if (item is Turquoise)
+                    currentAmount = m_Turquoise;
+                else if (item is BrilliantAmber)
+                    currentAmount = m_BrilliantAmber;
+                else if (item is PerfectEmerald)
+                    currentAmount = m_PerfectEmerald;
                 	
 //                else if (item is Apple)
 //                    currentAmount = m_Apple;
@@ -168,6 +215,16 @@ namespace Server.Items
                         m_WhitePearl += amount;
                     else if (item is Gold)
                         m_Gold += amount;
+                    else if (item is BlueDiamond)
+                        m_BlueDiamond += amount;
+                    else if (item is EcruCitrine)
+                        m_EcruCitrine += amount;
+                    else if (item is Turquoise)
+                        m_Turquoise += amount;
+                    else if (item is BrilliantAmber)
+                        m_BrilliantAmber += amount;
+                    else if (item is PerfectEmerald)
+                        m_PerfectEmerald += amount;
 //                    else if (item is Apple)
 //                        m_Apple += amount;
 
@@ -386,6 +443,78 @@ namespace Server.Items
                             BeginCombine(from);
                         }
                     }
+                    
+
+                    
+                    
+                    
+                    
+                    else if (curItem is BlueDiamond)
+                    {
+
+                        if (BlueDiamond + curItem.Amount > StorageLimit)
+                            from.SendMessage("You are trying to add " + ((BlueDiamond + curItem.Amount) - m_StorageLimit) + " too much! The warehouse can store only " + m_StorageLimit + " of this resource.");
+                        else
+                        {
+                            curItem.Delete();
+                            BlueDiamond = (BlueDiamond + curItem.Amount);
+                            from.SendGump(new ResourceStorageKeyJewelGump((PlayerMobile)from, this));
+                            BeginCombine(from);
+                        }
+                    }
+                    else if (curItem is EcruCitrine)
+                    {
+
+                        if (EcruCitrine + curItem.Amount > StorageLimit)
+                            from.SendMessage("You are trying to add " + ((EcruCitrine + curItem.Amount) - m_StorageLimit) + " too much! The warehouse can store only " + m_StorageLimit + " of this resource.");
+                        else
+                        {
+                            curItem.Delete();
+                            EcruCitrine = (EcruCitrine + curItem.Amount);
+                            from.SendGump(new ResourceStorageKeyJewelGump((PlayerMobile)from, this));
+                            BeginCombine(from);
+                        }
+                    }
+                    else if (curItem is Turquoise)
+                    {
+
+                        if (Turquoise + curItem.Amount > StorageLimit)
+                            from.SendMessage("You are trying to add " + ((Turquoise + curItem.Amount) - m_StorageLimit) + " too much! The warehouse can store only " + m_StorageLimit + " of this resource.");
+                        else
+                        {
+                            curItem.Delete();
+                            Turquoise = (Turquoise + curItem.Amount);
+                            from.SendGump(new ResourceStorageKeyJewelGump((PlayerMobile)from, this));
+                            BeginCombine(from);
+                        }
+                    }
+                    else if (curItem is BrilliantAmber)
+                    {
+
+                        if (BrilliantAmber + curItem.Amount > StorageLimit)
+                            from.SendMessage("You are trying to add " + ((BrilliantAmber + curItem.Amount) - m_StorageLimit) + " too much! The warehouse can store only " + m_StorageLimit + " of this resource.");
+                        else
+                        {
+                            curItem.Delete();
+                            BrilliantAmber = (BrilliantAmber + curItem.Amount);
+                            from.SendGump(new ResourceStorageKeyJewelGump((PlayerMobile)from, this));
+                            BeginCombine(from);
+                        }
+                    }
+                    else if (curItem is PerfectEmerald)
+                    {
+
+                        if (PerfectEmerald + curItem.Amount > StorageLimit)
+                            from.SendMessage("You are trying to add " + ((PerfectEmerald + curItem.Amount) - m_StorageLimit) + " too much! The warehouse can store only " + m_StorageLimit + " of this resource.");
+                        else
+                        {
+                            curItem.Delete();
+                            PerfectEmerald = (PerfectEmerald + curItem.Amount);
+                            from.SendGump(new ResourceStorageKeyJewelGump((PlayerMobile)from, this));
+                            BeginCombine(from);
+                        }
+                    }
+
 //                    else if (curItem is Apple)
 //                    {
 //
@@ -446,7 +575,11 @@ namespace Server.Items
             writer.Write((int)m_FireRuby);
             writer.Write((int)m_DarkSapphire);
             writer.Write((int)m_WhitePearl);
-            
+            writer.Write((int)m_BlueDiamond);
+            writer.Write((int)m_EcruCitrine);
+            writer.Write((int)m_Turquoise);
+            writer.Write((int)m_BrilliantAmber);
+            writer.Write((int)m_PerfectEmerald);
             
         }
 
@@ -470,7 +603,13 @@ namespace Server.Items
             m_WithdrawIncrement = reader.ReadInt();
             m_FireRuby = reader.ReadInt();
             m_DarkSapphire = reader.ReadInt();
-            m_WhitePearl = reader.ReadInt();            
+            m_WhitePearl = reader.ReadInt();
+            m_BlueDiamond = reader.ReadInt();
+            m_EcruCitrine = reader.ReadInt();
+            m_Turquoise = reader.ReadInt();
+            m_BrilliantAmber = reader.ReadInt();
+            m_PerfectEmerald = reader.ReadInt();
+
         }
     }
 
@@ -489,9 +628,9 @@ namespace Server.Items
 
             AddPage(0);
 
-            AddBackground(50, 10, 455, 280, 5054);
-            AddImageTiled(58, 20, 438, 260, 2624);
-            AddAlphaRegion(58, 20, 438, 260);
+            AddBackground(50, 10, 455, 280 + 100, 5054);
+            AddImageTiled(58, 20, 438, 260 + 100, 2624);
+            AddAlphaRegion(58, 20, 438, 260 + 100);
 
             AddLabel(200, 25, 88, "Jewel  Warehouse");
 	    AddLabel(125, 50, 0x486, "Withdraw Increment:");
@@ -500,70 +639,96 @@ namespace Server.Items
 	    AddButton(360, 50, 4011, 4012, 18, GumpButtonType.Reply, 0);
 	    AddButton(390, 50, 4011, 4012, 19, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 75, 0x486, "Diamond");
-            AddLabel(225, 75, 0x480, key.Diamond.ToString());
-            AddButton(75, 75, 4005, 4007, 1, GumpButtonType.Reply, 0);
+            AddLabel(125, 225, 0x486, "Diamond");
+            AddLabel(225, 225, 0x480, key.Diamond.ToString());
+            AddButton(75, 225, 4005, 4007, 1, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 100, 0x486, "Sapphire");
-            AddLabel(225, 100, 0x480, key.Sapphire.ToString());
-            AddButton(75, 100, 4005, 4007, 2, GumpButtonType.Reply, 0);
+            AddLabel(325, 100, 0x486, "Sapphire");
+            AddLabel(425, 100, 0x480, key.Sapphire.ToString());
+            AddButton(275, 100, 4005, 4007, 2, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 125, 0x486, "Star Sapphire");
-            AddLabel(225, 125, 0x480, key.StarSapphire.ToString());
-            AddButton(75, 125, 4005, 4007, 3, GumpButtonType.Reply, 0);
+            AddLabel(325, 125, 0x486, "Star Sapphire");
+            AddLabel(425, 125, 0x480, key.StarSapphire.ToString());
+            AddButton(275, 125, 4005, 4007, 3, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 150, 0x486, "Emerald");
-            AddLabel(225, 150, 0x480, key.Emerald.ToString());
-            AddButton(75, 150, 4005, 4007, 4, GumpButtonType.Reply, 0);
+            AddLabel(125, 275, 0x486, "Emerald");
+            AddLabel(225, 275, 0x480, key.Emerald.ToString());
+            AddButton(75, 275, 4005, 4007, 4, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 175, 0x486, "Ruby");
-            AddLabel(225, 175, 0x480, key.Ruby.ToString());
-            AddButton(75, 175, 4005, 4007, 5, GumpButtonType.Reply, 0);
+            AddLabel(325, 75, 0x486, "Ruby");
+            AddLabel(425, 75, 0x480, key.Ruby.ToString());
+            AddButton(275, 75, 4005, 4007, 5, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 200, 0x486, "Amethyst");
-            AddLabel(225, 200, 0x480, key.Amethyst.ToString());
-            AddButton(75, 200, 4005, 4007, 6, GumpButtonType.Reply, 0);
+            AddLabel(125, 100, 0x486, "Amethyst");
+            AddLabel(225, 100, 0x480, key.Amethyst.ToString());
+            AddButton(75, 100, 4005, 4007, 6, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 225, 0x486, "Citrine");
-            AddLabel(225, 225, 0x480, key.Citrine.ToString());
-            AddButton(75, 225, 4005, 4007, 7, GumpButtonType.Reply, 0);
+            AddLabel(125, 175, 0x486, "Citrine");
+            AddLabel(225, 175, 0x480, key.Citrine.ToString());
+            AddButton(75, 175, 4005, 4007, 7, GumpButtonType.Reply, 0);
 
-            AddLabel(125, 250, 0x486, "Tourmaline");
-            AddLabel(225, 250, 0x480, key.Tourmaline.ToString());
-            AddButton(75, 250, 4005, 4007, 8, GumpButtonType.Reply, 0);
+            AddLabel(325, 150, 0x486, "Tourmaline");
+            AddLabel(425, 150, 0x480, key.Tourmaline.ToString());
+            AddButton(275, 150, 4005, 4007, 8, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 75, 0x486, "Amber");
-            AddLabel(425, 75, 0x480, key.Amber.ToString());
-            AddButton(275, 75, 4005, 4007, 9, GumpButtonType.Reply, 0);
+            AddLabel(125, 75, 0x486, "Amber");
+            AddLabel(225, 75, 0x480, key.Amber.ToString());
+            AddButton(75, 75, 4005, 4007, 9, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 100, 0x486, "Gold");
-            AddLabel(425, 100, 0x480, key.Gold.ToString());
-            AddButton(275, 100, 4005, 4007, 10, GumpButtonType.Reply, 0);
+            AddLabel(125, 325, 0x486, "Gold");
+            AddLabel(225, 325, 0x480, key.Gold.ToString());
+            AddButton(75, 325, 4005, 4007, 10, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 125, 0x486, "DarkSapphire");
-            AddLabel(425, 125, 0x480, key.DarkSapphire.ToString());
-            AddButton(275, 125, 4005, 4007, 11, GumpButtonType.Reply, 0);
+            AddLabel(125, 200, 0x486, "DarkSapphire");
+            AddLabel(225, 200, 0x480, key.DarkSapphire.ToString());
+            AddButton(75, 200, 4005, 4007, 11, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 150, 0x486, "WhitePearl");
-            AddLabel(425, 150, 0x480, key.WhitePearl.ToString());
-            AddButton(275, 150, 4005, 4007, 12, GumpButtonType.Reply, 0);
+            AddLabel(325, 200, 0x486, "WhitePearl");
+            AddLabel(425, 200, 0x480, key.WhitePearl.ToString());
+            AddButton(275, 200, 4005, 4007, 12, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 175, 0x486, "FireRuby");
-            AddLabel(425, 175, 0x480, key.FireRuby.ToString());
-            AddButton(275, 175, 4005, 4007, 13, GumpButtonType.Reply, 0);
+            AddLabel(125, 300, 0x486, "FireRuby");
+            AddLabel(225, 300, 0x480, key.FireRuby.ToString());
+            AddButton(75, 300, 4005, 4007, 13, GumpButtonType.Reply, 0);
 
             //AddLabel(325, 125, 0x486, "Apple");
             //AddLabel(425, 125, 0x480, key.Apple.ToString());
             //AddButton(275, 125, 4005, 4007, 11, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 200, 88, "Each Max:");
-            AddLabel(425, 200, 0x480, key.StorageLimit.ToString());
+            AddLabel(325, 275, 88, "Each Max:");
+            AddLabel(425, 275, 0x480, key.StorageLimit.ToString());
 
-            AddLabel(325, 225, 88, "Add ");
-            AddButton(275, 225, 4005, 4007, 15, GumpButtonType.Reply, 0);
+            AddLabel(325, 300, 88, "Add ");
+            AddButton(275, 300, 4005, 4007, 15, GumpButtonType.Reply, 0);
 
-            AddLabel(325, 250, 88, "Collect all from backpack");
-            AddButton(275, 250, 4005, 4007, 16, GumpButtonType.Reply, 0);
+            AddLabel(325, 325, 88, "Collect all from backpack");
+            AddButton(275, 325, 4005, 4007, 16, GumpButtonType.Reply, 0);
+
+            
+            
+            
+            AddLabel(125, 125, 0x486, "BlueDiamond");
+            AddLabel(225, 125, 0x480, key.BlueDiamond.ToString());
+            AddButton(75, 125, 4005, 4007, 20, GumpButtonType.Reply, 0);
+            
+            AddLabel(125, 250, 0x486, "EcruCitrine");
+            AddLabel(225, 250, 0x480, key.EcruCitrine.ToString());
+            AddButton(75, 250, 4005, 4007, 21, GumpButtonType.Reply, 0);
+            
+            AddLabel(325, 175, 0x486, "Turquoise");
+            AddLabel(425, 175, 0x480, key.Turquoise.ToString());
+            AddButton(275, 175, 4005, 4007, 22, GumpButtonType.Reply, 0);
+            
+            AddLabel(125, 150, 0x486, "BrilliantAmber");
+            AddLabel(225, 150, 0x480, key.BrilliantAmber.ToString());
+            AddButton(75, 150, 4005, 4007, 23, GumpButtonType.Reply, 0);
+
+            AddLabel(125, 350, 0x486, "PerfectEmerald");
+            AddLabel(225, 350, 0x480, key.PerfectEmerald.ToString());
+            AddButton(75, 350, 4005, 4007, 24, GumpButtonType.Reply, 0);
+            
+            
+            
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
@@ -871,6 +1036,153 @@ namespace Server.Items
                     m_Key.BeginCombine(m_From);
                 }
             }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            else if (info.ButtonID == 20)
+            {
+                if (m_Key.BlueDiamond > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
+                {
+                    m_From.AddToBackpack(new BlueDiamond(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.BlueDiamond = m_Key.BlueDiamond - m_Key.WithdrawIncrement;				//removes that many from the keys count
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else if (m_Key.BlueDiamond > 0)
+                {
+                    m_From.AddToBackpack(new BlueDiamond(m_Key.BlueDiamond));  					//Sends all stored Amber of whichever type to players backpack
+                    m_Key.BlueDiamond = 0;						     						//Sets the count in the key back to 0
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else
+                {
+                    m_From.SendMessage("You do not have any of that !");
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));
+                    m_Key.BeginCombine(m_From);
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            else if (info.ButtonID == 21)
+            {
+                if (m_Key.EcruCitrine > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
+                {
+                    m_From.AddToBackpack(new EcruCitrine(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.EcruCitrine = m_Key.EcruCitrine - m_Key.WithdrawIncrement;				//removes that many from the keys count
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else if (m_Key.EcruCitrine > 0)
+                {
+                    m_From.AddToBackpack(new EcruCitrine(m_Key.EcruCitrine));  					//Sends all stored Amber of whichever type to players backpack
+                    m_Key.EcruCitrine = 0;						     						//Sets the count in the key back to 0
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else
+                {
+                    m_From.SendMessage("You do not have any of that !");
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));
+                    m_Key.BeginCombine(m_From);
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            else if (info.ButtonID == 22)
+            {
+                if (m_Key.Turquoise > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
+                {
+                    m_From.AddToBackpack(new Turquoise(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.Turquoise = m_Key.Turquoise - m_Key.WithdrawIncrement;				//removes that many from the keys count
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else if (m_Key.Turquoise > 0)
+                {
+                    m_From.AddToBackpack(new Turquoise(m_Key.Turquoise));  					//Sends all stored Amber of whichever type to players backpack
+                    m_Key.Turquoise = 0;						     						//Sets the count in the key back to 0
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else
+                {
+                    m_From.SendMessage("You do not have any of that !");
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));
+                    m_Key.BeginCombine(m_From);
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            else if (info.ButtonID == 23)
+            {
+                if (m_Key.BrilliantAmber > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
+                {
+                    m_From.AddToBackpack(new BrilliantAmber(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.BrilliantAmber = m_Key.BrilliantAmber - m_Key.WithdrawIncrement;				//removes that many from the keys count
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else if (m_Key.BrilliantAmber > 0)
+                {
+                    m_From.AddToBackpack(new BrilliantAmber(m_Key.BrilliantAmber));  					//Sends all stored Amber of whichever type to players backpack
+                    m_Key.BrilliantAmber = 0;						     						//Sets the count in the key back to 0
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else
+                {
+                    m_From.SendMessage("You do not have any of that !");
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));
+                    m_Key.BeginCombine(m_From);
+                }
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            else if (info.ButtonID == 24)
+            {
+                if (m_Key.PerfectEmerald > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount
+                {
+                    m_From.AddToBackpack(new PerfectEmerald(m_Key.WithdrawIncrement));  	//Send the increment amount of this type to players backpack
+                    m_Key.PerfectEmerald = m_Key.PerfectEmerald - m_Key.WithdrawIncrement;				//removes that many from the keys count
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else if (m_Key.PerfectEmerald > 0)
+                {
+                    m_From.AddToBackpack(new PerfectEmerald(m_Key.PerfectEmerald));  					//Sends all stored Amber of whichever type to players backpack
+                    m_Key.PerfectEmerald = 0;						     						//Sets the count in the key back to 0
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));					//Resets the gump with the new info
+                }
+                else
+                {
+                    m_From.SendMessage("You do not have any of that !");
+                    m_From.SendGump(new ResourceStorageKeyJewelGump(m_From, m_Key));
+                    m_Key.BeginCombine(m_From);
+                }
+            }
+            
 //            else if (info.ButtonID == 11)
 //            {
 //                if (m_Key.Apple > m_Key.WithdrawIncrement)								//if the key currently holds more ot this type than the increment amount

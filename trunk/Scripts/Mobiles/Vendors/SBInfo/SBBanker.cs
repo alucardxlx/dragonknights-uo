@@ -21,6 +21,7 @@ namespace Server.Mobiles
 		{
 			public InternalBuyInfo()
 			{
+				Add( new GenericBuyInfo( "GoldBar", typeof( GoldBar ), 1000000, 20, 0x1BE9, 0 ) );
 				Add( new GenericBuyInfo( "1041243", typeof( ContractOfEmployment ), 1252, 20, 0x14F0, 0 ) );
 
 				if ( Multis.BaseHouse.NewVendorSystem )
@@ -33,6 +34,7 @@ namespace Server.Mobiles
 		{
 			public InternalSellInfo()
 			{
+//				Add( typeof( GoldBar ), 1000000 );
 			}
 		}
 	}
