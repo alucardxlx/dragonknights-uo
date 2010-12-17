@@ -373,16 +373,19 @@ namespace Server.Items
 
             AddPage(0);
 
-            AddBackground(0, 0, 790, 470, 3000);
+            AddBackground(0, 0, 790, 470, 5054);
+            AddImageTiled(8, 10, 773, 451, 2624);
+            AddAlphaRegion(8, 10, 773, 451);
+
             AddPage(0);
-            AddLabel(310, 7, 25, "Scribers Tome");
+            AddLabel(310, 7, 88, "SCRIBERS TOME");
 
             AddButton(5, 10, 2462, 2461, 1, GumpButtonType.Reply, 0);
-            AddLabel(70, 7, 25, "Add individual scroll");
+            AddLabel(70, 7, 38, "Add individual scroll");
             AddButton(730, 10, 2462, 2461, 2, GumpButtonType.Reply, 0);
-            AddLabel(520, 7, 25, "Collect all scrolls from backpack");
+            AddLabel(520, 7, 38, "Collect all scrolls from backpack");
             AddButton(300, 440, 0xFBE, 0xFBF, 3, GumpButtonType.Reply, 0);
-            AddLabel(350, 437, 25, "Auto withdraw and fill a spellbook");
+            AddLabel(350, 437, 38, "Auto withdraw and fill a spellbook");
 
             int x = 5, y = 0;
             for (int i = 0; i < 80; i++)
@@ -395,7 +398,7 @@ namespace Server.Items
                 }
                 AddButton(x, 28 + y * 20, 2443, 2444, i + 100, GumpButtonType.Reply, 0);
                 AddHtml(x + 10, 30 + y * 20, 70, 20, ((i % 2 == 0) ? "<basefont color=#f8f8f8>" : "<basefont color=#0000ff>") + ((ScrollEntry)tome.GlobalEntry[i]).Amount.ToString() + "</basefont>", false, false);
-                AddHtml(x + 70, 30 + y * 20, 155, 20, "<basefont color=#0000ff>" + ResourceStorageKeyScribersTome.ScrollsNames[i] + "</basefont>", false, false);
+                AddHtml(x + 70, 30 + y * 20, 155, 20, "<basefont color=#FFDE00>" + ResourceStorageKeyScribersTome.ScrollsNames[i] + "</basefont>", false, false);
                 y++;
             }
         }
