@@ -30,22 +30,22 @@ namespace Server.Gumps
 
             AddPage(0);
 
-            AddBackground(111, 93, 280, 226, 9400);
+            AddBackground(94, 80, 321, 304, 2600);
+            AddImage(157, 138, 666);
 
-            AddTextEntry(206, 97, 75, 20, 0, 0, @"Party Invite");
-            AddTextEntry(116, 137, 258, 20, 0, 0, String.Format("{0} is asking you to join their party.", m_Leader.Name));
-            AddTextEntry(146, 159, 190, 20, 0, 0, @"Please Click Accept Or Decline");
+            AddLabel(209, 94, 38, "PARTY INVITE");
+            AddLabel(187, 120, 0, String.Format("{0}", m_Leader.Name));
+            AddLabel(153, 141, 0, "is asking you to join their party.");
+            AddLabel(156, 162, 0, "Please Click Accept Or Decline.");
 
-            AddButton(116, 224, 11400, 11402, 1, GumpButtonType.Reply, 0);
+            AddButton(116, 223, 11400, 11402, 1, GumpButtonType.Reply, 0);
 
-            AddButton(302, 224, 11410, 11412, 2, GumpButtonType.Reply, 0);
+            AddButton(321, 223, 11410, 11412, 2, GumpButtonType.Reply, 0);
 
-            AddTextEntry(140, 220, 47, 20, 0, 0, @"Accept");
+            AddLabel(137, 220, 0, "Accept");
 
-            AddTextEntry(327, 220, 50, 20, 0, 0, @"Decline");
+            AddLabel(341, 220, 0, "Decline");
 
-            AddImage(218, 254, 5608);
-            AddImage(215, 221, 9804);
 
         }
 
