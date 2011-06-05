@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Mobile.cs 406 2009-10-18 01:34:42Z mark $
+ *   $Id: Mobile.cs 649 2010-12-26 05:18:57Z asayre $
  *
  ***************************************************************************/
 
@@ -42,9 +42,11 @@ namespace Server
 	#region Callbacks
 	public delegate void TargetCallback( Mobile from, object targeted );
 	public delegate void TargetStateCallback( Mobile from, object targeted, object state );
+	public delegate void TargetStateCallback<T>( Mobile from, object targeted, T state );
 
 	public delegate void PromptCallback( Mobile from, string text );
 	public delegate void PromptStateCallback( Mobile from, string text, object state );
+	public delegate void PromptStateCallback<T>( Mobile from, string text, T state );
 	#endregion
 
 	#region [...]Mods
@@ -108,7 +110,7 @@ namespace Server
 		private double m_Value;
 		private bool m_ObeyCap;
 
-		public SkillMod( SkillName skill, bool relative, double value )
+		protected SkillMod( SkillName skill, bool relative, double value )
 		{
 			m_Skill = skill;
 			m_Relative = relative;
@@ -498,7 +500,7 @@ namespace Server
 	/// <summary>
 	/// Base class representing players, npcs, and creatures.
 	/// </summary>
-	public class Mobile : IEntity, IHued, IComparable<Mobile>, ISerializable
+	public class Mobile : IEntity, IHued, IComparable<Mobile>, ISerializable, ISpawnable
 	{
 		#region CompareTo(...)
 		public int CompareTo( IEntity other )
@@ -749,6 +751,7 @@ namespace Server
 		private FrozenTimer m_FrozenTimer;
 		private int m_AllowedStealthSteps;
 		private int m_Hunger;
+		private int m_BonusMaxWeight = 0;
 		private int m_NameHue = -1;
 		private Region m_Region;
 		private bool m_DisarmReady, m_StunReady;
@@ -1157,7 +1160,7 @@ namespace Server
 					info.Free();
 
 					if( m_NetState != null && this.CanSee( attacker ) && Utility.InUpdateRange( m_Location, attacker.m_Location ) ) {
-						if ( m_NetState.IsPost7000 ) {
+						if ( m_NetState.StygianAbyss ) {
 							m_NetState.Send( new MobileIncoming( this, attacker ) );
 						} else {
 							m_NetState.Send( new MobileIncomingOld( this, attacker ) );
@@ -1182,7 +1185,7 @@ namespace Server
 					info.Free();
 
 					if( m_NetState != null && this.CanSee( defender ) && Utility.InUpdateRange( m_Location, defender.m_Location ) ) {
-						if ( m_NetState.IsPost7000 ) {
+						if ( m_NetState.StygianAbyss ) {
 							m_NetState.Send( new MobileIncoming( this, defender ) );
 						} else {
 							m_NetState.Send( new MobileIncomingOld( this, defender ) );
@@ -1543,6 +1546,21 @@ namespace Server
 			}
 		}
 
+		//I ADDED START
+		[CommandProperty( AccessLevel.GameMaster )]
+		public int BonusMaxWeight
+		{
+			get
+			{
+				return m_BonusMaxWeight;
+			}
+			set
+			{
+				m_BonusMaxWeight = value;
+			}
+		}
+		//I ADDED FIN
+		
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Thirst
 		{
@@ -2386,7 +2404,7 @@ namespace Server
 				m_Aggressors.Add( AggressorInfo.Create( aggressor, this, criminal ) ); // new AggressorInfo( aggressor, this, criminal, true ) );
 
 				if( this.CanSee( aggressor ) && m_NetState != null ) {
-					if ( m_NetState.IsPost7000 ) {
+					if ( m_NetState.StygianAbyss ) {
 						m_NetState.Send( new MobileIncoming( this, aggressor ) );
 					} else {
 						m_NetState.Send( new MobileIncomingOld( this, aggressor ) );
@@ -2404,7 +2422,7 @@ namespace Server
 				aggressor.m_Aggressed.Add( AggressorInfo.Create( aggressor, this, criminal ) ); // new AggressorInfo( aggressor, this, criminal, false ) );
 
 				if( this.CanSee( aggressor ) && m_NetState != null ) {
-					if ( m_NetState.IsPost7000 ) {
+					if ( m_NetState.StygianAbyss ) {
 						m_NetState.Send( new MobileIncoming( this, aggressor ) );
 					} else {
 						m_NetState.Send( new MobileIncomingOld( this, aggressor ) );
@@ -2440,7 +2458,7 @@ namespace Server
 					info.Free();
 
 					if( m_NetState != null && this.CanSee( aggressed ) ) {
-						if ( m_NetState.IsPost7000 ) {
+						if ( m_NetState.StygianAbyss ) {
 							m_NetState.Send( new MobileIncoming( this, aggressed ) );
 						} else {
 							m_NetState.Send( new MobileIncomingOld( this, aggressed ) );
@@ -2471,7 +2489,7 @@ namespace Server
 					info.Free();
 
 					if( m_NetState != null && this.CanSee( aggressor ) ) {
-						if ( m_NetState.IsPost7000 ) {
+						if ( m_NetState.StygianAbyss ) {
 							m_NetState.Send( new MobileIncoming( this, aggressor ) );
 						} else {
 							m_NetState.Send( new MobileIncomingOld( this, aggressor ) );
@@ -2708,6 +2726,33 @@ namespace Server
 			return t;
 		}
 
+		private class SimpleStateTarget<T> : Target
+		{
+			private TargetStateCallback<T> m_Callback;
+			private T m_State;
+
+			public SimpleStateTarget(int range, TargetFlags flags, bool allowGround, TargetStateCallback<T> callback, T state)
+				: base(range, allowGround, flags)
+			{
+				m_Callback = callback;
+				m_State = state;
+			}
+
+			protected override void OnTarget(Mobile from, object targeted)
+			{
+				if (m_Callback != null)
+					m_Callback(from, targeted, m_State);
+			}
+		}
+		public Target BeginTarget<T>(int range, bool allowGround, TargetFlags flags, TargetStateCallback<T> callback, T state)
+		{
+			Target t = new SimpleStateTarget<T>(range, flags, allowGround, callback, state);
+
+			this.Target = t;
+
+			return t;
+		}
+
 		public Target Target
 		{
 			get
@@ -2730,25 +2775,9 @@ namespace Server
 				m_Target = newTarget;
 
 				if( newTarget != null && m_NetState != null && !m_TargetLocked )
-					m_NetState.Send( newTarget.GetPacket() );
+					m_NetState.Send( newTarget.GetPacketFor( m_NetState ) );
 
 				OnTargetChange();
-
-
-
-				/*if ( m_Target != value )
-				{
-					if ( m_Target != null && value != null )
-						m_Target.Cancel( this, TargetCancelType.Overriden );
-
-					m_Target = value;
-
-					if ( m_Target != null && m_NetState != null && !m_TargetLocked )
-						m_NetState.Send( m_Target.GetPacket() );
-					//m_NetState.Send( new TargetReq( m_Target ) );
-
-					OnTargetChange();
-				}*/
 			}
 		}
 
@@ -2779,6 +2808,7 @@ namespace Server
 			return true;
 		}
 
+		#region Prompts
 		private class SimplePrompt : Prompt
 		{
 			private PromptCallback m_Callback;
@@ -2894,6 +2924,65 @@ namespace Server
 			return BeginPrompt( callback, false, state );
 		}
 
+		private class SimpleStatePrompt<T> : Prompt
+		{
+			private PromptStateCallback<T> m_Callback;
+			private PromptStateCallback<T> m_CancelCallback;
+
+			private bool m_CallbackHandlesCancel;
+
+			private T m_State;
+
+			public SimpleStatePrompt(PromptStateCallback<T> callback, PromptStateCallback<T> cancelCallback, T state)
+			{
+				m_Callback = callback;
+				m_CancelCallback = cancelCallback;
+				m_State = state;
+			}
+			public SimpleStatePrompt(PromptStateCallback<T> callback, bool callbackHandlesCancel, T state)
+			{
+				m_Callback = callback;
+				m_State = state;
+				m_CallbackHandlesCancel = callbackHandlesCancel;
+			}
+			public SimpleStatePrompt(PromptStateCallback<T> callback, T state)
+				: this(callback, false, state)
+			{
+			}
+
+			public override void OnResponse(Mobile from, string text)
+			{
+				if (m_Callback != null)
+					m_Callback(from, text, m_State);
+			}
+
+			public override void OnCancel(Mobile from)
+			{
+				if (m_CallbackHandlesCancel && m_Callback != null)
+					m_Callback(from, "", m_State);
+				else if (m_CancelCallback != null)
+					m_CancelCallback(from, "", m_State);
+			}
+		}
+		public Prompt BeginPrompt<T>(PromptStateCallback<T> callback, PromptStateCallback<T> cancelCallback, T state)
+		{
+			Prompt p = new SimpleStatePrompt<T>(callback, cancelCallback, state);
+
+			this.Prompt = p;
+			return p;
+		}
+		public Prompt BeginPrompt<T>(PromptStateCallback<T> callback, bool callbackHandlesCancel, T state)
+		{
+			Prompt p = new SimpleStatePrompt<T>(callback, callbackHandlesCancel, state);
+
+			this.Prompt = p;
+			return p;
+		}
+		public Prompt BeginPrompt<T>(PromptStateCallback<T> callback, T state)
+		{
+			return BeginPrompt(callback, false, state);
+		}
+
 		public Prompt Prompt
 		{
 			get
@@ -2919,6 +3008,7 @@ namespace Server
 					Send( new UnicodePrompt( newPrompt ) );
 			}
 		}
+		#endregion
 
 		private bool InternalOnMove( Direction d )
 		{
@@ -3253,7 +3343,7 @@ namespace Server
 						{
 							Packet p = null;
 
-							if ( ns.IsPost7000 ) {
+							if ( ns.StygianAbyss ) {
 								int noto = Notoriety.Compute( m, this );
 								p = cache[0][noto];
 
@@ -3870,6 +3960,7 @@ namespace Server
 			if( pack != null )
 			{
 				List<Item> packCopy = new List<Item>( pack.Items );
+				List<Item> contCopy = new List<Item>();
 
 				for( int i = 0; i < packCopy.Count; ++i )
 				{
@@ -3878,9 +3969,30 @@ namespace Server
 					DeathMoveResult res = GetInventoryMoveResultFor( item );
 
 					if( res == DeathMoveResult.MoveToCorpse )
+					{
 						content.Add( item );
+
+						if( item is Container )
+							contCopy.AddRange( item.Items );
+					}
 					else
 						moveToPack.Add( item );
+
+					while( contCopy.Count > 0 )
+					{
+						Item child = contCopy[0];
+						res = GetInventoryMoveResultFor( child );
+
+						if( res != DeathMoveResult.MoveToBackpack )
+						{
+							if( child is Container )
+								contCopy.AddRange( child.Items );
+						}
+						else
+							moveToPack.Add( child );
+
+						contCopy.RemoveAt( 0 );
+					}
 				}
 
 				for( int i = 0; i < moveToPack.Count; ++i )
@@ -4285,7 +4397,7 @@ namespace Server
 
 								foreach( NetState ns in eable )
 								{
-									if( !ns.IsPost7000 && ns.Mobile != from && ns.Mobile.CanSee( from ) )
+									if( !ns.StygianAbyss && ns.Mobile != from && ns.Mobile.CanSee( from ) )
 									{
 										if( p == null )
 										{
@@ -4349,7 +4461,7 @@ namespace Server
 				state.Send( new LiftRej( reject ) );
 
 				if( item.Parent is Item ) {
-					if ( state.IsPost6017 )
+					if ( state.ContainerGridLines )
 						state.Send( new ContainerContentUpdate6017( item ) );
 					else
 						state.Send( new ContainerContentUpdate( item ) );
@@ -4385,7 +4497,7 @@ namespace Server
 			item.Layer = oldItem.Layer;
 			item.Name = oldItem.Name;
 			item.Weight = oldItem.Weight;
-			//item.Amount = oldItem.amount;
+
 			item.Amount = oldItem.Amount - amount;
 			item.Map = oldItem.Map;
 
@@ -4421,7 +4533,7 @@ namespace Server
 
 					foreach( NetState ns in eable )
 					{
-						if( !ns.IsPost7000 && ns.Mobile != this && ns.Mobile.CanSee( this ) )
+						if( !ns.StygianAbyss && ns.Mobile != this && ns.Mobile.CanSee( this ) )
 						{
 							if( p == null )
 							{
@@ -5154,9 +5266,7 @@ namespace Server
 
 								if( ourState != null )
 								{
-									bool newPacket = (ourState.Version != null && ourState.Version >= DamagePacket.Version);
-
-									if( newPacket )
+									if( ourState.DamagePacket )
 										p = Packet.Acquire( new DamagePacket( this, amount ) );
 									else
 										p = Packet.Acquire( new DamagePacketOld( this, amount ) );
@@ -5166,7 +5276,7 @@ namespace Server
 
 								if( theirState != null && theirState != ourState )
 								{
-									bool newPacket = (theirState.Version != null && theirState.Version >= DamagePacket.Version);
+									bool newPacket = theirState.DamagePacket;
 
 									if( newPacket && (p == null || !(p is DamagePacket)) )
 									{
@@ -5235,10 +5345,9 @@ namespace Server
 			{
 				if( ns.Mobile.CanSee( this ) )
 				{
-					bool newPacket = (ns.Version != null && ns.Version >= DamagePacket.Version);
 					Packet p;
 
-					if( newPacket )
+					if( ns.DamagePacket )
 					{
 						if( pNew == null )
 							pNew = Packet.Acquire( new DamagePacket( this, amount ) );
@@ -5518,6 +5627,7 @@ namespace Server
 				case 1:
 					{
 						m_Hunger = reader.ReadInt();
+						m_BonusMaxWeight = reader.ReadInt();
 
 						goto case 0;
 					}
@@ -5838,6 +5948,10 @@ namespace Server
 			writer.Write( m_NameHue );
 
 			writer.Write( m_Hunger );
+
+			//I ADDED START
+			writer.Write(m_BonusMaxWeight);
+			//I ADDED FIN
 
 			writer.Write( m_Location );
 			writer.Write( (int)m_Body );
@@ -6180,7 +6294,7 @@ namespace Server
 					{
 						state.Mobile.ProcessDelta();
 
-						//if ( state.IsPost7000 ) {
+						//if ( state.StygianAbyss ) {
 							//if( pNew == null )
 								//pNew = Packet.Acquire( new NewMobileAnimation( this, action, frameCount, delay ) );
 
@@ -6736,7 +6850,7 @@ namespace Server
 
 						if( CanSee( m ) && Utility.InUpdateRange( m_Location, m.m_Location ) )
 						{
-							if ( ns.IsPost7000 ) {
+							if ( ns.StygianAbyss ) {
 								ns.Send( new MobileIncoming( this, m ) );
 
 								if ( m.Poisoned )
@@ -6812,7 +6926,7 @@ namespace Server
 						ns.Send( new MapPatches() );
 						ns.Send( SeasonChange.Instantiate( GetSeason(), true ) );
 
-						if ( ns.IsPost7000 )
+						if ( ns.StygianAbyss )
 							ns.Send( new MobileUpdate( this ) );
 						else
 							ns.Send( new MobileUpdateOld( this ) );
@@ -6828,7 +6942,7 @@ namespace Server
 						ns.Sequence = 0;
 						ClearFastwalkStack();
 
-						if ( ns.IsPost7000 ) {
+						if ( ns.StygianAbyss ) {
 							Send( new MobileIncoming( this, this ) );
 							Send( new MobileUpdate( this ) );
 							CheckLightLevels( true );
@@ -6849,7 +6963,7 @@ namespace Server
 						ns.Sequence = 0;
 						ClearFastwalkStack();
 
-						if ( ns.IsPost7000 ) {
+						if ( ns.StygianAbyss ) {
 							Send( new MobileIncoming( this, this ) );
 							Send( SupportedFeatures.Instantiate( ns ) );
 							Send( new MobileUpdate( this ) );
@@ -7902,7 +8016,7 @@ namespace Server
 							}
 							else
 							{
-								if ( state.IsPost7000 )
+								if ( state.StygianAbyss )
 									state.Send( new MobileIncoming( state.Mobile, this ) );
 								else
 									state.Send( new MobileIncomingOld( state.Mobile, this ) );
@@ -8068,7 +8182,9 @@ namespace Server
 			{
 				if( item.Parent is Item )
 				{
-					if( !CanSee( (Item)item.Parent ) )
+					Item parent = item.Parent as Item;
+
+					if ( !(CanSee( parent ) && parent.IsChildVisibleTo( this, item )) )
 						return false;
 				}
 				else if( item.Parent is Mobile )
@@ -8654,7 +8770,10 @@ namespace Server
 		private static int[] m_InvalidBodies = new int[]
 			{
 				32,
-				156,
+				// 95, Now used for the Turkey
+				156
+				// 197, Now used for the Order Dragon
+				// 198, Now used for the Chaos Dragon
 			};
 
 		[Body, CommandProperty( AccessLevel.GameMaster )]
@@ -8917,7 +9036,7 @@ namespace Server
 					ns.Send( new MapPatches() );
 					ns.Send( SeasonChange.Instantiate( GetSeason(), true ) );
 
-					if ( ns.IsPost7000 )
+					if ( ns.StygianAbyss )
 						ns.Send( new MobileUpdate( this ) );
 					else
 						ns.Send( new MobileUpdateOld( this ) );
@@ -8938,7 +9057,7 @@ namespace Server
 				ns.Sequence = 0;
 				ClearFastwalkStack();
 
-				if ( ns.IsPost7000 ) {
+				if ( ns.StygianAbyss ) {
 					Send( new MobileIncoming( this, this ) );
 					Send( new MobileUpdate( this ) );
 					CheckLightLevels( true );
@@ -8959,7 +9078,7 @@ namespace Server
 				ns.Sequence = 0;
 				ClearFastwalkStack();
 
-				if ( ns.IsPost7000 ) {
+				if ( ns.StygianAbyss ) {
 					Send( new MobileIncoming( this, this ) );
 					Send( SupportedFeatures.Instantiate( ns ) );
 					Send( new MobileUpdate( this ) );
@@ -9006,7 +9125,7 @@ namespace Server
 				{
 					m_NetState.Sequence = 0;
 
-					if ( m_NetState.IsPost7000 )
+					if ( m_NetState.StygianAbyss )
 						m_NetState.Send( new MobileUpdate( this ) );
 					else
 						m_NetState.Send( new MobileUpdateOld( this ) );
@@ -9067,7 +9186,7 @@ namespace Server
 
 								if( (isTeleport || !inOldRange) && m.m_NetState != null && m.CanSee( this ) )
 								{
-									if ( m.m_NetState.IsPost7000 ) {
+									if ( m.m_NetState.StygianAbyss ) {
 										m.m_NetState.Send( new MobileIncoming( m, this ) );
 
 										if ( m_Poison != null )
@@ -9093,7 +9212,7 @@ namespace Server
 
 								if( !inOldRange && CanSee( m ) )
 								{
-									if ( ourState.IsPost7000 ) {
+									if ( ourState.StygianAbyss ) {
 										ourState.Send( new MobileIncoming( this, m ) );
 
 										if ( m.Poisoned )
@@ -9130,7 +9249,7 @@ namespace Server
 						{
 							if( (isTeleport || !Utility.InUpdateRange( oldLocation, ns.Mobile.Location )) && ns.Mobile.CanSee( this ) )
 							{
-								if ( ns.IsPost7000 ) {
+								if ( ns.StygianAbyss ) {
 									ns.Send( new MobileIncoming( ns.Mobile, this ) );
 
 									if ( m_Poison != null )
@@ -9469,7 +9588,7 @@ namespace Server
 				{
 					if( state.Mobile.CanSee( this ) )
 					{
-						if ( state.IsPost7000 ) {
+						if ( state.StygianAbyss ) {
 							state.Send( new MobileIncoming( state.Mobile, this ) );
 
 							if ( m_Poison != null )
@@ -10018,7 +10137,7 @@ namespace Server
 				{
 					ourState.Sequence = 0;
 
-					if ( ourState.IsPost7000 )
+					if ( ourState.StygianAbyss )
 						ourState.Send( new MobileUpdate( m ) );
 					else
 						ourState.Send( new MobileUpdateOld( m ) );
@@ -10026,7 +10145,7 @@ namespace Server
 					ClearFastwalkStack();
 				}
 
-				if ( ourState.IsPost7000 ) {
+				if ( ourState.StygianAbyss ) {
 					if( sendIncoming )
 						ourState.Send( new MobileIncoming( m, m ) );
 
@@ -10130,7 +10249,7 @@ namespace Server
 
 						if( sendIncoming )
 						{
-							if ( state.IsPost7000 ) {
+							if ( state.StygianAbyss ) {
 								state.Send( new MobileIncoming( beholder, m ) );
 							} else {
 								state.Send( new MobileIncomingOld( beholder, m ) );
@@ -10145,7 +10264,7 @@ namespace Server
 							}
 						}
 
-						if ( state.IsPost7000 ) {
+						if ( state.StygianAbyss ) {
 							if( sendMoving )
 							{
 								int noto = Notoriety.Compute( beholder, m );

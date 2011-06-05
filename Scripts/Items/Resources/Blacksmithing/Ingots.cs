@@ -20,15 +20,8 @@ namespace Server.Items
 			get { return 0.1; }
 		}
 		
-		string ICommodity.Description
-		{
-			get
-			{
-				return String.Format( Amount == 1 ? "{0} {1} ingot" : "{0} {1} ingots", Amount, CraftResources.GetName( m_Resource ).ToLower() );
-			}
-		}
-
 		int ICommodity.DescriptionNumber { get { return LabelNumber; } }
+		bool ICommodity.IsDeedable { get { return true; } }
 
 		public override void Serialize( GenericWriter writer )
 		{
@@ -158,8 +151,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -192,8 +183,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -226,8 +215,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -260,8 +247,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -294,8 +279,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -328,8 +311,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -362,8 +343,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -396,8 +375,6 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 
 	[FlipableAttribute( 0x1BF2, 0x1BEF )]
@@ -430,7 +407,5 @@ namespace Server.Items
 
 			int version = reader.ReadInt();
 		}
-
-		
 	}
 }

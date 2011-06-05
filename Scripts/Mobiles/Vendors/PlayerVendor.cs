@@ -1476,16 +1476,14 @@ namespace Server.Mobiles
 				int price;
 				string description;
 
-				try
+				if ( int.TryParse( firstWord, out price ) )
 				{
-					price = Convert.ToInt32( firstWord );
-
 					if ( sep >= 0 )
 						description = text.Substring( sep + 1 ).Trim();
 					else
 						description = "";
 				}
-				catch
+				else
 				{
 					price = -1;
 					description = text.Trim();
@@ -1569,14 +1567,9 @@ namespace Server.Mobiles
 				text = text.Trim();
 
 				int amount;
-				try
-				{
-					amount = Convert.ToInt32( text );
-				}
-				catch
-				{
+
+				if ( !int.TryParse( text, out amount ) )
 					amount = 0;
-				}
 
 				GiveGold( from, amount );
 			}

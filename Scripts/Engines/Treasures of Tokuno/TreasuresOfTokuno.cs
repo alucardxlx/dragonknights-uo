@@ -2,6 +2,7 @@ using System;
 using Server;
 using Server.Network;
 using System.Collections;
+using System.Collections.Generic;
 using Server.Items;
 using Server.Gumps;
 using Server.Misc;
@@ -46,11 +47,6 @@ namespace Server.Misc
 			get { return _RewardEra; }
 			set { _RewardEra = value; }
 		}
-
-		public static void Initialize()
-        {
-            new TreasuresOfTokunoPersistance();
-        }
 
 		private static Type[][] m_LesserArtifacts = new Type[][]
 		{
@@ -167,16 +163,20 @@ namespace Server.Misc
 
 				if( i != null )
 				{
-					if( pm.AddToBackpack( i ) )
+					pm.SendLocalizedMessage( 1062317 ); // For your valor in combating the fallen beast, a special artifact has been bestowed on you.
+					
+					if( !pm.PlaceInBackpack( i ) )
 					{
-						pm.SendLocalizedMessage( 1062317 ); // For your valor in combating the fallen beast, a special artifact has been bestowed on you.
-						pm.ToTTotalMonsterFame = 0;
+						if( pm.BankBox != null && pm.BankBox.TryDropItem( killer, i, false ) )
+							pm.SendLocalizedMessage( 1079730 ); // The item has been placed into your bank box.
+						else
+						{
+							pm.SendLocalizedMessage( 1072523 ); // You find an artifact, but your backpack and bank are too full to hold it.
+							i.MoveToWorld( pm.Location, pm.Map );
+						}
 					}
-					else
-					{
-						//Place in bank possibly?
-						i.Delete();
-					}
+					
+					pm.ToTTotalMonsterFame = 0;
 				}
 			}
 		}
@@ -193,9 +193,9 @@ namespace Server.Mobiles
 		public override bool ClickTitle { get { return true; } }
 		public override bool CanTeach { get { return false; } }
 
-		protected ArrayList m_SBInfos = new ArrayList();
-		protected override ArrayList SBInfos { get { return m_SBInfos; } }
-
+        protected List<SBInfo> m_SBInfos = new List<SBInfo>();
+        protected override List<SBInfo> SBInfos { get { return m_SBInfos; } }
+		
 		public override void InitSBInfo()
 		{
 		}

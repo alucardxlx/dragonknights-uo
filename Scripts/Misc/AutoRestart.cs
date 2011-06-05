@@ -34,11 +34,11 @@ namespace Server.Misc
 		{
 			if ( m_Restarting )
 			{
-				e.Mobile.SendMessage( "The server is already restarting." );
+				e.Mobile.SendMessage( 38,"The server is already restarting." );
 			}
 			else
 			{
-				e.Mobile.SendMessage( "You have initiated server shutdown." );
+				e.Mobile.SendMessage( 38,"You have initiated server shutdown." );
 				Enabled = true;
 				m_RestartTime = DateTime.Now;
 			}

@@ -5,7 +5,7 @@ namespace Server.Engines.Craft
 {
 	#region Mondain's Legacy
 	public enum SmithRecipes
-	{		
+	{
 		// magical
 		TrueSpellblade			= 300,
 		IcySpellblade			= 301,
@@ -22,7 +22,7 @@ namespace Server.Engines.Craft
 		KnightsWarCleaver		= 312,
 		ButchersWarCleaver		= 313,
 		SerratedWarCleaver		= 314,
-		TrueWarCleaver			= 315,	
+		TrueWarCleaver			= 315,
 		AdventurersMachete		= 316,
 		OrcishMachete			= 317,
 		MacheteOfDefense		= 318,
@@ -44,7 +44,7 @@ namespace Server.Engines.Craft
 		SapphireMace			= 334,
 		SilverEtchedMace		= 335,
 		BoneMachete				= 336,
-		
+
 		// arties
 		RuneCarvingKnife 		= 350,
 		ColdForgedBlade 		= 351,
@@ -53,7 +53,7 @@ namespace Server.Engines.Craft
 		ShardTrasher 			= 354
 	}
 	#endregion
-	
+
 	public class DefBlacksmithy : CraftSystem
 	{
 		public override SkillName MainSkill
@@ -143,11 +143,11 @@ namespace Server.Engines.Craft
 			{
 				for ( int y = -range; (!anvil || !forge) && y <= range; ++y )
 				{
-					Tile[] tiles = map.Tiles.GetStaticTiles( from.X+x, from.Y+y, true );
+					StaticTile[] tiles = map.Tiles.GetStaticTiles( from.X+x, from.Y+y, true );
 
 					for ( int i = 0; (!anvil || !forge) && i < tiles.Length; ++i )
 					{
-						int id = tiles[i].ID & 0x3FFF;
+						int id = tiles[i].ID;
 
 						bool isAnvil = ( id == 4015 || id == 4016 || id == 0x2DD5 || id == 0x2DD6 );
 						bool isForge = ( id == 4017 || (id >= 6522 && id <= 6569) || id == 0x2DD8 );
@@ -238,18 +238,18 @@ namespace Server.Engines.Craft
 		{
 			/*
 			Synthax for a SIMPLE craft item
-			AddCraft( ObjectType, Group, MinSkill, MaxSkill, RessourceType, Amount, Message )
+			AddCraft( ObjectType, Group, MinSkill, MaxSkill, ResourceType, Amount, Message )
 			
 			ObjectType		: The type of the object you want to add to the build list.
 			Group			: The group in wich the object will be showed in the craft menu.
 			MinSkill		: The minimum of skill value
 			MaxSkill		: The maximum of skill value
-			RessourceType	: The type of the ressource the mobile need to create the item
-			Amount			: The amount of the RessourceType it need to create the item
-			Message			: String or Int for Localized.  The message that will be sent to the mobile, if the specified ressource is missing.
+			ResourceType	: The type of the resource the mobile need to create the item
+			Amount			: The amount of the ResourceType it need to create the item
+			Message			: String or Int for Localized.  The message that will be sent to the mobile, if the specified resource is missing.
 			
 			Synthax for a COMPLEXE craft item.  A complexe item is an item that need either more than
-			only one skill, or more than only one ressource.
+			only one skill, or more than only one resource.
 			
 			Coming soon....
 			*/

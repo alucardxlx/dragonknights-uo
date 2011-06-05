@@ -41,8 +41,8 @@ namespace Server.Mobiles
 			SetSkill( SkillName.Tactics, 104.5, 105.1 );
 			SetSkill( SkillName.Wrestling, 105.1, 109.4 );
 
-			Fame = 3700;  // Guessed
-			Karma = -3700;  // Guessed
+			Fame = 11000;
+			Karma = -11000;
 		}
 
 		public override void GenerateLoot() //-- Need to verify
@@ -107,21 +107,6 @@ namespace Server.Mobiles
 		{
 			base.Deserialize( reader );
 			int version = reader.ReadInt();
-		}
-
-		private class InternalTimer : Timer
-		{
-			private Mobile m_From;
-			private Mobile m_Mobile;
-			private int m_Count;
-
-			public InternalTimer( Mobile from, Mobile m ) : base( TimeSpan.FromSeconds( 1.0 ), TimeSpan.FromSeconds( 1.0 ) )
-			{
-				m_From = from;
-				m_Mobile = m;
-				Priority = TimerPriority.TwoFiftyMS;
-			}
-
 		}
 	}
 }

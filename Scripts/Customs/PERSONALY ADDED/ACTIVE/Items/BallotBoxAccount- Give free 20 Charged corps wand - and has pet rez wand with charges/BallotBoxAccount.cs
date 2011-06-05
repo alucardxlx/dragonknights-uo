@@ -583,7 +583,7 @@ namespace Server.Items
                 if (m_Box.Deleted || !m_Box.IsOwner(from))
                     return;
 
-                int days = Utility.GetInt32(text, DefaultBallotOpenDays);
+                int days = Utility.GetXMLInt32(text, DefaultBallotOpenDays);
                 if (days < 1 || days > 10)
                     days = DefaultBallotOpenDays;
 

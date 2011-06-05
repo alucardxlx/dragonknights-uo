@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Container.cs 331 2009-06-28 03:34:19Z mark $
+ *   $Id: Container.cs 564 2010-10-18 04:56:28Z asayre $
  *
  ***************************************************************************/
 
@@ -1620,6 +1620,34 @@ namespace Server.Items
 
 		public virtual void DisplayTo( Mobile to )
 		{
+			ProcessOpeners( to );
+
+			NetState ns = to.NetState;
+
+			if ( ns == null )
+				return;
+
+			if ( ns.HighSeas )
+				to.Send( new ContainerDisplayHS( this ) );
+			else
+				to.Send( new ContainerDisplay( this ) );
+			
+			if ( ns.ContainerGridLines )
+				to.Send( new ContainerContent6017( to, this ) );
+			else
+				to.Send( new ContainerContent( to, this ) );
+
+			if ( ObjectPropertyList.Enabled )
+			{
+				List<Item> items = this.Items;
+
+				for ( int i = 0; i < items.Count; ++i )
+					to.Send( items[i].OPLPacket );
+			}
+		}
+
+		public void ProcessOpeners( Mobile opener )
+		{
 			if ( !IsPublicContainer )
 			{
 				bool contains = false;
@@ -1633,7 +1661,7 @@ namespace Server.Items
 					{
 						Mobile mob = m_Openers[i];
 
-						if ( mob == to )
+						if ( mob == opener )
 						{
 							contains = true;
 						}
@@ -1649,31 +1677,17 @@ namespace Server.Items
 
 				if ( !contains )
 				{
-					if ( m_Openers == null ) {
+					if ( m_Openers == null )
+					{
 						m_Openers = new List<Mobile>();
 					}
 
-					m_Openers.Add( to );
+					m_Openers.Add( opener );
 				}
 				else if ( m_Openers != null && m_Openers.Count == 0 )
 				{
 					m_Openers = null;
 				}
-			}
-
-			to.Send( new ContainerDisplay( this ) );
-			
-			if ( to.NetState != null && to.NetState.IsPost6017 )
-				to.Send( new ContainerContent6017( to, this ) );
-			else
-				to.Send( new ContainerContent( to, this ) );
-
-			if ( ObjectPropertyList.Enabled )
-			{
-				List<Item> items = this.Items;
-
-				for ( int i = 0; i < items.Count; ++i )
-					to.Send( items[i].OPLPacket );
 			}
 		}
 

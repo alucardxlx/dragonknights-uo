@@ -3,22 +3,23 @@ using System.Collections;
 using Server.Items;
 using Server.Engines.Apiculture;
 using Server.Engines.Plants;
+using System.Collections.Generic; 
 
 namespace Server.Mobiles
 {
 	public class SBjunkbuyer: SBInfo
 	{
-		private ArrayList m_BuyInfo = new InternalBuyInfo();
-		private IShopSellInfo m_SellInfo = new InternalSellInfo();
+		private List<GenericBuyInfo> m_BuyInfo = new InternalBuyInfo(); 
+		private IShopSellInfo m_SellInfo = new InternalSellInfo(); 
 
 		public SBjunkbuyer()
 		{
 		}
 
-		public override IShopSellInfo SellInfo { get { return m_SellInfo; } }
-		public override ArrayList BuyInfo { get { return m_BuyInfo; } }
+		public override IShopSellInfo SellInfo { get { return m_SellInfo; } } 
+		public override List<GenericBuyInfo> BuyInfo { get { return m_BuyInfo; } } 
 
-		public class InternalBuyInfo : ArrayList
+		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{
 			public InternalBuyInfo()
 			{

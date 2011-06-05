@@ -284,14 +284,8 @@ namespace Server.Gumps
 
 				int price;
 
-				try
-				{
-					price = Convert.ToInt32( text );
-				}
-				catch
-				{
-					price = -1;
-				}
+                if ( !int.TryParse( text, out price ) )
+                    price = -1;
 
 				if ( price < 0 )
 				{
@@ -335,7 +329,7 @@ namespace Server.Gumps
 
 				if ( mob == null || !mob.Player || !mob.Alive || mob == from )
 				{
-					from.SendMessage( "That is not a valid target for a rental contract!" );
+					from.SendLocalizedMessage(1071984); //That is not a valid target for a rental contract!
 				}
 				else if ( !mob.InRange( m_Contract, 5 ) )
 				{
@@ -512,14 +506,8 @@ namespace Server.Gumps
 
 				int price;
 
-				try
-				{
-					price = Convert.ToInt32( text );
-				}
-				catch
-				{
-					price = -1;
-				}
+                if ( !int.TryParse( text, out price ) )
+                    price = -1;
 
 				if ( price < 0 )
 				{

@@ -4,17 +4,29 @@ using Server.Targeting;
 using System.Collections;
 using System.Collections.Generic;
 using Server.ContextMenus;
+using Server.Mobiles;
 
 namespace Server.Items
 {
 	[FlipableAttribute( 0x2790, 0x27DB )]
-	public class LeatherNinjaBelt : BaseWaist, IUsesRemaining
+	public class LeatherNinjaBelt : BaseWaist, IDyable, INinjaWeapon
 	{
 		public override CraftResource DefaultResource{ get{ return CraftResource.RegularLeather; } }
 
-		private bool m_Using;
-		private int m_UsesRemaining;
+		public virtual int WrongAmmoMessage { get { return 1063301; } } //You can only place shuriken in a ninja belt.
+		public virtual int NoFreeHandMessage { get { return 1063299; } } //You must have a free hand to throw shuriken.
+		public virtual int EmptyWeaponMessage { get { return 1063297; } } //You have no shuriken in your ninja belt!
+		public virtual int RecentlyUsedMessage { get { return 1063298; } } //You cannot throw another shuriken yet.
+		public virtual int FullWeaponMessage { get { return 1063302; } } //You cannot add any more shuriken.
 
+		public virtual int WeaponMinRange { get { return 2; } }
+		public virtual int WeaponMaxRange { get { return 10; } }
+
+		public virtual int WeaponDamage { get { return Utility.RandomMinMax(3, 5); } }
+
+		public virtual Type AmmoType { get { return typeof(Shuriken); } }
+
+		private int m_UsesRemaining;
 		private Poison m_Poison;
 		private int m_PoisonCharges;
 
@@ -52,6 +64,17 @@ namespace Server.Items
 		{
 		}
 
+		public void AttackAnimation(Mobile from, Mobile to)
+		{
+			if (from.Body.IsHuman)
+			{
+				from.Animate(from.Mounted ? 26 : 9, 7, 1, true, false, 0);
+			}
+
+			from.PlaySound(0x23A);
+			from.MovingEffect(to, 0x27AC, 1, 0, false, false);
+		}
+
 		public override void GetProperties( ObjectPropertyList list )
 		{
 			base.GetProperties( list );
@@ -66,40 +89,20 @@ namespace Server.Items
 
 		public override bool OnEquip( Mobile from )
 		{
-			if ( !base.OnEquip( from ) )
-				return false;
-
-			from.SendLocalizedMessage( 1070785 ); // Double click this item each time you wish to throw a shuriken.
-			return true;
+			if (base.OnEquip(from))
+			{
+				from.SendLocalizedMessage(1070785); // Double click this item each time you wish to throw a shuriken.
+				return true;
+			}
+			return false;
 		}
 
-		public override void OnDoubleClick( Mobile from )
+		public override void OnDoubleClick(Mobile from)
 		{
-			if ( !IsChildOf( from ) )
-				return;
-
-			if ( m_UsesRemaining < 1 )
-			{
-				// You have no shuriken in your ninja belt!
-				from.SendLocalizedMessage( 1063297 );
-			}
-			else if ( m_Using )
-			{
-				// You cannot throw another shuriken yet.
-				from.SendLocalizedMessage( 1063298 );
-			}
-			else if ( !BasePotion.HasFreeHand( from ) )
-			{
-				// You must have a free hand to throw shuriken.
-				from.SendLocalizedMessage( 1063299 );
-			}
-			else
-			{
-				from.BeginTarget( 10, false, TargetFlags.Harmful, new TargetCallback( OnTarget ) );
-			}
+			NinjaWeapon.AttemptShoot((PlayerMobile)from, this);
 		}
 
-		public void Shoot( Mobile from, Mobile target )
+/*		public void Shoot( Mobile from, Mobile target )
 		{
 			if ( from == target )
 				return;
@@ -109,7 +112,7 @@ namespace Server.Items
 				// You have no shuriken in your ninja belt!
 				from.SendLocalizedMessage( 1063297 );
 			}
-			else if ( m_Using )
+			else if (((PlayerMobile)from).NinjaWepCooldown)
 			{
 				// You cannot throw another shuriken yet.
 				from.SendLocalizedMessage( 1063298 );
@@ -125,7 +128,7 @@ namespace Server.Items
 			}
 			else if ( from.CanBeHarmful( target ) )
 			{
-				m_Using = true;
+				((PlayerMobile)from).NinjaWepCooldown = true;
 
 				from.Direction = from.GetDirectionTo( target );
 
@@ -142,7 +145,7 @@ namespace Server.Items
 				else
 					ConsumeUse();
 
-				Timer.DelayCall( TimeSpan.FromSeconds( 2.5 ), new TimerCallback( ResetUsing ) );
+				Timer.DelayCall(TimeSpan.FromSeconds(2.5), new TimerStateCallback( ResetUsing ), from );
 			}
 		}
 
@@ -170,43 +173,40 @@ namespace Server.Items
 			if ( m_UsesRemaining < 1 )
 				return;
 
-			--m_UsesRemaining;
+			--UsesRemaining;
 
 			if ( m_PoisonCharges > 0 )
 			{
-				--m_PoisonCharges;
+				--PoisonCharges;
 
 				if ( m_PoisonCharges == 0 )
-					m_Poison = null;
+					Poison = null;
 			}
-
-			InvalidateProperties();
 		}
 
-		public void ResetUsing()
+		public void ResetUsing(object state)
 		{
-			m_Using = false;
+			PlayerMobile from = (PlayerMobile)state;
+			from.NinjaWepCooldown = false;
 		}
 
 		private const int MaxUses = 10;
 
 		public void Unload( Mobile from )
 		{
-			if ( UsesRemaining < 1 )
+			if ( m_UsesRemaining < 1 )
 				return;
 
-			Shuriken shuriken = new Shuriken( UsesRemaining );
+			Shuriken shuriken = new Shuriken( m_UsesRemaining );
 
 			shuriken.Poison = m_Poison;
 			shuriken.PoisonCharges = m_PoisonCharges;
 
 			from.AddToBackpack( shuriken );
 
-			m_UsesRemaining = 0;
-			m_PoisonCharges = 0;
-			m_Poison = null;
-
-			InvalidateProperties();
+			UsesRemaining = 0;
+			PoisonCharges = 0;
+			Poison = null;
 		}
 
 		public void Reload( Mobile from, Shuriken shuriken )
@@ -220,51 +220,74 @@ namespace Server.Items
 			}
 			else if ( shuriken.UsesRemaining > 0 )
 			{
+				bool canload = false;
+				bool poison = false;
+
 				if ( need > shuriken.UsesRemaining )
 					need = shuriken.UsesRemaining;
 
-				if ( shuriken.Poison != null && shuriken.PoisonCharges > 0 )
+				if( shuriken.Poison != null && shuriken.PoisonCharges > 0 )
 				{
-					if ( m_PoisonCharges <= 0 || m_Poison == shuriken.Poison )
-					{
-						#region Mondain's Legacy mod
-						if ( m_Poison != null && m_Poison.RealLevel < shuriken.Poison.RealLevel )
-							Unload( from );
-						#endregion
+					poison = true;
 
+					#region Mondain's Legacy mod
+					if( m_Poison == null || ( m_Poison.RealLevel < shuriken.Poison.RealLevel ))
+					{
+						Unload( from );
+						canload = true;
+					}
+					#endregion
+					else if( m_Poison != null && ( m_Poison.RealLevel == shuriken.Poison.RealLevel ))
+					{
+						canload = true;
+					}
+				}
+				else if( shuriken.Poison == null || shuriken.PoisonCharges <= 0 )
+				{
+					if( m_Poison == null || m_PoisonCharges <= 0 )
+					{
+						canload = true;
+					}
+				}
+
+				if( !canload )
+				{
+					from.SendLocalizedMessage( 1070767 ); // Loaded projectile is stronger, unload it first
+				}
+				else
+				{
+					if( poison )
+					{
 						if ( need > shuriken.PoisonCharges )
+						{
 							need = shuriken.PoisonCharges;
+						}
 
 						if ( m_Poison == null || m_PoisonCharges <= 0 )
-							m_PoisonCharges = need;
+						{
+							PoisonCharges = need;
+						}
 						else
-							m_PoisonCharges += need;
+						{
+							PoisonCharges += need;
+						}
 
-						m_Poison = shuriken.Poison;
+						Poison = shuriken.Poison;
 
 						shuriken.PoisonCharges -= need;
 
 						if ( shuriken.PoisonCharges <= 0 )
+						{
 							shuriken.Poison = null;
+						}
+					}
 
-						m_UsesRemaining += need;
-						shuriken.UsesRemaining -= need;
-					}
-					else
-					{
-						from.SendLocalizedMessage( 1070767 ); // Loaded projectile is stronger, unload it first
-					}
-				}
-				else
-				{
-					m_UsesRemaining += need;
+					UsesRemaining += need;
 					shuriken.UsesRemaining -= need;
 				}
 
 				if ( shuriken.UsesRemaining <= 0 )
 					shuriken.Delete();
-
-				InvalidateProperties();
 			}
 		}
 
@@ -279,7 +302,7 @@ namespace Server.Items
 				Reload( from, (Shuriken) obj );
 			else
 				from.SendLocalizedMessage( 1063301 ); // You can only place shuriken in a ninja belt.
-		}
+		}*/
 
 		public override void GetContextMenuEntries( Mobile from, List<ContextMenuEntry> list )
 		{
@@ -287,42 +310,8 @@ namespace Server.Items
 
 			if ( IsChildOf( from ) )
 			{
-				list.Add( new LoadEntry( this ) );
-				list.Add( new UnloadEntry( this ) );
-			}
-		}
-
-		private class LoadEntry : ContextMenuEntry
-		{
-			private LeatherNinjaBelt m_Belt;
-
-			public LoadEntry( LeatherNinjaBelt belt ) : base( 6222, 0 )
-			{
-				m_Belt = belt;
-			}
-
-			public override void OnClick()
-			{
-				if ( !m_Belt.Deleted && m_Belt.IsChildOf( Owner.From ) )
-					Owner.From.BeginTarget( 10, false, TargetFlags.Harmful, new TargetCallback( m_Belt.OnTarget ) );
-			}
-		}
-
-		private class UnloadEntry : ContextMenuEntry
-		{
-			private LeatherNinjaBelt m_Belt;
-
-			public UnloadEntry( LeatherNinjaBelt belt ) : base( 6223, 0 )
-			{
-				m_Belt = belt;
-
-				Enabled = ( belt.UsesRemaining > 0 );
-			}
-
-			public override void OnClick()
-			{
-				if ( !m_Belt.Deleted && m_Belt.IsChildOf( Owner.From ) )
-					m_Belt.Unload( Owner.From );
+				list.Add( new NinjaWeapon.LoadEntry( this ) );
+				list.Add( new NinjaWeapon.UnloadEntry( this ) );
 			}
 		}
 
@@ -337,7 +326,7 @@ namespace Server.Items
 			Poison.Serialize( m_Poison, writer );
 			writer.Write( (int) m_PoisonCharges );
 		}
-		
+
 		public override void Deserialize( GenericReader reader )
 		{
 			base.Deserialize( reader );

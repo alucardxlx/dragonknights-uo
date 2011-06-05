@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Server.Items;
 using Server.Guilds;
 
@@ -7,7 +7,7 @@ namespace Server.Mobiles
 {
 	public class SBProvisioner : SBInfo
 	{
-		private ArrayList m_BuyInfo = new InternalBuyInfo();
+		private List<GenericBuyInfo> m_BuyInfo = new InternalBuyInfo();
 		private IShopSellInfo m_SellInfo = new InternalSellInfo();
 
 		public SBProvisioner()
@@ -15,12 +15,16 @@ namespace Server.Mobiles
 		}
 
 		public override IShopSellInfo SellInfo { get { return m_SellInfo; } }
-		public override ArrayList BuyInfo { get { return m_BuyInfo; } }
+		public override List<GenericBuyInfo> BuyInfo { get { return m_BuyInfo; } }
 
-		public class InternalBuyInfo : ArrayList
+		public class InternalBuyInfo : List<GenericBuyInfo>
 		{
 			public InternalBuyInfo()
 			{
+				#region Salvage Bag
+				if( Core.ML )
+					Add( new GenericBuyInfo( "1079931", typeof( SalvageBag ), 1255, 20, 0xE76, Utility.RandomBlueHue() ) );
+				#endregion
 				Add( new GenericBuyInfo( "1060834", typeof( Engines.Plants.PlantBowl ), 2, 20, 0x15FD, 0 ) );
 
 				Add( new GenericBuyInfo( typeof( Arrow ), 2, 20, 0xF3F, 0 ) );

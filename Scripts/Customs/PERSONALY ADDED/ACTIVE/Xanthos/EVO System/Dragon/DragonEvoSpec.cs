@@ -22,7 +22,7 @@ namespace Xanthos.Evo
 			m_PregnancyTerm = 0.0; // originaly was 0.10
 			m_AbsoluteStatValues = false;
 			m_MaxEvoResistance = 100;
-			m_MaxTrainingStage = 7;
+			m_MaxTrainingStage = 7;// At what stage can evo to?
 			m_CanAttackPlayers = false;
 
 			m_RandomHues = new int[] { 1157, 1175, 1172, 1170, 2703, 2473, 2643, 1156, 2704, 2734, 2669, 2621, 2859, 2716, 2791, 2927, 2974, 1161, 2717, 2652, 2821, 2818, 2730, 2670, 2678, 2630, 2641, 2644, 2592, 2543, 2526, 2338, 2339, 1793, 1980, 1983 };
@@ -52,7 +52,7 @@ namespace Xanthos.Evo
 	{
 		public RaelisDragonStageOne()
 		{
-			EvolutionMessage = "has evolved";
+			EvolutionMessage = "has evolved.";//stage 1 - green
 			NextEpThreshold = 25000; EpMinDivisor = 10; EpMaxDivisor = 5; DustMultiplier = 20;
 			BaseSoundID = 0xDB;
 			BodyValue = 733;
@@ -60,7 +60,7 @@ namespace Xanthos.Evo
 			MinTameSkill = 99.9;
 			VirtualArmor = 30;
 //			Hue = Evo.Flags.kRandomHueFlag;
-			Hue = 0;
+//			Hue = 0;
 
 			DamagesTypes = new ResistanceType[1] { ResistanceType.Physical };
 			MinDamages = new int[1] { 100 };
@@ -79,14 +79,14 @@ namespace Xanthos.Evo
 	{
 		public RaelisDragonStageTwo()
 		{
-			EvolutionMessage = "has evolved";
+			EvolutionMessage = "has evolved.";//Stage-2 green with firewings
 			NextEpThreshold = 75000; EpMinDivisor = 20; EpMaxDivisor = 10; DustMultiplier = 20;
 			BaseSoundID = 219;
 			ControlSlots = 2;
 			MinTameSkill = 103.9;
 			BodyValue = 718;
 			VirtualArmor = 40;
-			Hue = 0;
+//			Hue = 0;
 		
 			DamagesTypes = new ResistanceType[5] { ResistanceType.Physical, ResistanceType.Fire, ResistanceType.Cold,
 													ResistanceType.Poison, ResistanceType.Energy };
@@ -107,14 +107,14 @@ namespace Xanthos.Evo
 	{
 		public RaelisDragonStageThree()
 		{
-			EvolutionMessage = "has evolved";
+			EvolutionMessage = "has evolved.";//stage-3 stone gargoyle
 			NextEpThreshold = 175000; EpMinDivisor = 30; EpMaxDivisor = 20; DustMultiplier = 20;
 			BaseSoundID = 0x5A;
 			ControlSlots = 3;
 			MinTameSkill = 106.9;
 			BodyValue = 293;
 			VirtualArmor = 50;
-			Hue = 0;
+//			Hue = 0;
 		
 			DamagesTypes = null;
 			MinDamages = null;
@@ -134,14 +134,14 @@ namespace Xanthos.Evo
 	{
 		public RaelisDragonStageFour()
 		{
-			EvolutionMessage = "has evolved";
+			EvolutionMessage = "has evolved.";//stage-4 Red Drake
 			NextEpThreshold = 3750000; EpMinDivisor = 50; EpMaxDivisor = 40; DustMultiplier = 20;
 			BaseSoundID = 362;
 			BodyValue = 61;
 			ControlSlots = 3;
 			MinTameSkill = 109.9;
 			VirtualArmor = 60;
-			Hue = 0;
+//			Hue = 0;
 		
 			DamagesTypes = null;
 			MinDamages = null;
@@ -161,13 +161,13 @@ namespace Xanthos.Evo
 	{
 		public RaelisDragonStageFive()
 		{
-			EvolutionMessage = "has evolved";
+			EvolutionMessage = "has evolved.";//stage-5 Red Dragon
 			NextEpThreshold = 7750000; EpMinDivisor = 160; EpMaxDivisor = 40; DustMultiplier = 20;
 			BodyValue = 59;
 			VirtualArmor = 60;
 			ControlSlots = 4;
 			MinTameSkill = 113.9;
-			Hue = 0;
+//			Hue = 0;
 		
 			DamagesTypes = new ResistanceType[5] { ResistanceType.Physical, ResistanceType.Fire, ResistanceType.Cold,
 													 ResistanceType.Poison, ResistanceType.Energy };
@@ -188,13 +188,13 @@ namespace Xanthos.Evo
 	{
 		public RaelisDragonStageSix()
 		{
-			EvolutionMessage = "has evolved";
+			EvolutionMessage = "has evolved.";//Stage-6 Red Crisom Dragon
 			NextEpThreshold = 15000000; EpMinDivisor = 540; EpMaxDivisor = 480; DustMultiplier = 20;
 			BodyValue = 197;
 			VirtualArmor = 70;
 			ControlSlots = 4;
 			MinTameSkill = 116.9;
-			Hue = 0;
+//			Hue = 0;
 		
 			DamagesTypes = null;
 			MinDamages = null;
@@ -215,14 +215,14 @@ namespace Xanthos.Evo
 		public RaelisDragonStageSeven()
 		{
 			Title = "The Ancient Dragon";
-			EvolutionMessage = "has evolved to its highest form and is now an Ancient Dragon";
-			NextEpThreshold = 0; EpMinDivisor = 740; EpMaxDivisor = 660; DustMultiplier = 20;
+			EvolutionMessage = "has evolved to its highest form and is now an Ancient Dragon.";
+			NextEpThreshold = 30000000; EpMinDivisor = 740; EpMaxDivisor = 660; DustMultiplier = 20;
 			BaseSoundID = 362;
 			BodyValue = 826;
 			ControlSlots = 5;
 			VirtualArmor = 80;
 			MinTameSkill = 119.9;
-			Hue = 0;
+//			Hue = 0;
 		
 			DamagesTypes = new ResistanceType[5] { ResistanceType.Physical, ResistanceType.Fire, ResistanceType.Cold,
 													 ResistanceType.Poison, ResistanceType.Energy };

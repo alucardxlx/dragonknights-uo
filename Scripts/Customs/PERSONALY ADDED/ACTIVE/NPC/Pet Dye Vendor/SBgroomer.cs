@@ -1,12 +1,13 @@
 using System; 
 using System.Collections; 
 using Server.Items;
+using System.Collections.Generic; 
 
 namespace Server.Mobiles 
 { 
 	public class SBgroomer : SBInfo 
 	{ 
-		private ArrayList m_BuyInfo = new InternalBuyInfo(); 
+		private List<GenericBuyInfo> m_BuyInfo = new InternalBuyInfo(); 
 		private IShopSellInfo m_SellInfo = new InternalSellInfo(); 
 
 		public SBgroomer() 
@@ -14,12 +15,13 @@ namespace Server.Mobiles
 		} 
 
 		public override IShopSellInfo SellInfo { get { return m_SellInfo; } } 
-		public override ArrayList BuyInfo { get { return m_BuyInfo; } } 
+		public override List<GenericBuyInfo> BuyInfo { get { return m_BuyInfo; } } 
 
-		public class InternalBuyInfo : ArrayList 
+		public class InternalBuyInfo : List<GenericBuyInfo> 
 		{ 
 			public InternalBuyInfo() 
 			{ 
+				Add( new GenericBuyInfo( typeof( PetColorResetToDefaultPotion ), 100000, 20, 3836, 1150 ) );
 				Add( new GenericBuyInfo( typeof( spetdyepi ), 100000, 20, 3836, 1172 ) );
 				Add( new GenericBuyInfo( typeof( spetdyep ), 100000, 20, 3836, 1278 ) );
 				Add( new GenericBuyInfo( typeof( spetdyebv ), 100000, 20, 3836, 1282 ) );
@@ -56,6 +58,7 @@ namespace Server.Mobiles
 		{ 
 			public InternalSellInfo() 
 			{ 
+				Add( typeof( PetColorResetToDefaultPotion ), 100000 );
 				Add( typeof( spetdyeb ), 50000 );
 				Add( typeof( spetdyepi ), 50000 );
 				Add( typeof( spetdyep ), 50000 );

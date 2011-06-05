@@ -73,13 +73,6 @@ namespace Server.Engines.Craft
             return 0;
         }
 
-        public override void PlayCraftEffect(Mobile from)
-        {
-            // no sound
-            //from.PlaySound( 0x241 );
-            from.PlaySound( 0x956 );
-        }
-
         private static Type[] m_TinkerColorables = new Type[]
 			{
 				typeof( ForkLeft ), typeof( ForkRight ),
@@ -107,6 +100,13 @@ namespace Server.Engines.Craft
                 contains = (m_TinkerColorables[i] == type);
 
             return contains;
+        }
+
+        public override void PlayCraftEffect(Mobile from)
+        {
+            // no sound
+            //from.PlaySound( 0x241 );
+            from.PlaySound( 0x956 );
         }
 
         public override int PlayEndingEffect(Mobile from, bool failed, bool lostMaterial, bool toolBroken, int quality, bool makersMark, CraftItem item)
@@ -187,7 +187,6 @@ namespace Server.Engines.Craft
 
             #region Tools
             AddCraft(typeof(Scissors), 1044046, 1023998, 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
-            AddCraft(typeof(SewingKit), 1044046, 1023997, 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
 //I ADDED
                 index = AddCraft(typeof(CarpetWeaverTool), 1044046, "Carpet Weaver Tool", 100.0, 140.0, typeof(Log), "Boards or Logs", 50, "You do not have sufficient wood to make that.");
                 AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
@@ -219,6 +218,7 @@ namespace Server.Engines.Craft
             AddCraft(typeof(TinkerTools), 1044046, 1044164, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(Hatchet), 1044046, 1023907, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(DrawKnife), 1044046, 1024324, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
+            AddCraft(typeof(SewingKit), 1044046, 1023997, 10.0, 70.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(Saw), 1044046, 1024148, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(DovetailSaw), 1044046, 1024136, 30.0, 80.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(Froe), 1044046, 1024325, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -244,7 +244,6 @@ namespace Server.Engines.Craft
                 AddRes(index, typeof(Gears), 1044254, 2, 1044253);
                 AddRes(index, typeof(Diamond), 1062608, 1, 1044240);
                 SetNeededExpansion(index, Expansion.ML);
-
             }
             #endregion
 
@@ -260,7 +259,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(Hinge), 1044047, 1024181, 5.0, 55.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(BolaBall), 1044047, 1023699, 45.0, 95.0, typeof(IronIngot), 1044036, 10, 1044037);
 
-            #region Mondain's Legacy
             if (Core.ML)
             {
                 index = AddCraft(typeof(JeweledFiligree), 1044047, 1072894, 70.0, 110.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -268,7 +266,6 @@ namespace Server.Engines.Craft
                 AddRes(index, typeof(Ruby), 1044234, 1, 1044253);
                 SetNeededExpansion(index, Expansion.ML);
             }
-            #endregion
 
             #endregion
 

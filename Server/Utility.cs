@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Utility.cs 312 2009-02-21 21:58:45Z mark $
+ *   $Id: Utility.cs 591 2010-12-06 06:45:45Z mark $
  *
  ***************************************************************************/
 
@@ -146,23 +146,23 @@ namespace Server
 			return sb.ToString();
 		}
 
-        public static bool IPMatchCIDR( string cidr, IPAddress ip )
-        {
-			if ( ip.AddressFamily == AddressFamily.InterNetworkV6 )
+		public static bool IPMatchCIDR( string cidr, IPAddress ip )
+		{
+			if ( ip == null || ip.AddressFamily == AddressFamily.InterNetworkV6 )
 				return false;	//Just worry about IPv4 for now
 
 
 			/*
-            string[] str = cidr.Split( '/' );
+			string[] str = cidr.Split( '/' );
 
-            if ( str.Length != 2 )
-                return false;
+			if ( str.Length != 2 )
+				return false;
 
 			/* **************************************************
-            IPAddress cidrPrefix;
+			IPAddress cidrPrefix;
 
-            if ( !IPAddress.TryParse( str[0], out cidrPrefix ) )
-                return false;
+			if ( !IPAddress.TryParse( str[0], out cidrPrefix ) )
+				return false;
 			 * */
 
 			/*
@@ -180,7 +180,7 @@ namespace Server
 
 			uint cidrPrefix = OrderedAddressValue( bytes );
 
-            int cidrLength = Utility.ToInt32( str[1] );
+			int cidrLength = Utility.ToInt32( str[1] );
 			//The below solution is the fastest solution of the three
 
 			*/
@@ -273,19 +273,19 @@ namespace Server
 
 			uint cidrPrefix = OrderedAddressValue( bytes );
 
-            return IPMatchCIDR( cidrPrefix, ip, cidrLength );
-        }
+			return IPMatchCIDR( cidrPrefix, ip, cidrLength );
+		}
 
-        public static bool IPMatchCIDR( IPAddress cidrPrefix, IPAddress ip, int cidrLength )
-        {
-            if ( cidrPrefix == null || ip == null || cidrPrefix.AddressFamily == AddressFamily.InterNetworkV6 )	//Ignore IPv6 for now
-                return false;
+		public static bool IPMatchCIDR( IPAddress cidrPrefix, IPAddress ip, int cidrLength )
+		{
+			if ( cidrPrefix == null || ip == null || cidrPrefix.AddressFamily == AddressFamily.InterNetworkV6 )	//Ignore IPv6 for now
+				return false;
 
 			uint cidrValue = SwapUnsignedInt( (uint)GetLongAddressValue( cidrPrefix ) );
 			uint ipValue   = SwapUnsignedInt( (uint)GetLongAddressValue( ip ) );
 
 			return IPMatchCIDR( cidrValue, ipValue, cidrLength );
-        }
+		}
 
 		public static bool IPMatchCIDR( uint cidrPrefixValue, IPAddress ip, int cidrLength )
 		{
@@ -481,10 +481,10 @@ namespace Server
 		public static bool InsensitiveStartsWith( string first, string second )
 		{
 			return Insensitive.StartsWith( first, second );
-        }
+		}
 
-        #region To[Something]
-        public static bool ToBoolean( string value )
+		#region To[Something]
+		public static bool ToBoolean( string value )
 		{
 			bool b;
 			bool.TryParse( value, out b );
@@ -518,11 +518,11 @@ namespace Server
 				int.TryParse( value, out i );
 
 			return i;
-        }
-        #endregion
+		}
+		#endregion
 
-        #region Get[Something]
-        public static int GetInt32( string intString, int defaultValue )
+		#region Get[Something]
+		public static int GetXMLInt32( string intString, int defaultValue )
 		{
 			try
 			{
@@ -530,18 +530,15 @@ namespace Server
 			}
 			catch
 			{
-				try
-				{
-					return Convert.ToInt32( intString );
-				}
-				catch
-				{
-					return defaultValue;
-				}
+				int val;
+				if ( int.TryParse( intString, out val ) )
+					return val;
+
+				return defaultValue;
 			}
 		}
 
-		public static DateTime GetDateTime( string dateTimeString, DateTime defaultValue )
+		public static DateTime GetXMLDateTime( string dateTimeString, DateTime defaultValue )
 		{
 			try
 			{
@@ -558,7 +555,7 @@ namespace Server
 			}
 		}
 
-		public static TimeSpan GetTimeSpan( string timeSpanString, TimeSpan defaultValue )
+		public static TimeSpan GetXMLTimeSpan( string timeSpanString, TimeSpan defaultValue )
 		{
 			try
 			{
@@ -608,15 +605,15 @@ namespace Server
 #pragma warning disable 618
 			return address.Address;
 #pragma warning restore 618
-        }
-        #endregion
+		}
+		#endregion
 
-        public static double RandomDouble()
+		public static double RandomDouble()
 		{
 			return m_Random.NextDouble();
-        }
-        #region In[...]Range
-        public static bool InRange( Point3D p1, Point3D p2, int range )
+		}
+		#region In[...]Range
+		public static bool InRange( Point3D p1, Point3D p2, int range )
 		{
 			return ( p1.m_X >= (p2.m_X - range) )
 				&& ( p1.m_X <= (p2.m_X + range) )
@@ -646,10 +643,10 @@ namespace Server
 				&& ( p1.X <= (p2.X + 18) )
 				&& ( p1.Y >= (p2.Y - 18) )
 				&& ( p1.Y <= (p2.Y + 18) );
-        }
+		}
 
-        #endregion
-        public static Direction GetDirection( IPoint2D from, IPoint2D to )
+		#endregion
+		public static Direction GetDirection( IPoint2D from, IPoint2D to )
 		{
 			int dx = to.X - from.X;
 			int dy = to.Y - from.Y;
@@ -687,16 +684,18 @@ namespace Server
 			}
 		}
 
-		public static bool CanMobileFit( int z, Tile[] tiles )
+		/* Should probably be rewritten to use an ITile interface
+
+		public static bool CanMobileFit( int z, StaticTile[] tiles )
 		{
 			int checkHeight = 15;
 			int checkZ = z;
 
 			for ( int i = 0; i < tiles.Length; ++i )
 			{
-				Tile tile = tiles[i];
+				StaticTile tile = tiles[i];
 
-				if ( ((checkZ + checkHeight) > tile.Z && checkZ < (tile.Z + tile.Height))/* || (tile.Z < (checkZ + checkHeight) && (tile.Z + tile.Height) > checkZ)*/ )
+				if ( ((checkZ + checkHeight) > tile.Z && checkZ < (tile.Z + tile.Height))*//* || (tile.Z < (checkZ + checkHeight) && (tile.Z + tile.Height) > checkZ)*//* )
 				{
 					return false;
 				}
@@ -709,16 +708,16 @@ namespace Server
 			return true;
 		}
 
-		public static bool IsInContact( Tile check, Tile[] tiles )
+		public static bool IsInContact( StaticTile check, StaticTile[] tiles )
 		{
 			int checkHeight = check.Height;
 			int checkZ = check.Z;
 
 			for ( int i = 0; i < tiles.Length; ++i )
 			{
-				Tile tile = tiles[i];
+				StaticTile tile = tiles[i];
 
-				if ( ((checkZ + checkHeight) > tile.Z && checkZ < (tile.Z + tile.Height))/* || (tile.Z < (checkZ + checkHeight) && (tile.Z + tile.Height) > checkZ)*/ )
+				if ( ((checkZ + checkHeight) > tile.Z && checkZ < (tile.Z + tile.Height))*//* || (tile.Z < (checkZ + checkHeight) && (tile.Z + tile.Height) > checkZ)*//* )
 				{
 					return true;
 				}
@@ -730,6 +729,7 @@ namespace Server
 
 			return false;
 		}
+		*/
 
 		public static object GetArrayCap( Array array, int index )
 		{

@@ -469,7 +469,7 @@ namespace Server.Items
 						{
 							MultiTileEntry entry = mcl.List[i];
 
-							int itemID = entry.m_ItemID & 0x3FFF;
+							int itemID = entry.m_ItemID;
 
 							if ( itemID >= 0xBA3 && itemID <= 0xC0E )
 							{
@@ -565,7 +565,7 @@ namespace Server.Items
 				{
 					HousePlacementEntry e = (HousePlacementEntry)list[i];
 
-					if ( e.m_MultiID == (house.ItemID & 0x3FFF) )
+					if ( e.m_MultiID == house.ItemID )
 						return e;
 				}
 			}
@@ -573,7 +573,7 @@ namespace Server.Items
 			{
 				Hashtable table = (Hashtable)obj;
 
-				obj = table[house.ItemID & 0x3FFF];
+				obj = table[house.ItemID];
 
 				if ( obj is HousePlacementEntry )
 					return (HousePlacementEntry)obj;

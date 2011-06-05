@@ -149,7 +149,7 @@ namespace Server.Multis
 
 		public static List<BaseBoat> Boats{ get{ return m_Instances; } }
 
-		public BaseBoat() : base( 0x4000 )
+		public BaseBoat() : base( 0x0 )
 		{
 			m_DecayTime = DateTime.Now + BoatDecayDelay;
 
@@ -891,14 +891,8 @@ namespace Server.Multis
 			{
 				string sNumber = navPoint.Substring( start );
 
-				try
-				{
-					number = Convert.ToInt32( sNumber );
-				}
-				catch
-				{
+                if ( !int.TryParse( sNumber, out number ) )
 					number = -1;
-				}
 
 				if ( number != -1 )
 				{
@@ -1190,8 +1184,8 @@ namespace Server.Multis
 					if ( newComponents.Tiles[x][y].Length == 0 || Contains( tx, ty ) )
 						continue;
 
-					Tile landTile = map.Tiles.GetLandTile( tx, ty );
-					Tile[] tiles = map.Tiles.GetStaticTiles( tx, ty, true );
+					LandTile landTile = map.Tiles.GetLandTile( tx, ty );
+					StaticTile[] tiles = map.Tiles.GetStaticTiles( tx, ty, true );
 
 					bool hasWater = false;
 
@@ -1209,8 +1203,8 @@ namespace Server.Multis
 
 					for ( int i = 0; i < tiles.Length; ++i )
 					{
-						Tile tile = tiles[i];
-						bool isWater = ( tile.ID >= 0x5796 && tile.ID <= 0x57B2 );
+						StaticTile tile = tiles[i];
+						bool isWater = ( tile.ID >= 0x1796 && tile.ID <= 0x17B2 );
 
 						if ( tile.Z == p.Z && isWater )
 							hasWater = true;
@@ -1227,7 +1221,7 @@ namespace Server.Multis
 
 			foreach ( Item item in eable )
 			{
-				if ( item.ItemID >= 0x4000 || item.Z < p.Z || !item.Visible )
+				if ( item is BaseMulti || item.ItemID > TileData.MaxItemValue || item.Z < p.Z || !item.Visible )
 					continue;
 
 				int x = item.X - p.X + newComponents.Min.X;

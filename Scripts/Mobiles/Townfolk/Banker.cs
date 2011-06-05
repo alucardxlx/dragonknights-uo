@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Server.Items;
 using Server.ContextMenus;
@@ -10,8 +9,8 @@ namespace Server.Mobiles
 {
 	public class Banker : BaseVendor
 	{
-		private ArrayList m_SBInfos = new ArrayList();
-		protected override ArrayList SBInfos{ get { return m_SBInfos; } }
+		private List<SBInfo> m_SBInfos = new List<SBInfo>();
+		protected override List<SBInfo> SBInfos{ get { return m_SBInfos; } }
 
 		public override NpcGuild NpcGuild{ get{ return NpcGuild.MerchantsGuild; } }
 
@@ -250,32 +249,32 @@ namespace Server.Mobiles
 							{
 								int amount;
 
-								try
-								{
-									amount = Convert.ToInt32( split[1] );
-								}
-								catch
-								{
-									break;
-								}
+								Container pack = e.Mobile.Backpack;
 
-								if ( amount > 5000 )
+								if ( !int.TryParse( split[1], out amount ) )
+									break;
+
+								if ( (!Core.ML && amount > 5000) || (Core.ML && amount > 60000) )
 								{
 									this.Say( 500381 ); // Thou canst not withdraw so much at one time!
 								}
-								else if ( amount > 0 )
+								else if (pack == null || pack.Deleted || !(pack.TotalWeight < pack.MaxWeight) || !(pack.TotalItems < pack.MaxItems))
+								{
+									this.Say(1048147); // Your backpack can't hold anything else.
+								}
+								else if (amount > 0)
 								{
 									BankBox box = e.Mobile.FindBankNoCreate();
 
-									if ( box == null || !box.ConsumeTotal( typeof( Gold ), amount ) )
+									if (box == null || !box.ConsumeTotal(typeof(Gold), amount))
 									{
-										this.Say( 500384 ); // Ah, art thou trying to fool me? Thou hast not so much gold!
+										this.Say(500384); // Ah, art thou trying to fool me? Thou hast not so much gold!
 									}
 									else
 									{
-										e.Mobile.AddToBackpack( new Gold( amount ) );
+										pack.DropItem(new Gold(amount));
 
-										this.Say( 1010005 ); // Thou hast withdrawn gold from thy account.
+										this.Say(1010005); // Thou hast withdrawn gold from thy account.
 									}
 								}
 							}
@@ -331,14 +330,8 @@ namespace Server.Mobiles
 							{
 								int amount;
 
-								try
-								{
-									amount = Convert.ToInt32( split[1] );
-								}
-								catch
-								{
-									break;
-								}
+                                if ( !int.TryParse( split[1], out amount ) )
+                                    break;
 
 								if ( amount < 5000 )
 								{

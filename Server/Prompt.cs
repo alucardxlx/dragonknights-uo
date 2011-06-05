@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Prompt.cs 4 2006-06-15 04:28:39Z mark $
+ *   $Id: Prompt.cs 644 2010-12-23 09:18:45Z asayre $
  *
  ***************************************************************************/
 
@@ -36,7 +36,7 @@ namespace Server.Prompts
 			}
 		}
 
-		public Prompt()
+		protected Prompt()
 		{
 			do
 			{
@@ -46,7 +46,7 @@ namespace Server.Prompts
 
 		public virtual void OnCancel( Mobile from )
 		{
-        }
+		}
 
 		public virtual void OnResponse( Mobile from, string text )
 		{

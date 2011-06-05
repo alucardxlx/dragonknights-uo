@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Packets.cs 406 2009-10-18 01:34:42Z mark $
+ *   $Id: Packets.cs 653 2010-12-31 11:09:18Z asayre $
  *
  ***************************************************************************/
 
@@ -89,8 +89,6 @@ namespace Server.Network
 
 	public sealed class DamagePacket : Packet
 	{
-		public static readonly ClientVersion Version = new ClientVersion( "4.0.7a" );
-
 		public DamagePacket( Mobile m, int amount ) : base( 0x0B, 7 )
 		{
 			m_Stream.Write( (int) m.Serial );
@@ -137,6 +135,28 @@ namespace Server.Network
 			m_Stream.Write( (byte) 1 );
 			m_Stream.Write( (short) x );
 			m_Stream.Write( (short) y );
+		}
+	}
+
+	public sealed class CancelArrowHS : Packet
+	{
+		public CancelArrowHS( int x, int y, Serial s ) : base( 0xBA, 10 )
+		{
+			m_Stream.Write( (byte) 0 );
+			m_Stream.Write( (short) x );
+			m_Stream.Write( (short) y );
+			m_Stream.Write( (int) s );
+		}
+	}
+
+	public sealed class SetArrowHS : Packet
+	{
+		public SetArrowHS( int x, int y, Serial s ) : base( 0xBA, 10 )
+		{
+			m_Stream.Write( (byte) 1 );
+			m_Stream.Write( (short) x );
+			m_Stream.Write( (short) y );
+			m_Stream.Write( (int) s );
 		}
 	}
 
@@ -251,7 +271,8 @@ namespace Server.Network
 
 	public sealed class VendorBuyContent : Packet
 	{
-		public VendorBuyContent( ArrayList list ) : base( 0x3c )
+		public VendorBuyContent( List<BuyItemState> list )
+			: base( 0x3c )
 		{
 			this.EnsureCapacity( list.Count*19 + 5 );
 
@@ -266,7 +287,7 @@ namespace Server.Network
 				BuyItemState bis = (BuyItemState)list[i];
 		
 				m_Stream.Write( (int)bis.MySerial );
-				m_Stream.Write( (ushort)(bis.ItemID & 0x3FFF) );
+				m_Stream.Write( (ushort)bis.ItemID );
 				m_Stream.Write( (byte)0 );//itemid offset
 				m_Stream.Write( (ushort)bis.Amount );
 				m_Stream.Write( (short)(i+1) );//x
@@ -277,9 +298,9 @@ namespace Server.Network
 		}
 	}
 
-		public sealed class VendorBuyContent6017 : Packet
+	public sealed class VendorBuyContent6017 : Packet
 	{
-		public VendorBuyContent6017( ArrayList list ) : base( 0x3c )
+		public VendorBuyContent6017( List<BuyItemState> list ) : base( 0x3c )
 		{
 			this.EnsureCapacity( list.Count*20 + 5 );
 
@@ -294,7 +315,7 @@ namespace Server.Network
 				BuyItemState bis = (BuyItemState)list[i];
 		
 				m_Stream.Write( (int)bis.MySerial );
-				m_Stream.Write( (ushort)(bis.ItemID & 0x3FFF) );
+				m_Stream.Write( (ushort)bis.ItemID );
 				m_Stream.Write( (byte)0 );//itemid offset
 				m_Stream.Write( (ushort)bis.Amount );
 				m_Stream.Write( (short)(i+1) );//x
@@ -311,13 +332,24 @@ namespace Server.Network
 		public DisplayBuyList( Mobile vendor ) : base( 0x24, 7 )
 		{
 			m_Stream.Write( (int)vendor.Serial );
-			m_Stream.Write( (short)0x30 );//buy window id?
+			m_Stream.Write( (short) 0x30 ); // buy window id?
+		}
+	}
+
+	public sealed class DisplayBuyListHS : Packet
+	{
+		public DisplayBuyListHS( Mobile vendor ) : base( 0x24, 9 )
+		{
+			m_Stream.Write( (int)vendor.Serial );
+			m_Stream.Write( (short) 0x30 ); // buy window id?
+			m_Stream.Write( (short) 0x00 );
 		}
 	}
 
 	public sealed class VendorBuyList : Packet
 	{
-		public VendorBuyList( Mobile vendor, ArrayList list ) : base( 0x74 )
+		public VendorBuyList( Mobile vendor, List<BuyItemState> list )
+			: base( 0x74 )
 		{
 			this.EnsureCapacity( 256 );
 
@@ -328,7 +360,7 @@ namespace Server.Network
 
 			for ( int i = 0; i < list.Count; ++i )
 			{
-				BuyItemState bis = (BuyItemState)list[i];
+				BuyItemState bis = list[i];
 
 				m_Stream.Write( (int) bis.Price );
 
@@ -356,7 +388,7 @@ namespace Server.Network
 			foreach ( SellItemState state in table.Values )
 			{
 				m_Stream.Write( (int) state.Item.Serial );
-				m_Stream.Write( (ushort) (state.Item.ItemID & 0x3FFF) );
+				m_Stream.Write( (ushort) state.Item.ItemID );
 				m_Stream.Write( (ushort) state.Item.Hue );
 				m_Stream.Write( (ushort) state.Item.Amount );
 				m_Stream.Write( (ushort) state.Price );
@@ -759,7 +791,7 @@ namespace Server.Network
 			{
 				ItemListEntry e = entries[i];
 
-				m_Stream.Write( (short) (e.ItemID & 0x3FFF) );
+				m_Stream.Write( (ushort) e.ItemID );
 				m_Stream.Write( (short) e.Hue );
 
 				string name = e.Name;
@@ -1011,7 +1043,7 @@ namespace Server.Network
 			// +1 - Flags
 
 			uint serial = (uint)item.Serial.Value;
-			int itemID = item.ItemID;
+			int itemID = item.ItemID & 0x3FFF;
 			int amount = item.Amount;
 			Point3D loc = item.Location;
 			int x = loc.m_X;
@@ -1030,7 +1062,11 @@ namespace Server.Network
 			}
 
 			m_Stream.Write( (uint) serial );
-			m_Stream.Write( (short) (itemID & 0x7FFF) );
+
+			if ( item is BaseMulti )
+				m_Stream.Write( (short) (itemID | 0x4000) );
+			else
+				m_Stream.Write( (short) itemID );
 
 			if ( amount != 0 )
 			{
@@ -1070,6 +1106,118 @@ namespace Server.Network
 
 			if ( flags != 0 )
 				m_Stream.Write( (byte) flags );
+		}
+	}
+
+	public sealed class WorldItemSA : Packet
+	{
+		public WorldItemSA( Item item ) : base( 0xF3, 24 )
+		{
+			m_Stream.Write( (short) 0x1 );
+
+			int itemID = item.ItemID;
+
+			if ( item is BaseMulti ) {
+				m_Stream.Write( (byte) 0x02 );
+
+				m_Stream.Write( (int) item.Serial );
+
+				itemID &= 0x3FFF;
+
+				m_Stream.Write( (short) itemID ); 
+
+				m_Stream.Write( (byte) 0 );
+			/*} else if (  ) {
+				m_Stream.Write( (byte) 0x01 );
+
+				m_Stream.Write( (int) item.Serial );
+
+				m_Stream.Write( (short) itemID ); 
+
+				m_Stream.Write( (byte) item.Direction );*/
+			} else {
+				m_Stream.Write( (byte) 0x00 );
+
+				m_Stream.Write( (int) item.Serial );
+
+				itemID &= 0x7FFF;
+
+				m_Stream.Write( (short) itemID ); 
+
+				m_Stream.Write( (byte) 0 );
+			}
+
+			int amount = item.Amount;
+			m_Stream.Write( (short) amount );
+			m_Stream.Write( (short) amount );
+
+			Point3D loc = item.Location;
+			int x = loc.m_X & 0x7FFF;
+			int y = loc.m_Y & 0x3FFF;
+			m_Stream.Write( (short) x );
+			m_Stream.Write( (short) y );
+			m_Stream.Write( (sbyte) loc.m_Z );
+
+			m_Stream.Write( (byte) item.Light );
+			m_Stream.Write( (short) item.Hue );
+			m_Stream.Write( (byte) item.GetPacketFlags() );
+		}
+	}
+
+	public sealed class WorldItemHS : Packet
+	{
+		public WorldItemHS( Item item ) : base( 0xF3, 26 )
+		{
+			m_Stream.Write( (short) 0x1 );
+
+			int itemID = item.ItemID;
+
+			if ( item is BaseMulti ) {
+				m_Stream.Write( (byte) 0x02 );
+
+				m_Stream.Write( (int) item.Serial );
+
+				itemID &= 0x3FFF;
+
+				m_Stream.Write( (ushort) itemID ); 
+
+				m_Stream.Write( (byte) 0 );
+			/*} else if (  ) {
+				m_Stream.Write( (byte) 0x01 );
+
+				m_Stream.Write( (int) item.Serial );
+
+				m_Stream.Write( (ushort) itemID ); 
+
+				m_Stream.Write( (byte) item.Direction );*/
+			} else {
+				m_Stream.Write( (byte) 0x00 );
+
+				m_Stream.Write( (int) item.Serial );
+
+				itemID &= 0xFFFF;
+
+				m_Stream.Write( (ushort) itemID );
+
+				m_Stream.Write( (byte) 0 );
+			}
+
+			int amount = item.Amount;
+			m_Stream.Write( (short) amount );
+			m_Stream.Write( (short) amount );
+
+			Point3D loc = item.Location;
+			int x = loc.m_X & 0x7FFF;
+			int y = loc.m_Y & 0x3FFF;
+			m_Stream.Write( (short) x );
+			m_Stream.Write( (short) y );
+			m_Stream.Write( (sbyte) loc.m_Z );
+
+			m_Stream.Write( (byte) item.Light );
+			m_Stream.Write( (short) item.Hue );
+			m_Stream.Write( (byte) item.GetPacketFlags() );
+
+			m_Stream.Write( (short) 0x00 ); // ??
 		}
 	}
 
@@ -1479,6 +1627,16 @@ namespace Server.Network
 		}
 	}
 
+	public sealed class DisplaySpellbookHS : Packet
+	{
+		public DisplaySpellbookHS( Item book ) : base( 0x24, 9 )
+		{
+			m_Stream.Write( (int) book.Serial );
+			m_Stream.Write( (short) -1 );
+			m_Stream.Write( (short) 0x7D );
+		}
+	}
+
 	public sealed class NewSpellbookContent : Packet
 	{
 		public NewSpellbookContent( Item item, int graphic, int offset, ulong content ) : base( 0xBF )
@@ -1575,6 +1733,16 @@ namespace Server.Network
 		}
 	}
 
+	public sealed class ContainerDisplayHS : Packet
+	{
+		public ContainerDisplayHS( Container c ) : base( 0x24, 9 )
+		{
+			m_Stream.Write( (int) c.Serial );
+			m_Stream.Write( (short) c.GumpID );
+			m_Stream.Write( (short) 0x7D );
+		}
+	}
+
 	public sealed class ContainerContentUpdate : Packet
 	{
 		public ContainerContentUpdate( Item item ) : base( 0x25, 20 )
@@ -1591,13 +1759,8 @@ namespace Server.Network
 				parentSerial = Serial.Zero;
 			}
 
-			ushort cid = (ushort) item.ItemID;
-
-			if ( cid > 0x3FFF )
-				cid = 0x9D7;
-
 			m_Stream.Write( (int) item.Serial );
-			m_Stream.Write( (short) cid );
+			m_Stream.Write( (ushort) item.ItemID );
 			m_Stream.Write( (byte) 0 ); // signed, itemID offset
 			m_Stream.Write( (ushort) item.Amount );
 			m_Stream.Write( (short) item.X );
@@ -1607,7 +1770,7 @@ namespace Server.Network
 		}
 	}
 
-		public sealed class ContainerContentUpdate6017 : Packet
+	public sealed class ContainerContentUpdate6017 : Packet
 	{
 		public ContainerContentUpdate6017( Item item ) : base( 0x25, 21 )
 		{
@@ -1623,13 +1786,8 @@ namespace Server.Network
 				parentSerial = Serial.Zero;
 			}
 
-			ushort cid = (ushort) item.ItemID;
-
-			if ( cid > 0x3FFF )
-				cid = 0x9D7;
-
 			m_Stream.Write( (int) item.Serial );
-			m_Stream.Write( (short) cid );
+			m_Stream.Write( (ushort) item.ItemID );
 			m_Stream.Write( (byte) 0 ); // signed, itemID offset
 			m_Stream.Write( (ushort) item.Amount );
 			m_Stream.Write( (short) item.X );
@@ -1663,13 +1821,8 @@ namespace Server.Network
 				{
 					Point3D loc = child.Location;
 
-					ushort cid = (ushort) child.ItemID;
-
-					if ( cid > 0x3FFF )
-						cid = 0x9D7;
-
 					m_Stream.Write( (int) child.Serial );
-					m_Stream.Write( (ushort) cid );
+					m_Stream.Write( (ushort) child.ItemID );
 					m_Stream.Write( (byte) 0 ); // signed, itemID offset
 					m_Stream.Write( (ushort) child.Amount );
 					m_Stream.Write( (short) loc.m_X );
@@ -1686,7 +1839,7 @@ namespace Server.Network
 		}
 	}
 
-		public sealed class ContainerContent6017 : Packet
+	public sealed class ContainerContent6017 : Packet
 	{
 		public ContainerContent6017( Mobile beholder, Item beheld ) : base( 0x3C )
 		{
@@ -1709,13 +1862,8 @@ namespace Server.Network
 				{
 					Point3D loc = child.Location;
 
-					ushort cid = (ushort) child.ItemID;
-
-					if ( cid > 0x3FFF )
-						cid = 0x9D7;
-
 					m_Stream.Write( (int) child.Serial );
-					m_Stream.Write( (ushort) cid );
+					m_Stream.Write( (ushort) child.ItemID );
 					m_Stream.Write( (byte) 0 ); // signed, itemID offset
 					m_Stream.Write( (ushort) child.Amount );
 					m_Stream.Write( (short) loc.m_X );
@@ -2001,6 +2149,24 @@ namespace Server.Network
 			m_Stream.Write( (short) hue );
 			m_Stream.Write( (byte) m.GetOldPacketFlags() );
 			m_Stream.Write( (byte) noto );
+		}
+	}
+
+	public sealed class MultiTargetReqHS : Packet
+	{
+		public MultiTargetReqHS( MultiTarget t ) : base( 0x99, 30 )
+		{
+			m_Stream.Write( (bool) t.AllowGround );
+			m_Stream.Write( (int) t.TargetID );
+			m_Stream.Write( (byte) t.Flags );
+
+			m_Stream.Fill();
+
+			m_Stream.Seek( 18, SeekOrigin.Begin );
+			m_Stream.Write( (short) t.MultiID );
+			m_Stream.Write( (short) t.Offset.X );
+			m_Stream.Write( (short) t.Offset.Y );
+			m_Stream.Write( (short) t.Offset.Z );
 		}
 	}
 
@@ -2513,9 +2679,9 @@ namespace Server.Network
 
 	public sealed class SupportedFeatures : Packet
 	{
-		private static int m_AdditionalFlags;
+		private static FeatureFlags m_AdditionalFlags;
 
-		public static int Value{ get{ return m_AdditionalFlags; } set{ m_AdditionalFlags = value; } }
+		public static FeatureFlags Value{ get{ return m_AdditionalFlags; } set{ m_AdditionalFlags = value; } }
 
 		public static SupportedFeatures Instantiate( NetState ns )
 		{
@@ -2524,25 +2690,21 @@ namespace Server.Network
 
 		public SupportedFeatures( NetState ns ) : base( 0xB9, ns.ExtendedSupportedFeatures ? 5 : 3 )
 		{
-			int flags = ExpansionInfo.CurrentExpansion.SupportedFeatures;
+			FeatureFlags flags = ExpansionInfo.CurrentExpansion.SupportedFeatures;
 
 			flags |= m_AdditionalFlags;
-			/*
-			int flags = 0x3 | m_AdditionalFlags;
-
-			if ( Core.SE )
-				flags |= 0x0040;
-
-			if ( Core.AOS )
-				flags |= 0x801C;
-			 * */
 
 			IAccount acct = ns.Account as IAccount;
 
 			if ( acct != null && acct.Limit >= 6 )
 			{
-				flags |= 0x8020;
-				flags &= ~0x004;
+				flags |= FeatureFlags.Unk7;
+				flags &= ~FeatureFlags.UOTD;
+
+				if ( acct.Limit > 6 )
+					flags |= FeatureFlags.SeventhCharacterSlot;
+				else
+					flags |= FeatureFlags.SixthCharacterSlot;
 			}
 
 			if ( ns.ExtendedSupportedFeatures ) {
@@ -2550,12 +2712,10 @@ namespace Server.Network
 			} else {
 				m_Stream.Write( (ushort) flags );
 			}
-
-			//m_Stream.Write( (ushort) m_Value ); // 0x01 = T2A, 0x02 = LBR
 		}
 	}
 
-	public class AttributeNormalizer
+	public static class AttributeNormalizer
 	{
 		private static int m_Maximum = 25;
 		private static bool m_Enabled = true;
@@ -3063,14 +3223,14 @@ namespace Server.Network
 					if ( beheld.SolidHueOverride >= 0 )
 						hue = beheld.SolidHueOverride;
 
-					int itemID = item.ItemID & 0x3FFF;
+					int itemID = item.ItemID & 0x7FFF;
 					bool writeHue = ( hue != 0 );
 
 					if ( writeHue )
 						itemID |= 0x8000;
 
 					m_Stream.Write( (int) item.Serial );
-					m_Stream.Write( (short) itemID );
+					m_Stream.Write( (ushort) itemID );
 					m_Stream.Write( (byte) layer );
 
 					if ( writeHue )
@@ -3088,7 +3248,7 @@ namespace Server.Network
 					if( beheld.SolidHueOverride >= 0 )
 						hue = beheld.SolidHueOverride;
 
-					int itemID = beheld.HairItemID & 0x3FFF;
+					int itemID = beheld.HairItemID & 0x7FFF;
 
 					bool writeHue = (hue != 0);
 
@@ -3096,7 +3256,7 @@ namespace Server.Network
 						itemID |= 0x8000;
 
 					m_Stream.Write( (int)HairInfo.FakeSerial( beheld ) );
-					m_Stream.Write( (short)itemID );
+					m_Stream.Write( (ushort)itemID );
 					m_Stream.Write( (byte)Layer.Hair );
 
 					if( writeHue )
@@ -3114,7 +3274,7 @@ namespace Server.Network
 					if( beheld.SolidHueOverride >= 0 )
 						hue = beheld.SolidHueOverride;
 
-					int itemID = beheld.FacialHairItemID & 0x3FFF;
+					int itemID = beheld.FacialHairItemID & 0x7FFF;
 
 					bool writeHue = (hue != 0);
 
@@ -3122,7 +3282,7 @@ namespace Server.Network
 						itemID |= 0x8000;
 
 					m_Stream.Write( (int)FacialHairInfo.FakeSerial( beheld ) );
-					m_Stream.Write( (short)itemID );
+					m_Stream.Write( (ushort)itemID );
 					m_Stream.Write( (byte)Layer.FacialHair );
 
 					if( writeHue )
@@ -3187,14 +3347,14 @@ namespace Server.Network
 					if ( beheld.SolidHueOverride >= 0 )
 						hue = beheld.SolidHueOverride;
 
-					int itemID = item.ItemID & 0x3FFF;
+					int itemID = item.ItemID & 0x7FFF;
 					bool writeHue = ( hue != 0 );
 
 					if ( writeHue )
 						itemID |= 0x8000;
 
 					m_Stream.Write( (int) item.Serial );
-					m_Stream.Write( (short) itemID );
+					m_Stream.Write( (ushort) itemID );
 					m_Stream.Write( (byte) layer );
 
 					if ( writeHue )
@@ -3212,7 +3372,7 @@ namespace Server.Network
 					if( beheld.SolidHueOverride >= 0 )
 						hue = beheld.SolidHueOverride;
 
-					int itemID = beheld.HairItemID & 0x3FFF;
+					int itemID = beheld.HairItemID & 0x7FFF;
 
 					bool writeHue = (hue != 0);
 
@@ -3220,7 +3380,7 @@ namespace Server.Network
 						itemID |= 0x8000;
 
 					m_Stream.Write( (int)HairInfo.FakeSerial( beheld ) );
-					m_Stream.Write( (short)itemID );
+					m_Stream.Write( (ushort)itemID );
 					m_Stream.Write( (byte)Layer.Hair );
 
 					if( writeHue )
@@ -3238,7 +3398,7 @@ namespace Server.Network
 					if( beheld.SolidHueOverride >= 0 )
 						hue = beheld.SolidHueOverride;
 
-					int itemID = beheld.FacialHairItemID & 0x3FFF;
+					int itemID = beheld.FacialHairItemID & 0x7FFF;
 
 					bool writeHue = (hue != 0);
 
@@ -3246,7 +3406,7 @@ namespace Server.Network
 						itemID |= 0x8000;
 
 					m_Stream.Write( (int)FacialHairInfo.FakeSerial( beheld ) );
-					m_Stream.Write( (short)itemID );
+					m_Stream.Write( (ushort)itemID );
 					m_Stream.Write( (byte)Layer.FacialHair );
 
 					if( writeHue )
@@ -3589,35 +3749,29 @@ namespace Server.Network
 				m_Stream.WriteAsciiFixed( ci.City, 31 );
 				m_Stream.WriteAsciiFixed( ci.Building, 31 );
 			}
-/*
-			int flags = 0x08; //Context Menus
 
-			if ( Core.SE )
-				flags |= 0xA0; //SE & AOS
-			else if ( Core.AOS )
-				flags |= 0x20; //AOS
- * */
+			CharacterListFlags flags = ExpansionInfo.CurrentExpansion.CharacterListFlags;
 
-			int flags = ExpansionInfo.CurrentExpansion.CharacterListFlags;
-
-			if ( count >= 6 )
-				flags |= 0x40; // 6th character slot
+			if ( count > 6 )
+				flags |= (CharacterListFlags.SeventhCharacterSlot | CharacterListFlags.SixthCharacterSlot); // 7th Character Slot - TODO: Is SixthCharacterSlot Required?
+			else if ( count == 6 )
+				flags |= CharacterListFlags.SixthCharacterSlot; // 6th Character Slot
 			else if ( a.Limit == 1 )
-				flags |= 0x14; // Limit characters & one character
+				flags |= (CharacterListFlags.SlotLimit & CharacterListFlags.OneCharacterSlot); // Limit Characters & One Character
 
-			m_Stream.Write( (int)(flags | m_AdditionalFlags) ); // flags
+			m_Stream.Write( (int)(flags | m_AdditionalFlags) ); // Additional Flags
 		}
 
-		private static int m_AdditionalFlags;
+		private static CharacterListFlags m_AdditionalFlags;
 
-		public static int AdditionalFlags
+		public static CharacterListFlags AdditionalFlags
 		{
 			get{ return m_AdditionalFlags; }
 			set{ m_AdditionalFlags = value; }
 		}
 	}
 
-	public class ClearWeaponAbility : Packet
+	public sealed class ClearWeaponAbility : Packet
 	{
 		public static readonly Packet Instance = Packet.SetStatic( new ClearWeaponAbility() );
 
@@ -3631,12 +3785,12 @@ namespace Server.Network
 
 	public enum ALRReason : byte
 	{
-		Invalid = 0x00,
-		InUse = 0x01,
-		Blocked = 0x02,
-		BadPass = 0x03,
-		Idle = 0xFE,
-		BadComm = 0xFF
+		Invalid	= 0x00,
+		InUse	= 0x01,
+		Blocked	= 0x02,
+		BadPass	= 0x03,
+		Idle	= 0xFE,
+		BadComm	= 0xFF
 	}
 
 	public sealed class AccountLoginRej : Packet
@@ -3843,7 +3997,7 @@ namespace Server.Network
 			get{ return m_PacketID; }
 		}
 
-		public Packet( int packetID )
+		protected Packet( int packetID )
 		{
 			m_PacketID = packetID;
 
@@ -3861,7 +4015,7 @@ namespace Server.Network
 			m_Stream.Write( (short) 0 );
 		}
 
-		public Packet( int packetID, int length )
+		protected Packet( int packetID, int length )
 		{
 			m_PacketID = packetID;
 			m_Length = length;

@@ -28,7 +28,7 @@ namespace Server.Mobiles
 	{
 		private const int MaxSell = 500;
 
-		protected abstract ArrayList SBInfos { get; }
+		protected abstract List<SBInfo> SBInfos { get; }
 
 		private ArrayList m_ArmorBuyInfo = new ArrayList();
 		private ArrayList m_ArmorSellInfo = new ArrayList();
@@ -106,7 +106,7 @@ namespace Server.Mobiles
 			private BaseVendor m_Vendor;
 
 			public BulkOrderInfoEntry( Mobile from, BaseVendor vendor )
-				: base( 6152, 6 )
+				: base( 6152 )
 			{
 				m_From = from;
 				m_Vendor = vendor;
@@ -550,11 +550,11 @@ namespace Server.Mobiles
 			UpdateBuyInfo();
 
 			int count = 0;
-			ArrayList list;
+			List<BuyItemState> list;
 			IBuyItemInfo[] buyInfo = this.GetBuyInfo();
 			IShopSellInfo[] sellInfo = this.GetSellInfo();
 
-			list = new ArrayList( buyInfo.Length );
+            list = new List<BuyItemState>( buyInfo.Length );
 			Container cont = this.BuyPack;
 
 			List<ObjectPropertyList> opls = null;
@@ -637,15 +637,23 @@ namespace Server.Mobiles
 
 				SendPacksTo( from );
 
-				if ( from.NetState == null )
+				NetState ns = from.NetState;
+
+				if ( ns == null )
 					return;
 
-				if ( from.NetState.IsPost6017 )
+				if ( ns.ContainerGridLines )
 					from.Send( new VendorBuyContent6017( list ) );
 				else
 					from.Send( new VendorBuyContent( list ) );
+
 				from.Send( new VendorBuyList( this, list ) );
-				from.Send( new DisplayBuyList( this ) );
+
+				if ( ns.HighSeas )
+					from.Send( new DisplayBuyListHS( this ) );
+				else
+					from.Send( new DisplayBuyList( this ) );
+
 				from.Send( new MobileStatusExtended( from ) );//make sure their gold amount is sent
 
 				if ( opls != null ) {
@@ -835,8 +843,19 @@ namespace Server.Mobiles
 //I ADDED		
 		public override bool OnDragDrop( Mobile from, Item dropped )
 		{
+			/* TODO: Thou art giving me? and fame/karma for gold gifts */
+
 			if ( dropped is SmallBOD || dropped is LargeBOD )
 			{
+				if( Core.ML )
+				{
+					if( ((PlayerMobile)from).NextBODTurnInTime > DateTime.Now )
+					{
+						SayTo( from, 1079976 );	//
+						return false;
+					}
+				}
+
 				if ( !IsValidBulkOrder( dropped ) || !SupportsBulkOrders( from ) )
 				{
 					SayTo( from, 1045130 ); // That order is for some other shopkeeper.
@@ -872,6 +891,11 @@ namespace Server.Mobiles
 
 				OnSuccessfulBulkOrderReceive( from );
 
+				if( Core.ML )
+				{
+					((PlayerMobile)from).NextBODTurnInTime = DateTime.Now + TimeSpan.FromSeconds( 10.0 );
+				}
+
 				dropped.Delete();
 				return true;
 			}
@@ -893,7 +917,7 @@ namespace Server.Mobiles
 			return null;
 		}
 
-		private void ProcessSinglePurchase( BuyItemResponse buy, IBuyItemInfo bii, ArrayList validBuy, ref int controlSlots, ref bool fullPurchase, ref int totalCost )
+        private void ProcessSinglePurchase( BuyItemResponse buy, IBuyItemInfo bii, List<BuyItemResponse> validBuy, ref int controlSlots, ref bool fullPurchase, ref int totalCost )
 		{
 			int amount = buy.Amount;
 
@@ -990,7 +1014,7 @@ namespace Server.Mobiles
 			}
 		}
 
-		public virtual bool OnBuyItems( Mobile buyer, ArrayList list )
+        public virtual bool OnBuyItems( Mobile buyer, List<BuyItemResponse> list )
 		{
 			if ( !IsActiveSeller )
 				return false;
@@ -1009,7 +1033,7 @@ namespace Server.Mobiles
 			IBuyItemInfo[] buyInfo = this.GetBuyInfo();
 			IShopSellInfo[] info = GetSellInfo();
 			int totalCost = 0;
-			ArrayList validBuy = new ArrayList( list.Count );
+            List<BuyItemResponse> validBuy = new List<BuyItemResponse>( list.Count );
 			Container cont;
 			bool bought = false;
 			bool fromBank = false;
@@ -1220,7 +1244,7 @@ namespace Server.Mobiles
 			return true;
 		}
 
-		public virtual bool OnSellItems( Mobile seller, ArrayList list )
+        public virtual bool OnSellItems( Mobile seller, List<SellItemResponse> list )
 		{
 			if ( !IsActiveBuyer )
 				return false;
@@ -1241,8 +1265,6 @@ namespace Server.Mobiles
 			int GiveGold = 0;
 			int Sold = 0;
 			Container cont;
-			ArrayList delete = new ArrayList();
-			ArrayList drop = new ArrayList();
 
 			foreach ( SellItemResponse resp in list )
 			{
@@ -1372,12 +1394,12 @@ namespace Server.Mobiles
 
 			writer.Write( (int)1 ); // version
 
-			ArrayList sbInfos = this.SBInfos;
+            List<SBInfo> sbInfos = this.SBInfos;
 
 			for ( int i = 0; sbInfos != null && i < sbInfos.Count; ++i )
 			{
-				SBInfo sbInfo = (SBInfo)sbInfos[i];
-				ArrayList buyInfo = sbInfo.BuyInfo;
+				SBInfo sbInfo = sbInfos[i];
+                List<GenericBuyInfo> buyInfo = sbInfo.BuyInfo;
 
 				for ( int j = 0; buyInfo != null && j < buyInfo.Count; ++j )
 				{
@@ -1415,7 +1437,7 @@ namespace Server.Mobiles
 
 			LoadSBInfo();
 
-			ArrayList sbInfos = this.SBInfos;
+			List<SBInfo> sbInfos = this.SBInfos;
 
 			switch ( version )
 			{
@@ -1435,8 +1457,8 @@ namespace Server.Mobiles
 
 								if ( sbInfoIndex >= 0 && sbInfoIndex < sbInfos.Count )
 								{
-									SBInfo sbInfo = (SBInfo)sbInfos[sbInfoIndex];
-									ArrayList buyInfo = sbInfo.BuyInfo;
+									SBInfo sbInfo = sbInfos[sbInfoIndex];
+                                    List<GenericBuyInfo> buyInfo = sbInfo.BuyInfo;
 
 									if ( buyInfo != null && buyInfoIndex >= 0 && buyInfoIndex < buyInfo.Count )
 									{
@@ -1477,14 +1499,14 @@ namespace Server.Mobiles
 		{
 			if ( from.Alive && IsActiveVendor )
 			{
+				if ( SupportsBulkOrders( from ) )
+					list.Add( new BulkOrderInfoEntry( from, this ) );
+
 				if ( IsActiveSeller )
 					list.Add( new VendorBuyEntry( from, this ) );
 
 				if ( IsActiveBuyer )
 					list.Add( new VendorSellEntry( from, this ) );
-
-				if ( SupportsBulkOrders( from ) )
-					list.Add( new BulkOrderInfoEntry( from, this ) );
 			}
 
 			base.AddCustomContextEntries( from, list );

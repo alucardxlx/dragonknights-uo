@@ -64,7 +64,7 @@ namespace Server.Lokai
 			m_Target = MateGate.Location;
 			m_TargetMap = MateGate.Map;
 			
-			int flags = m.NetState == null ? 0 : m.NetState.Flags;
+			int flags = m.NetState == null ? 0 : (int)m.NetState.Flags;
 
 			if ( Factions.Sigil.ExistsOn( m ) )
 			{

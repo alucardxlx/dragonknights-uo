@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using Server;
+using System.Collections.Generic; 
 
 namespace Server.Mobiles
 {
 	public class AProvisioner : BaseVendor
 	{
-		private ArrayList m_SBInfos = new ArrayList();
-		protected override ArrayList SBInfos{ get { return m_SBInfos; } }
+		private List<SBInfo> m_SBInfos = new List<SBInfo>();
+		protected override List<SBInfo> SBInfos{ get { return m_SBInfos; } }
 
 		[Constructable]
 		public AProvisioner() : base( "The Provisioner" )

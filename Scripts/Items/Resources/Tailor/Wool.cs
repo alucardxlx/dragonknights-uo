@@ -162,7 +162,8 @@ namespace Server.Items
                             att.AddWheels(item);
                             from.PublicOverheadMessage(Server.Network.MessageType.Emote, 51, false, "*spinning*");
                             m_Wool.Consume();
-                            wheel.BeginSpin(new SpinCallback(Wool.OnSpunLoop), from, m_Wool.Hue, m_Wool);
+							if ( m_Wool is TaintedWool )	wheel.BeginSpin( new SpinCallback( TaintedWool.OnSpunLoop ), from, m_Wool.Hue, m_Wool );
+                            else wheel.BeginSpin(new SpinCallback(Wool.OnSpunLoop), from, m_Wool.Hue, m_Wool);
                         }
                         else
                             from.SendMessage("You are too occupied with the " + SpinningWheelQuotaAttachment.m_WheelQuotaCap.ToString() + " spinning wheels you are running.");
@@ -173,6 +174,48 @@ namespace Server.Items
 					from.SendLocalizedMessage( 502658 ); // Use that on a spinning wheel.
 				}
 			}
+		}
+	}
+	public class TaintedWool : Wool
+	{
+		[Constructable]
+		public TaintedWool() : this( 1 )
+		{
+		}
+
+		[Constructable]
+		public TaintedWool( int amount ) : base( 0x101F )
+		{
+			Stackable = true;
+			Weight = 4.0;
+			Amount = amount;
+		}
+
+		public TaintedWool( Serial serial ) : base( serial )
+		{
+		}
+
+		public override void Serialize( GenericWriter writer )
+		{
+			base.Serialize( writer );
+
+			writer.Write( (int) 0 ); // version
+		}
+
+		public override void Deserialize( GenericReader reader )
+		{
+			base.Deserialize( reader );
+
+			int version = reader.ReadInt();
+		}
+
+		new public static void OnSpun( ISpinningWheel wheel, Mobile from, int hue )
+		{
+			Item item = new DarkYarn( 1 );
+			item.Hue = hue;
+
+			from.AddToBackpack( item );
+			from.SendLocalizedMessage( 1010574 ); // You put a ball of yarn in your backpack.
 		}
 	}
 }

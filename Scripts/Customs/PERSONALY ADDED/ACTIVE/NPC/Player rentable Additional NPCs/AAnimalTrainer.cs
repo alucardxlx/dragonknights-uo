@@ -12,8 +12,8 @@ namespace Server.Mobiles
 {
 	public class AAnimalTrainer : BaseVendor
 	{
-		private ArrayList m_SBInfos = new ArrayList();
-		protected override ArrayList SBInfos{ get { return m_SBInfos; } }
+		private List<SBInfo> m_SBInfos = new List<SBInfo>();
+		protected override List<SBInfo> SBInfos{ get { return m_SBInfos; } }
 
 		[Constructable]
 		public AAnimalTrainer() : base( "The Animal Trainer" )

@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: ScriptCompiler.cs 353 2009-08-07 07:07:15Z mark $
+ *   $Id: ScriptCompiler.cs 651 2010-12-28 09:24:08Z asayre $
  *
  ***************************************************************************/
 
@@ -29,10 +29,11 @@ using System.Reflection;
 using System.Security.Cryptography;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
 
 namespace Server
 {
-	public class ScriptCompiler
+	public static class ScriptCompiler
 	{
 		private static Assembly[] m_Assemblies;
 
@@ -91,8 +92,8 @@ namespace Server
 
 			AppendDefine( ref sb, "/d:Framework_2_0" );
 
-#if Framework_3_5
-			AppendDefine( ref sb, "/d:Framework_3_5" );
+#if Framework_4_0
+			AppendDefine( ref sb, "/d:Framework_4_0" );
 #endif
 
 			return (sb == null ? null : sb.ToString());
@@ -126,6 +127,7 @@ namespace Server
 					}
 
 					bin.Write( debug );
+					bin.Write( Core.Version.ToString() );
 
 					ms.Position = 0;
 
@@ -211,11 +213,7 @@ namespace Server
 
 			DeleteFiles( "Scripts.CS*.dll" );
 
-#if Framework_3_5
-			using ( CSharpCodeProvider provider = new CSharpCodeProvider( new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } } ) )
-#else
 			using ( CSharpCodeProvider provider = new CSharpCodeProvider() )
-#endif
 			{
 				string path = GetUnusedPath( "Scripts.CS" );
 
@@ -354,11 +352,8 @@ namespace Server
 			}
 
 			DeleteFiles( "Scripts.VB*.dll" );
-#if Framework_3_5
-			using ( VBCodeProvider provider = new VBCodeProvider( new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } } ) )
-#else
+
 			using ( VBCodeProvider provider = new VBCodeProvider() )
-#endif
 			{
 				string path = GetUnusedPath( "Scripts.VB" );
 
@@ -418,7 +413,7 @@ namespace Server
 				{
 					string file = e.FileName;
 
-					// Rediculous. FileName is null if the warning/error is internally generated in csc.
+					// Ridiculous. FileName is null if the warning/error is internally generated in csc.
 					if ( string.IsNullOrEmpty( file ) ) {
 						Console.WriteLine( "ScriptCompiler: {0}: {1}", e.ErrorNumber, e.ErrorText );
 						continue;
@@ -528,15 +523,6 @@ namespace Server
 
 		private delegate CompilerResults Compiler( bool debug );
 
-		private void LoadScriptedAssembly( List<Assembly> assemblies, string fileName, Compiler compiler, bool debug )
-		{
-
-
-			if( File.Exists( fileName ) )
-			{
-			}
-		}
-
 		public static bool Compile()
 		{
 			return Compile( false );
@@ -598,8 +584,14 @@ namespace Server
 			m_Assemblies = assemblies.ToArray();
 
 			Console.Write( "Scripts: Verifying..." );
+
+			Stopwatch watch = Stopwatch.StartNew();
+
 			Core.VerifySerialization();
-			Console.WriteLine( "done ({0} items, {1} mobiles)", Core.ScriptItems, Core.ScriptMobiles );
+			
+			watch.Stop();
+
+			Console.WriteLine("done ({0} items, {1} mobiles) ({2:F2} seconds)", Core.ScriptItems, Core.ScriptMobiles, watch.Elapsed.TotalSeconds);
 
 			return true;
 		}

@@ -363,7 +363,7 @@ namespace Server.Commands
     {
 
 
-        public LootGump(Mobile m) : base( 0, 0 )
+        public LootGump(Mobile m) : base( 200, 100 )
         {
             LootData lootoptions = (LootData)XmlAttach.FindAttachment(m, typeof(LootData));
 
@@ -379,55 +379,55 @@ namespace Server.Commands
 			AddLabel(166, 4, 0, @"Looting Options");
 			AddLabel(108, 37, 233, @"Select what you want to be looted");
 
-            AddLabel(40, 90, 95, @"All Items");
+            AddLabel(40, 90, 0, @"All Items");
 			AddCheck(160, 90, 1151, 1154, lootoptions.GetAll, 1);
 
-			AddLabel(39, 130, 95, @"Artifacts");
+			AddLabel(39, 130, 0, @"Artifacts");
             AddCheck(160, 130, 1151, 1154, lootoptions.GetArtifacts, 2);
 
-			AddLabel(40, 170, 95, @"Weapons");
+			AddLabel(40, 170, 0, @"Weapons");
             AddCheck(160, 170, 1151, 1154, lootoptions.GetWeapons, 3);
 
-			AddLabel(40, 210, 95, @"Armor");
+			AddLabel(40, 210, 0, @"Armor");
             AddCheck(160, 210, 1151, 1154, lootoptions.GetArmor, 4);
 
-			AddLabel(40, 250, 95, @"Clothing");
+			AddLabel(40, 250, 0, @"Clothing");
             AddCheck(160, 250, 1151, 1154, lootoptions.GetClothing, 5);
 
-			AddLabel(40, 290, 95, @"Jewelry");
+			AddLabel(40, 290, 0, @"Jewelry");
             AddCheck(160, 290, 1151, 1154, lootoptions.GetJewelry, 6);
 			
-			AddLabel(40, 330, 95, @"Gems");
+			AddLabel(40, 330, 0, @"Gems");
             AddCheck(160, 330, 1151, 1154, lootoptions.GetGems, 7);
 
-			AddLabel(40, 370, 95, @"Bolts/Arrows");
+			AddLabel(40, 370, 0, @"Bolts/Arrows");
             AddCheck(160, 370, 1151, 1154, lootoptions.GetArrows, 8);
 
-			AddLabel(270, 90, 95, @"Food");
+			AddLabel(270, 90, 0, @"Food");
             AddCheck(380, 90, 1151, 1154, lootoptions.GetFood, 9);
 
-			AddLabel(270, 130, 95, @"Hides");
+			AddLabel(270, 130, 0, @"Hides");
             AddCheck(380, 129, 1151, 1154, lootoptions.GetHides, 10);
 
-			AddLabel(270, 170, 95, @"Scales");
+			AddLabel(270, 170, 0, @"Scales");
             AddCheck(380, 170, 1151, 1154, lootoptions.GetScales, 11);
 
-			AddLabel(270, 210, 95, @"Wood");
+			AddLabel(270, 210, 0, @"Wood");
             AddCheck(380, 210, 1151, 1154, lootoptions.GetWood, 12);
 
-			AddLabel(270, 250, 95, @"Ores");
+			AddLabel(270, 250, 0, @"Ores");
             AddCheck(380, 250, 1151, 1154, lootoptions.GetOres, 13);
 			
-            AddLabel(270, 290, 95, @"Reagents");
+            AddLabel(270, 290, 0, @"Reagents");
             AddCheck(380, 290, 1151, 1154, lootoptions.GetReagents, 14);
 
-			AddLabel(270, 330, 95, @"Potions");
+			AddLabel(270, 330, 0, @"Potions");
             AddCheck(380, 330, 1151, 1154, lootoptions.GetPotions, 15);
 
-            AddLabel(270, 370, 95, @"Other Things");
+            AddLabel(270, 370, 0, @"Other Things");
             AddCheck(380, 370, 1151, 1154, lootoptions.GetOther, 16);
 
-            AddLabel(140, 410, 95, @"Get Ground Items");
+            AddLabel(140, 410, 0, @"Get Ground Items");
             AddCheck(280, 410, 1151, 1154, lootoptions.GetGroundItems, 17);
 			
 			AddButton(349, 450, 247, 248, 1, GumpButtonType.Reply, 0);

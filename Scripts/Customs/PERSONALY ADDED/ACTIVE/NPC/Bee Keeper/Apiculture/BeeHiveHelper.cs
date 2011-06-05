@@ -153,7 +153,7 @@ namespace Server.Engines.Apiculture
 					int vx = from.X + x;
 					int vy = from.Y + y;
 
-					Tile[] tiles = map.Tiles.GetStaticTiles( vx, vy, true );
+					StaticTile[] tiles = map.Tiles.GetStaticTiles( vx, vy, true );
 
 					for ( int i = 0; i < tiles.Length; ++i )
 					{

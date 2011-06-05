@@ -30,22 +30,15 @@ namespace Server.Multis
 		// Any land tile which matches one of these ID numbers is considered a road and cannot be placed over.
 		private static int[] m_RoadIDs = new int[]
 			{
-				0x071, 0x08C,
-				0x0E8, 0x0EB,
-				0x14C, 0x14F,
-				0x161, 0x174,
-				0x1F0, 0x1F3,
-				0x26E, 0x279,
-				0x27E, 0x281,
-				0x324, 0x3AC,
-				0x547, 0x556,
-				0x597, 0x5A6,
-				0x637, 0x63A,
-				0x7AE, 0x7B1,
-				0x442, 0x479, // Sand stones
-				0x501, 0x510, // Sand stones
-				0x009, 0x015, // Furrows
-				0x150, 0x15C  // Furrows 
+				0x0071, 0x0078,
+				0x00E8, 0x00EB,
+				0x07AE, 0x07B1,
+				0x3FF4, 0x3FF4,
+				0x3FF8, 0x3FFB,
+				0x0442, 0x0479, // Sand stones
+				0x0501, 0x0510, // Sand stones
+				0x0009, 0x0015, // Furrows
+				0x0150, 0x015C  // Furrows
 			};
 
 		public static HousePlacementResult Check( Mobile from, int multiID, Point3D center, out ArrayList toMove )
@@ -104,7 +97,7 @@ namespace Server.Multis
 					int tileX = start.X + x;
 					int tileY = start.Y + y;
 
-					Tile[] addTiles = mcl.Tiles[x][y];
+					StaticTile[] addTiles = mcl.Tiles[x][y];
 
 					if ( addTiles.Length == 0 )
 						continue; // There are no tiles here, continue checking somewhere else
@@ -124,10 +117,10 @@ namespace Server.Multis
 						return HousePlacementResult.BadRegion;
 					}
 
-					Tile landTile = map.Tiles.GetLandTile( tileX, tileY );
-					int landID = landTile.ID & 0x3FFF;
+					LandTile landTile = map.Tiles.GetLandTile( tileX, tileY );
+					int landID = landTile.ID & TileData.MaxLandValue;
 
-					Tile[] oldTiles = map.Tiles.GetStaticTiles( tileX, tileY, true );
+					StaticTile[] oldTiles = map.Tiles.GetStaticTiles( tileX, tileY, true );
 
 					Sector sector = map.GetSector( tileX, tileY );
 
@@ -159,12 +152,12 @@ namespace Server.Multis
 
 					for ( int i = 0; i < addTiles.Length; ++i )
 					{
-						Tile addTile = addTiles[i];
+						StaticTile addTile = addTiles[i];
 
-						if ( addTile.ID == 0x4001 ) // Nodraw
+						if ( addTile.ID == 0x1 ) // Nodraw
 							continue;
 
-						TileFlag addTileFlags = TileData.ItemTable[addTile.ID & 0x3FFF].Flags;
+						TileFlag addTileFlags = TileData.ItemTable[addTile.ID & TileData.MaxItemValue].Flags;
 
 						bool isFoundation = ( addTile.Z == 0 && (addTileFlags & TileFlag.Wall) != 0 );
 						bool hasSurface = false;
@@ -181,13 +174,13 @@ namespace Server.Multis
 						if ( addTileTop > landStartZ && landAvgZ > addTileZ )
 							return HousePlacementResult.BadLand; // Broke rule #2
 
-						if ( isFoundation && ((TileData.LandTable[landTile.ID & 0x3FFF].Flags & TileFlag.Impassable) == 0) && landAvgZ == center.Z )
+						if ( isFoundation && ((TileData.LandTable[landTile.ID & TileData.MaxLandValue].Flags & TileFlag.Impassable) == 0) && landAvgZ == center.Z )
 							hasSurface = true;
 
 						for ( int j = 0; j < oldTiles.Length; ++j )
 						{
-							Tile oldTile = oldTiles[j];
-							ItemData id = TileData.ItemTable[oldTile.ID & 0x3FFF];
+							StaticTile oldTile = oldTiles[j];
+							ItemData id = TileData.ItemTable[oldTile.ID & TileData.MaxItemValue];
 
 							if ( (id.Impassable || (id.Surface && (id.Flags & TileFlag.Background) == 0)) && addTileTop > oldTile.Z && (oldTile.Z + id.CalcHeight) > addTileZ )
 								return HousePlacementResult.BadStatic; // Broke rule #2
@@ -258,14 +251,14 @@ namespace Server.Multis
 
 								if ( vx >= 0 && vx < mcl.Width && vy >= 0 && vy < mcl.Height )
 								{
-									Tile[] breakTiles = mcl.Tiles[vx][vy];
+									StaticTile[] breakTiles = mcl.Tiles[vx][vy];
 									bool shouldBreak = false;
 
 									for ( int i = 0; !shouldBreak && i < breakTiles.Length; ++i )
 									{
-										Tile breakTile = breakTiles[i];
+										StaticTile breakTile = breakTiles[i];
 
-										if ( breakTile.Height == 0 && breakTile.Z <= 8 && TileData.ItemTable[breakTile.ID & 0x3FFF].Surface )
+										if ( breakTile.Height == 0 && breakTile.Z <= 8 && TileData.ItemTable[breakTile.ID & TileData.MaxItemValue].Surface )
 											shouldBreak = true;
 									}
 
@@ -287,8 +280,8 @@ namespace Server.Multis
 			{
 				Point2D borderPoint = borders[i];
 
-				Tile landTile = map.Tiles.GetLandTile( borderPoint.X, borderPoint.Y );
-				int landID = landTile.ID & 0x3FFF;
+				LandTile landTile = map.Tiles.GetLandTile( borderPoint.X, borderPoint.Y );
+				int landID = landTile.ID & TileData.MaxLandValue;
 
 				if ( (TileData.LandTable[landID].Flags & TileFlag.Impassable) != 0 )
 					return HousePlacementResult.BadLand;
@@ -299,12 +292,12 @@ namespace Server.Multis
 						return HousePlacementResult.BadLand; // Broke rule #5
 				}
 
-				Tile[] tiles = map.Tiles.GetStaticTiles( borderPoint.X, borderPoint.Y, true );
+				StaticTile[] tiles = map.Tiles.GetStaticTiles( borderPoint.X, borderPoint.Y, true );
 
 				for ( int j = 0; j < tiles.Length; ++j )
 				{
-					Tile tile = tiles[j];
-					ItemData id = TileData.ItemTable[tile.ID & 0x3FFF];
+					StaticTile tile = tiles[j];
+					ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
 					if ( id.Impassable || (id.Surface && (id.Flags & TileFlag.Background) == 0 && (tile.Z + id.CalcHeight) > (center.Z + 2)) )
 						return HousePlacementResult.BadStatic; // Broke rule #1
@@ -360,11 +353,11 @@ namespace Server.Multis
 
 				IPooledEnumerable eable = map.GetMultiTilesAt( yardPoint.X, yardPoint.Y );
 
-				foreach ( Tile[] tile in eable )
+				foreach ( StaticTile[] tile in eable )
 				{
 					for ( int j = 0; j < tile.Length; ++j )
 					{
-						if ( (TileData.ItemTable[tile[j].ID & 0x3FFF].Flags & (TileFlag.Impassable | TileFlag.Surface)) != 0 )
+						if ( (TileData.ItemTable[tile[j].ID & TileData.MaxItemValue].Flags & (TileFlag.Impassable | TileFlag.Surface)) != 0 )
 						{
 							eable.Free();
 							return HousePlacementResult.BadStatic; // Broke rule #3

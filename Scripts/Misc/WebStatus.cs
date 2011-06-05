@@ -40,7 +40,7 @@ namespace Server.Misc
 			if ( !Directory.Exists( "web" ) )
 				Directory.CreateDirectory( "web" );
 
-			using ( StreamWriter op = new StreamWriter( "s:/status.html" ) )
+			using ( StreamWriter op = new StreamWriter( "web/status.html" ) )
 			{
 				op.WriteLine( "<html>" );
 
@@ -52,7 +52,8 @@ namespace Server.Misc
 				op.WriteLine( "   <body bgcolor=\"black\">" );
 				op.WriteLine( " <img src= http://dragonknights.kicks-ass.net/themes/Black_Enuff_Yellow/images/logo.jpg <br> " );
 				op.WriteLine( "      <h1><font color =\"gold\">UltimaOnline Server Status</font></h1>" );
-				op.WriteLine( "<b><font color =\"gold\">Last Updated:</font></b><font color=\"green\"> "+DateTime.Now.ToString() + "</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Current Server Version # :</font></b><font color=\"green\"> 7.0.12.0</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Status Page Last Updated:</font></b><font color=\"green\"> "+DateTime.Now.ToString() + "</font><br>");
 				op.WriteLine( "<b><font color =\"gold\">Total World Items:</font></b><font color=\"green\"> "+World.Items.Count.ToString()+"</font><br>");
 				op.WriteLine( "<b><font color =\"gold\">Total World Mobiles:</font></b><font color=\"green\"> " + World.Mobiles.Count.ToString() + "</font><br>");
 				op.WriteLine( "<b><font color =\"gold\">Total Online:</font></b><font color=\"green\"> " + NetState.Instances.Count.ToString() + "</font><br>");

@@ -18,15 +18,8 @@ namespace Server.Items
 			set{ m_Resource = value; InvalidateProperties(); }
 		}
 
-		string ICommodity.Description
-		{
-			get
-			{
-				return String.Format( "{0} {1} ore", Amount, CraftResources.GetName( m_Resource ).ToLower() );
-			}
-		}
-
 		int ICommodity.DescriptionNumber { get { return LabelNumber; } }
+		bool ICommodity.IsDeedable { get { return true; } }
 
 		public abstract BaseIngot GetIngot();
 
@@ -216,7 +209,7 @@ namespace Server.Items
 				if ( obj is Item )
 					itemID = ((Item)obj).ItemID;
 				else if ( obj is StaticTarget )
-					itemID = ((StaticTarget)obj).ItemID & 0x3FFF;
+					itemID = ((StaticTarget)obj).ItemID;
 
 				return ( itemID == 4017 || (itemID >= 6522 && itemID <= 6569) );
 			}
@@ -350,31 +343,47 @@ namespace Server.Items
 
 					if ( from.CheckTargetSkill( SkillName.Mining, targeted, minSkill, maxSkill ) )
 					{
-						int toConsume = m_Ore.Amount;
-
-						if ( toConsume <= 0 )
+						if ( m_Ore.Amount <= 0 )
 						{
 							from.SendLocalizedMessage( 501987 ); // There is not enough metal-bearing ore in this pile to make an ingot.
 						}
 						else
 						{
-							if ( toConsume > 30000 && m_Ore.ItemID == 0x19B9 )
-								toConsume = 30000;
+							int amount = m_Ore.Amount;
+							if ( m_Ore.Amount > 30000 )
+								amount = 30000;
 
 							BaseIngot ingot = m_Ore.GetIngot();
-							
-							int amount = toConsume;
+
 							if ( m_Ore.ItemID == 0x19B7 )
-								amount /= 2;
+							{
+								if ( m_Ore.Amount % 2 == 0 )
+								{
+									amount /= 2;
+									m_Ore.Delete();
+								}
+								else
+								{
+									amount /= 2;
+									m_Ore.Amount = 1;
+								}
+							}
+
 							else if ( m_Ore.ItemID == 0x19B9 )
+							{
 								amount *= 2;
+								m_Ore.Delete();
+							}
+
+							else
+							{
+								amount /= 1;
+								m_Ore.Delete();
+							}
 
 							ingot.Amount = amount;
-
-							m_Ore.Consume( toConsume );
-							from.AddToBackpack( ingot );
+							from.AddToBackpack(ingot);
 							//from.PlaySound( 0x57 );
-
 
 							from.SendLocalizedMessage( 501988 ); // You smelt the ore removing the impurities and put the metal in your backpack.
 						}

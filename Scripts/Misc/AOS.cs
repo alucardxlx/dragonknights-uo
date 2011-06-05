@@ -88,7 +88,7 @@ namespace Server
 			}
 
 			BaseQuiver quiver = null;
-			
+
 			if ( archer && from != null )
 				quiver = from.FindItemOnLayer( Layer.Cloak ) as BaseQuiver;
 
@@ -148,7 +148,7 @@ namespace Server
 					int absorbed = Scale( totalDamage, percent );
 
 					totalDamage -= absorbed;
-					
+
 					// Mondain's Legacy mod
 					if ( !( pet is ParoxysmusSwampDragon ) )
 						pet.BardingHP -= absorbed;
@@ -304,14 +304,6 @@ namespace Server
 					if( attrs != null )
 						value += attrs[attribute];
 				}
-				#region Mondain's Legacy
-				else if( obj is BaseTalisman )
-				{
-					AosAttributes attrs = ((BaseTalisman)obj).Attributes;
-
-					if( attrs != null )
-						value += attrs[attribute];
-				}
 				else if( obj is BaseQuiver )
 				{
 					AosAttributes attrs = ((BaseQuiver)obj).Attributes;
@@ -319,7 +311,15 @@ namespace Server
 					if( attrs != null )
 						value += attrs[attribute];
 				}
-				
+				else if( obj is BaseTalisman )
+				{
+					AosAttributes attrs = ((BaseTalisman)obj).Attributes;
+
+					if( attrs != null )
+						value += attrs[attribute];
+				}
+
+				#region Mondain's Legacy
 				if ( attribute == AosAttribute.WeaponDamage )
 				{
 					if ( BaseMagicalFood.IsUnderInfluence( m, MagicalFood.WrathGrapes ) )
@@ -342,11 +342,11 @@ namespace Server
 				}
 
 				if ( obj is ISetItem )
-				{					
+				{
 					ISetItem item = (ISetItem) obj;
 
 					AosAttributes attrs = item.SetAttributes;
-										
+
 					if( attrs != null && item.LastEquipped )
 						value += attrs[attribute];
 				}
