@@ -43,7 +43,7 @@ namespace Server.Spells.Chivalry
 					if ( m is BaseCreature && ((BaseCreature)m).IsAnimatedDead )
 						continue;
 
-					if ( Caster != m && Caster.CanBeBeneficial( m, false, true ) && !(m is Golem) )
+					if ( Caster != m && m.InLOS( Caster ) && Caster.CanBeBeneficial( m, false, true ) && !(m is Golem) )
 						targets.Add( m );
 				}
 
@@ -71,9 +71,6 @@ namespace Server.Spells.Chivalry
 						if ( m.Region != null && m.Region.IsPartOf( "Khaldun" ) )
 						{
 							Caster.SendLocalizedMessage( 1010395 ); // The veil of death in this area is too strong and resists thy efforts to restore life.
-						}
-						else if( Core.ML && m.Region != null && m.Region.IsPartOf( typeof( HouseRegion ) ) )
-						{
 						}
 						else if( resChance > Utility.RandomDouble() )
 						{
@@ -143,7 +140,7 @@ namespace Server.Spells.Chivalry
 							sendEffect = true;
 						}
 
-						if ( EvilOmenSpell.CheckEffect( m ) )
+						if ( EvilOmenSpell.TryEndEffect( m ) )
 							sendEffect = true;
 
 						if ( StrangleSpell.RemoveCurse( m ) )
@@ -164,7 +161,7 @@ namespace Server.Spells.Chivalry
 
 				if ( sacrifice )
 				{
-					Caster.PlaySound( 0x423 );
+					Caster.PlaySound( Caster.Body.IsFemale ? 0x150 : 0x423 );
 					Caster.Hits = 1;
 					Caster.Stam = 1;
 					Caster.Mana = 1;

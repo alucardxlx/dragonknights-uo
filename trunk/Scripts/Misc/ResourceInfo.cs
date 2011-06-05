@@ -100,35 +100,35 @@ namespace Server.Items
 		public int RunicMinIntensity{ get{ return m_RunicMinIntensity; } set{ m_RunicMinIntensity = value; } }
 		public int RunicMaxIntensity{ get{ return m_RunicMaxIntensity; } set{ m_RunicMaxIntensity = value; } }
 
-		#region Mondain's Legacy		
+		#region Mondain's Legacy
 		private int m_WeaponDamage;
 		private int m_WeaponHitChance;
 		private int m_WeaponHitLifeLeech;
 		private int m_WeaponRegenHits;
 		private int m_WeaponSwingSpeed;
-		
+
 		private int m_ArmorDamage;
 		private int m_ArmorHitChance;
 		private int m_ArmorRegenHits;
 		private int m_ArmorMage;
-		
+
 		private int m_ShieldPhysicalResist;
 		private int m_ShieldFireResist;
 		private int m_ShieldColdResist;
 		private int m_ShieldPoisonResist;
 		private int m_ShieldEnergyResist;
-		
+
 		public int WeaponDamage{ get{ return m_WeaponDamage; } set{ m_WeaponDamage = value; } }
 		public int WeaponHitChance{ get{ return m_WeaponHitChance; } set{ m_WeaponHitChance = value; } }
 		public int WeaponHitLifeLeech{ get{ return m_WeaponHitLifeLeech; } set{ m_WeaponHitLifeLeech = value; } }
 		public int WeaponRegenHits{ get{ return m_WeaponRegenHits; } set{ m_WeaponRegenHits = value; } }
 		public int WeaponSwingSpeed{ get{ return m_WeaponSwingSpeed; } set{ m_WeaponSwingSpeed = value; } }
-		
+
 		public int ArmorDamage{ get{ return m_ArmorDamage; } set{ m_ArmorDamage = value; } }
 		public int ArmorHitChance{ get{ return m_ArmorHitChance; } set{ m_ArmorHitChance = value; } }
 		public int ArmorRegenHits{ get{ return m_ArmorRegenHits; } set{ m_ArmorRegenHits = value; } }
 		public int ArmorMage{ get{ return m_ArmorMage; } set{ m_ArmorMage = value; } }
-		
+
 		public int ShieldPhysicalResist{ get{ return m_ShieldPhysicalResist; } set{ m_ShieldPhysicalResist = value; } }
 		public int ShieldFireResist{ get{ return m_ShieldFireResist; } set{ m_ShieldFireResist = value; } }
 		public int ShieldColdResist{ get{ return m_ShieldColdResist; } set{ m_ShieldColdResist = value; } }
@@ -424,12 +424,12 @@ namespace Server.Items
 			oak.ShieldPoisonResist = 1;
 			oak.ShieldEnergyResist = 1;
 			oak.WeaponLuck = 40;
-			oak.WeaponDamage = 5;			
+			oak.WeaponDamage = 5;
 			oak.RunicMinAttributes = 1;
 			oak.RunicMaxAttributes = 2;
 			oak.RunicMinIntensity = 1;
 			oak.RunicMaxIntensity = 50;
-			
+
 			CraftAttributeInfo ash = AshWood = new CraftAttributeInfo();
 
 			ash.ArmorPhysicalResist = 4;
@@ -440,12 +440,12 @@ namespace Server.Items
 			ash.ArmorLowerRequirements = 20;
 			ash.ShieldEnergyResist = 3;
 			ash.WeaponSwingSpeed = 10;
-			ash.WeaponLowerRequirements = 20;			
+			ash.WeaponLowerRequirements = 20;
 			ash.RunicMinAttributes = 2;
 			ash.RunicMaxAttributes = 3;
 			ash.RunicMinIntensity = 35;
 			ash.RunicMaxIntensity = 75;
-			
+
 			CraftAttributeInfo yew = YewWood = new CraftAttributeInfo();
 
 			yew.ArmorPhysicalResist = 6;
@@ -455,40 +455,40 @@ namespace Server.Items
 			yew.ArmorRegenHits = 1;
 			yew.ShieldPhysicalResist = 3;
 			yew.WeaponHitChance = 5;
-			yew.WeaponDamage = 10;			
+			yew.WeaponDamage = 10;
 			yew.RunicMinAttributes = 3;
 			yew.RunicMaxAttributes = 3;
 			yew.RunicMinIntensity = 40;
-			yew.RunicMaxIntensity = 90;		
-			
+			yew.RunicMaxIntensity = 90;
+
 			CraftAttributeInfo heartwood = Heartwood = new CraftAttributeInfo();
-			
+
 			heartwood.ArmorPhysicalResist = 2;
 			heartwood.ArmorFireResist = 3;
 			heartwood.ArmorColdResist = 2;
 			heartwood.ArmorPoisonResist = 7;
 			heartwood.ArmorEnergyResist = 2;
-			
+
 			// one of below
 			heartwood.ArmorDamage = 10;
 			heartwood.ArmorHitChance = 5;
 			heartwood.ArmorLuck = 40;
 			heartwood.ArmorLowerRequirements = 20;
 			heartwood.ArmorMage = 1;
-			
+
 			// one of below
 			heartwood.WeaponDamage = 10;
-			heartwood.WeaponHitChance = 5;		
+			heartwood.WeaponHitChance = 5;
 			heartwood.WeaponHitLifeLeech = 13;
 			heartwood.WeaponLuck = 40;
 			heartwood.WeaponLowerRequirements = 20;	
-			heartwood.WeaponSwingSpeed = 10;			
-			
+			heartwood.WeaponSwingSpeed = 10;
+
 			heartwood.RunicMinAttributes = 4;
 			heartwood.RunicMaxAttributes = 4;
 			heartwood.RunicMinIntensity = 50;
 			heartwood.RunicMaxIntensity = 100;
-			
+
 			CraftAttributeInfo bloodwood = Bloodwood = new CraftAttributeInfo();
 
 			bloodwood.ArmorPhysicalResist = 3;
@@ -500,7 +500,7 @@ namespace Server.Items
 			bloodwood.ShieldFireResist = 3;
 			bloodwood.WeaponRegenHits = 2;
 			bloodwood.WeaponHitLifeLeech = 16;
-			
+
 			CraftAttributeInfo frostwood = Frostwood = new CraftAttributeInfo();
 
 			frostwood.ArmorPhysicalResist = 2;

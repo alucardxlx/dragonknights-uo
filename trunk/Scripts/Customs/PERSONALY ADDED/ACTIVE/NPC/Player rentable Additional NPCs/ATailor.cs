@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using Server;
 using Server.Engines.BulkOrders;
+using System.Collections.Generic; 
 
 namespace Server.Mobiles
 {
 	public class ATailor : BaseVendor
 	{
-		private ArrayList m_SBInfos = new ArrayList();
-		protected override ArrayList SBInfos{ get { return m_SBInfos; } }
+		private List<SBInfo> m_SBInfos = new List<SBInfo>();
+		protected override List<SBInfo> SBInfos{ get { return m_SBInfos; } }
 
 		//public override NpcGuild NpcGuild{ get{ return NpcGuild.TailorsGuild; } }
 

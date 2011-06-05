@@ -65,7 +65,7 @@ namespace Xanthos.Utilities
 		private const string kFileSuffix	= ".txt";
 		private const string kPathMotd		= "Data/Motd/";
 		private const string kPathArchive	= kPathMotd + "Archive/";
-		private const string kGreeting		= "Greetings And Welcome To The DragonKnight's Shard";
+		private const string kGreeting		= "Welcome To The DragonKnight's Shard";
 		private const string kDefaultBody	= "There is no current news.";
 		private const string kDefaultTitle	= "Current News";
 		private const string kNewMotdMessage= "The message of the day has been updated. To see it, type motd.";
@@ -73,7 +73,7 @@ namespace Xanthos.Utilities
 		private	static bool	 kAlwaysShowMotdOnLogin		= true;// should be const, used static to get avoid compiler warning
 		private	static bool  kTextInsteadOfGumpOnLogin	= false;	// should be const, used static to get avoid compiler warning
 		
-		internal const int    kDataColor = 50;
+		internal const int    kDataColor = 52;
 		internal const int    kLabelColor = 88;
 		internal const string kLabelHtmlColor = "66CCFF";
 
@@ -343,7 +343,7 @@ namespace Xanthos.Utilities
 				int row = rowOne;
 
 				AddPage( 1 );
-				AddBackground( 0, 0, 205, 180, 5054 );
+				AddBackground( 0, 0, 205, 180, 5054 );//was 5054
 				AddButton( colOne, rowOne, 0xFB7, 0xFB9, 100, GumpButtonType.Reply, 0 );				// Archive
 				AddLabel( colTwo, rowOne, kLabelColor, "Archive motd File" );
 				AddButton( colOne, (row += rowHeight), 0xFB7, 0xFB9, 101, GumpButtonType.Reply, 0 );	// Reload
@@ -370,10 +370,10 @@ namespace Xanthos.Utilities
 		{
 			AddPage( ++m_TotalPages );
 
-			AddBackground( 50, 0, 514, 280, 9270 );
-			AddBackground( 50, 80, 514, 400, 9270 );
+			AddBackground( 50, 0, 514, 280, 9250 );//was 9270
+			AddBackground( 50, 80, 514, 400, 2600 );//was 9270
 
-			AddLabel( 170, 15, kDataColor, kGreeting );
+			AddLabel( 200, 15, kDataColor, kGreeting );//was 170, 15
 			AddLabel( 80, 33, kDataColor, m_Player.Name );
 			AddLabel( 205, 33, kLabelColor, "Online Users" );
 			AddLabel( 205, 47, kDataColor, m_UserCount );
@@ -387,7 +387,7 @@ namespace Xanthos.Utilities
 			AddHtml( 65, 450, 485, 25, CenterAndColor( "Page " + ( m_TotalPages ) + " of " + ( m_ArchiveCount + 1 ) ), false, false );
 			
 			AddButton( 525, 15, 25, 26, 102, GumpButtonType.Reply, 0 );		// Close button
-			AddButton( 60, 55, 5522, 5523, 103, GumpButtonType.Reply, 0 );	// Account button
+			AddButton( 89, 50, 5522, 5523, 103, GumpButtonType.Reply, 0 );	// Account button
 			AddButton( 65, 12, 22153, 22154, 104, GumpButtonType.Reply, 0 );// About button
 			AddButton( 500, 95, 5537, 5538, 0, GumpButtonType.Page, m_TotalPages - 1 );	// Navigation left button
 			AddButton( 525, 95, 5540, 5541, 0, GumpButtonType.Page, m_TotalPages + 1 );	// Navigation right button
@@ -454,32 +454,33 @@ namespace Xanthos.Utilities
 
 				if ( !showOnlyCredits )
 				{
-					AddBackground( 50, 0, 479, 309, 9270 );
+					AddBackground( 50, 0, 479, 309, 2600 );//was 9270
 					AddImage( 0, 0, 10400 );
 					AddImage( 0, 225, 10402 );
 					AddImage( 495, 0, 10410 );
 					AddImage( 495, 225, 10412 );
-					AddImage( 60, 15, 5536 );
+					AddImage( 100, 15, 5536 );
 					AddImage( 275, 15, 1025 );
-					AddLabel( 205, 43, NewsGump.kLabelColor, "Account Name" );
+					AddLabel( 205, 43, NewsGump.kLabelColor, "Account Name:" );
 					AddLabel( 205, 57, 0x480, mobile.Account.ToString() );
-					AddLabel( 205, 80, NewsGump.kLabelColor, "Account Password" );
+					AddLabel( 205, 80, NewsGump.kLabelColor, "Account Password:" );
 					AddLabel( 205, 98, NewsGump.kDataColor, "-(Protected)-" );
-					AddLabel( 355, 43, NewsGump.kLabelColor, "Online Character" );
+					AddLabel( 355, 43, NewsGump.kLabelColor, "Online Character:" );
 					AddLabel( 355, 57, NewsGump.kDataColor, mobile.Name );
-					AddLabel( 355, 80, NewsGump.kLabelColor, "Character Age" );
+					AddLabel( 355, 80, NewsGump.kLabelColor, "Character Age:" );
 					AddLabel( 355, 100, NewsGump.kDataColor, mobile.GameTime.Days.ToString() + " Days" );
 					AddLabel( 355, 115, NewsGump.kDataColor, mobile.GameTime.Hours.ToString() + " Hours" );
 					AddLabel( 355, 130, NewsGump.kDataColor, mobile.GameTime.Minutes.ToString() + " Minutes" );
 					AddLabel( 355, 144, NewsGump.kDataColor, mobile.GameTime.Seconds.ToString() + " Seconds" );
-					AddLabel( 205, 120, NewsGump.kLabelColor, "Account Access Level" );
+					AddLabel( 205, 120, NewsGump.kLabelColor, "Account Access Level:" );
 					AddLabel( 205, 135, NewsGump.kDataColor, from.AccessLevel.ToString() );
 					AddButton( 470, 15, 25, 26, 0, GumpButtonType.Reply, 0 );		// Close
-					AddLabel( 355, 165, NewsGump.kLabelColor, "IP Address" );
+					AddLabel( 355, 165, NewsGump.kLabelColor, "IP Address:" );
 					AddLabel( 355, 180, NewsGump.kDataColor, state.ToString());
-					AddLabel( 205, 165, NewsGump.kLabelColor, "Client Version" );
-					AddLabel( 205, 180, NewsGump.kDataColor, (( state.Flags & 0x10 ) != 0 ) ? "Samurai Empire" : (( state.Flags & 0x08 ) != 0) ? "Age of Shadows" : (( state.Flags & 0x04 ) != 0) ? "Blackthorn's Revenge" : (( state.Flags & 0x02 ) != 0 ) ? "Third Dawn" : (( state.Flags & 0x01 ) != 0 ) ? "Renaissance" : "The Second Age" );
-					AddLabel( 205, 200, NewsGump.kLabelColor, "Client Patch" );
+					AddLabel( 205, 165, NewsGump.kLabelColor, "Server:" );
+//					AddLabel( 205, 180, NewsGump.kDataColor, (( state.Flags & 0x10 ) != 0 ) ? "Samurai Empire" : (( state.Flags & 0x08 ) != 0) ? "Age of Shadows" : (( state.Flags & 0x04 ) != 0) ? "Blackthorn's Revenge" : (( state.Flags & 0x02 ) != 0 ) ? "Third Dawn" : (( state.Flags & 0x01 ) != 0 ) ? "Renaissance" : "The Second Age" );
+					AddLabel( 205, 180, NewsGump.kDataColor,  "DragonKnights");
+					AddLabel( 205, 200, NewsGump.kLabelColor, "Client Patch:" );
 					AddLabel( 205, 215, NewsGump.kDataColor, null == state.Version ? "(null)" : state.Version.ToString() );
 					AddButton( 445, 15, 22153, 22154, 0, GumpButtonType.Page, 2 );	// About
 
@@ -487,12 +488,12 @@ namespace Xanthos.Utilities
 				}
 
 				// Credits page
-				AddBackground( 50, 0, 479, 309, 9270 );
+				AddBackground( 50, 0, 479, 309, 2600 );//was 9270
 				AddImage( 0, 0, 10400 );
 				AddImage( 0, 225, 10402 );
 				AddImage( 495, 0, 10410 );
 				AddImage( 495, 225, 10412 );
-				AddImage( 60, 15, 5536 );
+				AddImage( 100, 15, 5536 );
 				AddLabel( 205, 45, NewsGump.kLabelColor, "Code By" );
 				AddLabel( 205, 60, NewsGump.kDataColor, "Xanthos" );
 				AddLabel( 205, 80, NewsGump.kLabelColor, "Inspiration By" );
@@ -504,6 +505,7 @@ namespace Xanthos.Utilities
 				AddLabel( 355, 75, NewsGump.kDataColor, "The RunUO Comunity" );
 				AddLabel( 355, 90, NewsGump.kDataColor, "Lady Rouge" );
 				AddLabel( 355, 105, NewsGump.kDataColor, "RoninGT" );
+				AddLabel( 355, 120, NewsGump.kDataColor, "AlphaDragon" );
 				AddButton( 470, 15, 25, 26, 0, GumpButtonType.Reply, 0 );		// Close
 			}
 			#endregion AccountGump

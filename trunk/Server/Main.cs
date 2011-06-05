@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Main.cs 401 2009-10-17 07:27:30Z mark $
+ *   $Id: Main.cs 651 2010-12-28 09:24:08Z asayre $
  *
  ***************************************************************************/
 
@@ -28,16 +28,21 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+#if Framework_4_0
+using System.Threading.Tasks;
+#endif
+
 using Server;
 using Server.Accounting;
 using Server.Gumps;
 using Server.Network;
+using System.Runtime;
 
 namespace Server
 {
 	public delegate void Slice();
 
-	public class Core
+	public static class Core
 	{
 		private static bool m_Crashed;
 		private static Thread timerThread;
@@ -102,11 +107,16 @@ namespace Server
 		internal static bool VBdotNet { get { return m_VBdotNET; } }
 		public static List<string> DataDirectories { get { return m_DataDirectories; } }
 		public static Assembly Assembly { get { return m_Assembly; } set { m_Assembly = value; } }
+		public static Version Version { get { return m_Assembly.GetName().Version; } }
 		public static Process Process { get { return m_Process; } }
 		public static Thread Thread { get { return m_Thread; } }
 		public static MultiTextWriter MultiConsoleOut { get { return m_MultiConOut; } }
 
-		public static readonly bool Is64Bit = (IntPtr.Size == 8);
+#if Framework_4_0
+		public static readonly bool Is64Bit = Environment.Is64BitProcess;
+#else
+		public static readonly bool Is64Bit = (IntPtr.Size == 8);	//Returns the size for the current /process/
+#endif
 
 		private static bool m_MultiProcessor;
 		private static int m_ProcessorCount;
@@ -152,6 +162,26 @@ namespace Server
 			set { m_Expansion = value; }
 		}
 
+		public static bool T2A
+		{
+			get { return m_Expansion >= Expansion.T2A; }
+		}
+
+		public static bool UOR
+		{
+			get { return m_Expansion >= Expansion.UOR; }
+		}
+
+		public static bool UOTD
+		{
+			get { return m_Expansion >= Expansion.UOTD; }
+		}
+
+		public static bool LBR
+		{
+			get { return m_Expansion >= Expansion.LBR; }
+		}
+
 		public static bool AOS
 		{
 			get { return m_Expansion >= Expansion.AOS; }
@@ -165,6 +195,11 @@ namespace Server
 		public static bool ML
 		{
 			get { return m_Expansion >= Expansion.ML; }
+		}
+
+		public static bool SA
+		{
+			get { return m_Expansion >= Expansion.SA; }
 		}
 
 		#endregion
@@ -274,7 +309,7 @@ namespace Server
 			if( World.Saving || ( m_Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT ) )
 				return true;
 			
-			Kill();
+			Kill();	//Kill -> HandleClosed will hadnle waiting for the completion of flushign to disk
 
 			return true;
 		}
@@ -287,12 +322,12 @@ namespace Server
 		private static bool m_Closing;
 		public static bool Closing { get { return m_Closing; } }
 
-		private static uint m_CycleIndex;
+		private static long m_CycleIndex = 1;
 		private static float[] m_CyclesPerSecond = new float[100];
 
 		public static float CyclesPerSecond
 		{
-			get { return m_CyclesPerSecond[((uint)(m_CycleIndex - 1)) % m_CyclesPerSecond.Length]; }
+			get { return m_CyclesPerSecond[(m_CycleIndex - 1) % m_CyclesPerSecond.Length]; }
 		}
 
 		public static float AverageCPS
@@ -335,6 +370,8 @@ namespace Server
 			m_Closing = true;
 
 			Console.Write( "Exiting..." );
+
+			World.WaitForWriteCompletion();
 
 			if( !m_Crashed )
 				EventSink.InvokeShutdown( new ShutdownEventArgs() );
@@ -429,6 +466,9 @@ namespace Server
 				SetConsoleCtrlHandler( m_ConsoleEventHandler, true );
 			}
 
+			if ( GCSettings.IsServerGC )
+				Console.WriteLine("Core: Server garbage collection mode enabled");
+
 			while( !ScriptCompiler.Compile( m_Debug, m_Cache ) )
 			{
 				Console.WriteLine( "Scripts: One or more scripts failed to compile or no script files were found." );
@@ -437,7 +477,7 @@ namespace Server
 					return;
 
 				Console.WriteLine( " - Press return to exit, or R to try again." );
-
+				
 				if( Console.ReadKey( true ).Key != ConsoleKey.R )
 					return;
 			}
@@ -449,7 +489,7 @@ namespace Server
 
 			ScriptCompiler.Invoke( "Initialize" );
 
-			MessagePump ms = m_MessagePump = new MessagePump();
+			MessagePump messagePump = new MessagePump();
 
 			timerThread.Start();
 
@@ -467,7 +507,7 @@ namespace Server
 				const int sampleInterval = 100;
 				const float ticksPerSecond = (float)(TimeSpan.TicksPerSecond * sampleInterval);
 
-				int sample = 0;
+				long sample = 0;
 
 				while( m_Signal.WaitOne() )
 				{
@@ -475,7 +515,7 @@ namespace Server
 					Item.ProcessDeltaQueue();
 
 					Timer.Slice();
-					m_MessagePump.Slice();
+					messagePump.Slice();
 
 					NetState.FlushAll();
 					NetState.ProcessDisposedQueue();
@@ -550,79 +590,95 @@ namespace Server
 				VerifySerialization( ScriptCompiler.Assemblies[a] );
 		}
 
+		private static readonly Type[] m_SerialTypeArray = new Type[1] { typeof(Serial) };
+
+		private static void VerifyType( Type t )
+		{
+			bool isItem = t.IsSubclassOf(typeof(Item));
+
+			if (isItem || t.IsSubclassOf(typeof(Mobile)))
+			{
+				if (isItem)
+				{
+					//++m_ItemCount;
+					Interlocked.Increment(ref m_ItemCount);
+				}
+				else
+				{
+					//++m_MobileCount;
+					Interlocked.Increment(ref m_MobileCount);
+				}
+
+				StringBuilder warningSb = null;
+
+				try
+				{
+					/*
+					if( isItem && t.IsPublic && !t.IsAbstract )
+					{
+						ConstructorInfo cInfo = t.GetConstructor( Type.EmptyTypes );
+
+						if( cInfo == null )
+						{
+							if (warningSb == null)
+								warningSb = new StringBuilder();
+
+							warningSb.AppendLine("       - No zero paramater constructor");
+						}
+					}*/
+
+					if (t.GetConstructor(m_SerialTypeArray) == null)
+					{
+						if (warningSb == null)
+							warningSb = new StringBuilder();
+
+						warningSb.AppendLine("       - No serialization constructor");
+					}
+
+					if (t.GetMethod("Serialize", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
+					{
+						if (warningSb == null)
+							warningSb = new StringBuilder();
+
+						warningSb.AppendLine("       - No Serialize() method");
+					}
+
+					if (t.GetMethod("Deserialize", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
+					{
+						if (warningSb == null)
+							warningSb = new StringBuilder();
+
+						warningSb.AppendLine("       - No Deserialize() method");
+					}
+
+					if (warningSb != null && warningSb.Length > 0)
+					{
+						Console.WriteLine("Warning: {0}\n{1}", t, warningSb.ToString());
+					}
+				}
+				catch
+				{
+					Console.WriteLine("Warning: Exception in serialization verification of type {0}", t);
+				}
+			}
+		}
+
 		private static void VerifySerialization( Assembly a )
 		{
 			if( a == null )
 				return;
 
-			Type[] ctorTypes = new Type[] { typeof( Serial ) };
-
-			foreach( Type t in a.GetTypes() )
-			{
-				bool isItem = t.IsSubclassOf( typeof( Item ) );
-
-				if( isItem || t.IsSubclassOf( typeof( Mobile ) ) )
+#if Framework_4_0
+			Parallel.ForEach(a.GetTypes(), t => 
 				{
-					if( isItem )
-						++m_ItemCount;
-					else
-						++m_MobileCount;
-
-					bool warned = false;
-
-					try
-					{
-
-						/*
-						if( isItem && t.IsPublic && !t.IsAbstract )
-						{
-							ConstructorInfo cInfo = t.GetConstructor( Type.EmptyTypes );
-							if( cInfo == null )
-							{
-								if( !warned )
-									Console.WriteLine( "Warning: {0}", t );
-
-								warned = true;
-								Console.WriteLine( "       - No zero paramater constructor" );
-							}
-						}
-						*/
-
-						if( t.GetConstructor( ctorTypes ) == null )
-						{
-							if( !warned )
-								Console.WriteLine( "Warning: {0}", t );
-
-							warned = true;
-							Console.WriteLine( "       - No serialization constructor" );
-						}
-
-						if( t.GetMethod( "Serialize", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly ) == null )
-						{
-							if( !warned )
-								Console.WriteLine( "Warning: {0}", t );
-
-							warned = true;
-							Console.WriteLine( "       - No Serialize() method" );
-						}
-
-						if( t.GetMethod( "Deserialize", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly ) == null )
-						{
-							if( !warned )
-								Console.WriteLine( "Warning: {0}", t );
-
-							warned = true;
-							Console.WriteLine( "       - No Deserialize() method" );
-						}
-
-						if( warned )
-							Console.WriteLine();
-					}
-					catch
-					{
-					}
-				}
+					VerifyType(t);
+				});
+#else
+			foreach (Type t in a.GetTypes())
+			{
+				VerifyType(t);
 			}
+#endif
 		}
 	}
 

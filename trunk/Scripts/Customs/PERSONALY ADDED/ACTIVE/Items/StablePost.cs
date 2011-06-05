@@ -20,7 +20,7 @@ namespace Server.Items
 		[CommandProperty(AccessLevel.GameMaster)]
 		public int MaxRange { get { return 5; } } // change this to adjust the max wander area (affects gump settings too)
 		[CommandProperty(AccessLevel.GameMaster)]
-		public static int DefaultWander { get { return 2; } } //change this to adjust the default wander area (only affects initial setup)
+		public static int DefaultWander { get { return 5; } } //change this to adjust the default wander area (only affects initial setup)
 		private BaseCreature m_Controlled;
 		private Mobile m_Owner;
 		private int m_HomeRange = DefaultWander;
@@ -387,14 +387,14 @@ namespace Server.Items
 						m_Post.Order = c.ControlOrder;
 						c.ControlOrder = OrderType.None;
 						m_Post.Command = c.Controlled;
-						c.Blessed = true;
+						c.Blessed = false;
 						m_Post.BondingBegin = c.BondingBegin;
 						c.BondingBegin = DateTime.MaxValue;
 						m_Post.OwnerAbandonTime = c.OwnerAbandonTime;
 						c.OwnerAbandonTime = DateTime.MaxValue;
 						m_Post.MinTameSkill = c.MinTameSkill;
-						c.MinTameSkill = 0.0;//changed from 240
-						c.ControlMaster = null;
+//						c.MinTameSkill = 0.0;//changed from 240
+						c.ControlMaster = null; //c.ControlMaster;//was null - moded to see if will dissapear
 					}
 				}
 				else if ((target is BaseCreature) && m_Post.Controlled != null)

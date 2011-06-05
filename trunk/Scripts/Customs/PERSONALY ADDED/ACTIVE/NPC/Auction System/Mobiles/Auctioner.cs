@@ -51,6 +51,9 @@ namespace Arya.Auction
 	/// </summary>
 	public class Auctioner : BaseVendor
 	{
+		private List<SBInfo> m_SBInfos = new List<SBInfo>(); 
+		protected override List<SBInfo> SBInfos{ get { return m_SBInfos; } } 
+		
 		[ Constructable ]
 		public Auctioner() : base ( "the Auctioner" )
 		{
@@ -123,13 +126,13 @@ namespace Arya.Auction
 		{
 		}
 
-		protected override System.Collections.ArrayList SBInfos
-		{
-			get
-			{
-				return new ArrayList();
-			}
-		}
+//		protected override System.Collections.ArrayList SBInfos
+//		{
+//			get
+//			{
+//				return new ArrayList();
+//			}
+//		}
 
 		public override void OnSpeech(SpeechEventArgs e)
 		{

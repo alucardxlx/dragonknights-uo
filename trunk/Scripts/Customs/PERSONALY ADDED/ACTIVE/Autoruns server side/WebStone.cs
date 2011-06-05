@@ -60,11 +60,11 @@ namespace Server.Gumps
 			this.AddButton(228, 145, 4023, 4025, 1, GumpButtonType.Reply, 0);
 			this.AddLabel(260, 145, 52, "-DragonKnight's Main WebSite"); //#1 Site's Name
 			
-			this.AddButton(228, 165, 4023, 4025, 2, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 165, 52, "-Forums"); //#2 Site's Name
+//			this.AddButton(228, 165, 4023, 4025, 2, GumpButtonType.Reply, 0);
+			this.AddLabel(260, 165, 38, "-Forums - Not Implamented"); //#2 Site's Name
 			
-			this.AddButton(228, 185, 4023, 4025, 3, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 185, 52, "-Donation"); //#3 Site's Name
+//			this.AddButton(228, 185, 4023, 4025, 3, GumpButtonType.Reply, 0);
+			this.AddLabel(260, 185, 38, "-Donation - Not Implamented"); //#3 Site's Name
 			
 			this.AddButton(228, 205, 4023, 4025, 4, GumpButtonType.Reply, 0);
 			this.AddLabel(260, 205, 52, "-UO Stratics"); //#4 Site's Name
@@ -84,8 +84,8 @@ namespace Server.Gumps
 			this.AddButton(228, 305, 4023, 4025, 9, GumpButtonType.Reply, 0);
 			this.AddLabel(260, 305, 52, "-All Around Associate Services"); //#9 Site's Name
 
-			this.AddButton(228, 325, 4023, 4025, 10, GumpButtonType.Reply, 0);
-			this.AddLabel(260, 325, 52, "-Jeff6o6-hosting"); //#10 Site's Name
+//			this.AddButton(228, 325, 4023, 4025, 10, GumpButtonType.Reply, 0);
+//			this.AddLabel(260, 325, 52, "-Jeff6o6-hosting"); //#10 Site's Name
 			
 			this.AddButton(302, 357, 2453, 4454, 0, GumpButtonType.Reply, 0); // Close Button
 			
@@ -105,19 +105,19 @@ namespace Server.Gumps
 			{
 				case 1: // #1 Site's Url
 					{
-						sender.LaunchBrowser( "http://dragonknights.kicks-ass.net/" );
+						sender.LaunchBrowser( "http://aaaservices.homeip.net/Ultima%20Online%20Game.htm" );
 						break;
 					}
-				case 2: // #2 Site's url
-					{
-						sender.LaunchBrowser( "http://dragonknights.kicks-ass.net/modules.php?name=Forums" );
-						break;
-					}
-				case 3: // #3 Site's url
-					{
-						sender.LaunchBrowser( "http://dragonknights.kicks-ass.net/modules.php?name=Donations" );
-						break;
-					}
+//				case 2: // #2 Site's url
+//					{
+//						sender.LaunchBrowser( "http://dragonknights.kicks-ass.net/modules.php?name=Forums" );
+//						break;
+//					}
+//				case 3: // #3 Site's url
+//					{
+//						sender.LaunchBrowser( "http://dragonknights.kicks-ass.net/modules.php?name=Donations" );
+//						break;
+//					}
 				case 4: // #4 Site's Url
 					{
 						sender.LaunchBrowser( "http://uo.stratics.com/" );
@@ -130,7 +130,7 @@ namespace Server.Gumps
 					}
 				case 6: // #6 Site's url
 					{
-						sender.LaunchBrowser( "http://aaaservices.homeip.net/temp/ts2client.exe" );
+						sender.LaunchBrowser( "http://aaaservices.homeip.net/TeamSpeak.htm" );
 						break;
 					}
 				case 7: // #7 Site's url
@@ -152,11 +152,11 @@ namespace Server.Gumps
 						break;
 					}
 
-				case 10: // #10 Site's url
-					{
-						sender.LaunchBrowser( "http://www.jeff6o6-hosting.com/" );
-						break;
-					}
+//				case 10: // #10 Site's url
+//					{
+//						sender.LaunchBrowser( "http://www.jeff6o6-hosting.com/" );
+//						break;
+//					}
 
 			}
 		}

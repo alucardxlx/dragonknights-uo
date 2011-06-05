@@ -67,7 +67,7 @@ namespace Xanthos.ShrinkSystem
 				else if ( m_IsStatuette = value )
 				{
 					ItemID = ShrinkTable.Lookup( m_Pet );
-					Name = "a shrunken pet";
+					Name = m_Name + "a shrunken pet";
 				}
 				else
 				{
@@ -237,7 +237,7 @@ namespace Xanthos.ShrinkSystem
 		
 			if ( ShrinkConfig.ShowPetDetails )
 			{
-				list.Add( 1060663, "Name\t{0} Breed: {1} Gender: {2}", m_Name, m_Breed, m_Gender );
+				list.Add( 1060663, "Name\t{0} Bonded: {1} Gender: {2}", m_Name, m_IsBonded, m_Gender );
 				list.Add( 1061640, ( null == m_Owner ) ? "nobody (WILD)" : m_Owner.Name ); // Owner: ~1_OWNER~
 				list.Add( 1060659, "Stats\tStrength {0}, Dexterity {1}, Intelligence {2}", m_RawStr, m_RawDex, m_RawInt );
 				list.Add( 1060660, "Combat Skills\tWrestling {0}, Tactics {1}, Anatomy {2}, Poisoning {3}", m_Wrestling, m_Tactics, m_Anatomy, m_Poisoning );

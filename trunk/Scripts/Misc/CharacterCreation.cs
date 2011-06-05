@@ -83,7 +83,7 @@ namespace Server.Misc
 
 			// The new AOS bankboxes don't have powerscrolls, they are automatically 'applied':
 
-			for ( int i = 0; i < PowerScroll.Skills.Length; ++i )
+			for ( int i = 0; i < PowerScroll.Skills.Count; ++i )
 				m.Skills[PowerScroll.Skills[ i ]].Cap = 120.0;
 
 
@@ -375,7 +375,7 @@ namespace Server.Misc
 			PlaceItemIn( cont, 93, 66, new PixieSwatter() );
 
 			for( int i = 0; i < 10; i++ )
-                PlaceItemIn( cont, 117, 128, new MessageInABottle( Utility.RandomBool() ? Map.Trammel : Map.Felucca, 4 ) );
+				PlaceItemIn( cont, 117, 128, new MessageInABottle( Utility.RandomBool() ? Map.Trammel : Map.Felucca, 4 ) );
 
 			PlaceItemIn( bank, 18, 124, cont );
 
@@ -550,7 +550,7 @@ namespace Server.Misc
 		{
 			Bag bag = new Bag();
 
-			for ( int i = 0; i < PowerScroll.Skills.Length; ++i )
+			for ( int i = 0; i < PowerScroll.Skills.Count; ++i )
 				bag.DropItem( new PowerScroll( PowerScroll.Skills[i], 120.0 ) );
 
 			bag.DropItem( new StatCapScroll( 250 ) );
@@ -658,8 +658,8 @@ namespace Server.Misc
 			newChar.Hue = newChar.Race.ClipSkinHue( args.Hue & 0x3FFF ) | 0x8000;
 
 			newChar.Hunger = 20;
-			newChar.Skills.Cap = 9000;
-
+			newChar.Skills.Cap = 58000;
+			newChar.BonusMaxWeight = 1374;
 			bool young = false;
 
 			if ( newChar is PlayerMobile )
@@ -771,14 +771,13 @@ namespace Server.Misc
 			}
 		}
 
-		private static readonly ClientVersion m_NewHavenClient = new ClientVersion( "6.0.0.0" );
 		private static readonly CityInfo m_NewHavenInfo = new CityInfo( "New Haven", "The Bountiful Harvest Inn", 3503, 2574, 14, Map.Trammel );
 
 		private static CityInfo GetStartLocation( CharacterCreatedEventArgs args, bool isYoung )
 		{
 			if( Core.ML )
 			{
-				//if( args.State != null && args.State.Version >= m_NewHavenClient )
+				//if( args.State != null && args.State.NewHaven )
 				return m_NewHavenInfo;	//We don't get the client Version until AFTER Character creation
 
 				//return args.City;  TODO: Uncomment when the old quest system is actually phased out
@@ -786,14 +785,14 @@ namespace Server.Misc
 
 			bool useHaven = isYoung;
 
-			int flags = args.State == null ? 0 : args.State.Flags;
+			ClientFlags flags = args.State == null ? ClientFlags.None : args.State.Flags;
 			Mobile m = args.Mobile;
 
 			switch ( args.Profession )
 			{
 				case 4: //Necro
 				{
-					if ( (flags & 0x8) != 0 )
+					if ( (flags & ClientFlags.Malas) != 0 )
 					{
 						return new CityInfo( "Umbra", "Mardoth's Tower", 2114, 1301, -50, Map.Malas );
 					}
@@ -819,7 +818,7 @@ namespace Server.Misc
 				}
 				case 6:	//Samurai
 				{
-					if ( (flags & 0x10) != 0 )
+					if ( (flags & ClientFlags.Tokuno) != 0 )
 					{
 						return new CityInfo( "Samurai DE", "Haoti's Grounds", 368, 780, -1, Map.Malas );
 					}
@@ -841,7 +840,7 @@ namespace Server.Misc
 				}
 				case 7:	//Ninja
 				{
-					if ( (flags & 0x10) != 0 )
+					if ( (flags & ClientFlags.Tokuno) != 0 )
 					{
 						return new CityInfo( "Ninja DE", "Enimo's Residence", 414,	823, -1, Map.Malas );
 					}
@@ -1182,7 +1181,7 @@ namespace Server.Misc
 				{
 					addSkillItems = false;
 					EquipItem( new Kasa() );
-					
+
 					int[] hues = new int[] { 0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89	};
 					//TODO: Verify that's ALL the hues for that above.
 
@@ -1273,7 +1272,7 @@ namespace Server.Misc
 
 		private static void PackScroll( int circle )
 		{
-			switch ( Utility.Random( 8 ) * (circle * 8) )
+			switch ( Utility.Random( 8 ) * ( circle + 1 ) )
 			{
 				case  0: PackItem( new ClumsyScroll() ); break;
 				case  1: PackItem( new CreateFoodScroll() ); break;
@@ -1356,8 +1355,6 @@ namespace Server.Misc
 				}
 				case SkillName.AnimalLore:
 				{
-					
-
 					int hue = Utility.RandomBlueHue();
 
 					if ( elf )

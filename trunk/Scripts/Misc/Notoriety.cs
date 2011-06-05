@@ -116,7 +116,7 @@ namespace Server.Misc
 			{
 				if ( Gregorio.IsMurderer( from ) )
 					return true;
-				
+
 				from.SendLocalizedMessage( 1075456 ); // You are not allowed to damage this NPC unless your on the Guilty Quest
 				return false;
 			}
@@ -301,7 +301,7 @@ namespace Server.Misc
 
 				if ( Core.ML && master != null )
 				{
-					if( source == master && CheckAggressor( target.Aggressors, source ) )
+					if ( ( source == master && CheckAggressor( target.Aggressors, source ) ) || ( CheckAggressor( source.Aggressors, bc ) ) )
 						return Notoriety.CanBeAttacked;
                     else if (bc is BaseEscortable || bc is BaseEscort)
                         return Notoriety.Innocent;
@@ -313,9 +313,9 @@ namespace Server.Misc
 					return Notoriety.Enemy;
 			}
 
-            if ( target.Kills >= 5 || ( target.Body.IsMonster && IsSummoned( target as BaseCreature ) && !( target is BaseFamiliar ) && !( target is ArcaneFey ) && !( target is Golem ) ) || ( target is BaseCreature && ( ( (BaseCreature)target ).AlwaysMurderer || ( (BaseCreature)target ).IsAnimatedDead ) ) )
+			if ( target.Kills >= 5 || ( target.Body.IsMonster && IsSummoned( target as BaseCreature ) && !( target is BaseFamiliar ) && !( target is ArcaneFey ) && !( target is Golem ) ) || ( target is BaseCreature && ( ( (BaseCreature)target ).AlwaysMurderer || ( (BaseCreature)target ).IsAnimatedDead ) ) )
 				return Notoriety.Murderer;
-				
+
 			#region Mondain's Legacy
 			if ( target is Gregorio )
 			{
@@ -323,7 +323,7 @@ namespace Server.Misc
 
 				if ( Gregorio.IsMurderer( source ) )
 					return Notoriety.Murderer;
-				
+
 				return Notoriety.Innocent;
 			}
 			else if ( source.Player && target is Engines.Quests.BaseEscort )
@@ -359,9 +359,9 @@ namespace Server.Misc
 			if( CheckHouseFlag( source, target, target.Location, target.Map ) )
 				return Notoriety.CanBeAttacked;
 
-			if( !(target is BaseCreature && ((BaseCreature)target).InitialInnocent) )
+			if( !(target is BaseCreature && ((BaseCreature)target).InitialInnocent) )   //If Target is NOT A baseCreature, OR it's a BC and the BC is initial innocent...
 			{
-				if( !target.Body.IsHuman && !target.Body.IsGhost && !IsPet( target as BaseCreature ) && !TransformationSpellHelper.UnderTransformation( target ) && !AnimalForm.UnderTransformation( target ) )
+				if( !target.Body.IsHuman && !target.Body.IsGhost && !IsPet( target as BaseCreature ) && !(target is PlayerMobile) || !Core.ML && !target.CanBeginAction( typeof( Server.Spells.Seventh.PolymorphSpell ) ) )
 					return Notoriety.CanBeAttacked;
 			}
 
@@ -384,8 +384,9 @@ namespace Server.Misc
 				BaseCreature bc = (BaseCreature)source;
 
 				Mobile master = bc.GetMaster();
-				if( master != null && CheckAggressor( master.Aggressors, target ) )
-					return Notoriety.CanBeAttacked;
+				if( master != null )
+					if( CheckAggressor( master.Aggressors, target ) || MobileNotoriety( master, target ) == Notoriety.CanBeAttacked )
+						return Notoriety.CanBeAttacked;
 			}
 
 			return Notoriety.Innocent;

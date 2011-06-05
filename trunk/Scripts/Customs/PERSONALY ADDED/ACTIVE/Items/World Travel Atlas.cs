@@ -371,7 +371,7 @@ namespace Server.Items
             } 
             else 
             { 
-               int flags = mobile.NetState == null ? 0 : mobile.NetState.Flags; 
+            	int flags = mobile.NetState == null ? 0 : (int)mobile.NetState.Flags;
 
                if ( Core.AOS && (flags & 0x8) != 0 ) 
                   checkLists = PMList.AOSLists; 

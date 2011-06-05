@@ -25,14 +25,15 @@ namespace Server.Misc
 				userCount, userCount == 1 ? "" : "s",
 				itemCount, itemCount == 1 ? "" : "s",
 				mobileCount, mobileCount == 1 ? "" : "s" );
-//******Edit: Added in******** added for tints page in queue gump
-            			if ( m.AccessLevel >= AccessLevel.Counselor )
-            			{
-                			Server.Engines.Help.PageQueue.Pages_OnCalled( m );
-					m.Send( SpeedControl.MountSpeed );
-					m.SendMessage( 38,"Speed boost has been enabled." );
-            			}
-//******************************add fin			
+
+			#region Tintamar's Page In Queue
+			if ( m.AccessLevel >= AccessLevel.Counselor )
+			{
+				Server.Engines.Help.PageQueue.Pages_OnCalled( m );
+				m.Send( SpeedControl.MountSpeed );
+				m.SendMessage( 68,"Speed boost has been enabled." );
+			}
+			#endregion
 		}
 	}
 }

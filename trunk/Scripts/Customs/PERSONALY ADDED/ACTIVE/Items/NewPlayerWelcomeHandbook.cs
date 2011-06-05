@@ -116,7 +116,7 @@ namespace Server.Items
         			"characters per account.",
         			"",
         			"SKILL CAP:",
-        			"Is 900.00 points per",
+        			"Is 5800.0 points per",
         			"character. With bouses",
         			"max skill is 125."),
         		new BookPageInfo

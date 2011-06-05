@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using Server.Items;
 using Server.Spells;
+using Server.Targeting;
 
 namespace Server.Mobiles
 {
@@ -13,6 +15,7 @@ namespace Server.Mobiles
 			Name = "an ant lion";
 			Body = 787;
 			BaseSoundID = 1006;
+			SpeechHue = 0x3B2;
 
 			SetStr( 296, 320 );
 			SetDex( 81, 105 );
@@ -45,21 +48,18 @@ namespace Server.Mobiles
 			if ( Core.ML && Utility.RandomDouble() < .33 )
 				PackItem( Engines.Plants.Seed.RandomPeculiarSeed(2) );
 
-			Item dullore = new DullCopperOre( Utility.RandomMinMax( 1, 10 ) );
-			dullore.ItemID = 0x19B9;
-			Item shadowore = new ShadowIronOre( Utility.RandomMinMax( 1, 10 ) );
-			shadowore.ItemID = 0x19B9;
-			Item copperore = new CopperOre( Utility.RandomMinMax( 1, 10 ) );
-			copperore.ItemID = 0x19B9;
-			Item bronzeore = new BronzeOre( Utility.RandomMinMax( 1, 10 ) );
-			bronzeore.ItemID = 0x19B9;
-			switch ( Utility.Random( 4 ) )
+			Item orepile = null; /* no trust, no love :( */
+
+			switch (Utility.Random(4))
 			{
-				case 0: PackItem( dullore ); break;
-				case 1: PackItem( shadowore ); break;
-				case 2: PackItem( copperore ); break;
-				case 3: PackItem( bronzeore ); break;
+				case 0: orepile = new DullCopperOre(); break;
+				case 1: orepile = new ShadowIronOre(); break;
+				case 2: orepile = new CopperOre(); break;
+				default: orepile = new BronzeOre(); break;
 			}
+			orepile.Amount = Utility.RandomMinMax(1, 10);
+			orepile.ItemID = 0x19B9;
+			PackItem(orepile);
 
 			for ( int i = 0; i < 3; i++ )
 			{
@@ -75,7 +75,7 @@ namespace Server.Mobiles
 
 			if ( 0.07 >= Utility.RandomDouble() )
 			{
-				switch ( Utility.Random( 4 ) )
+				switch ( Utility.Random( 3 ) )
 				{
 					case 0: PackItem( new UnknownBardSkeleton() ); break;
 					case 1: PackItem( new UnknownMageSkeleton() ); break;
@@ -111,7 +111,7 @@ namespace Server.Mobiles
 
 		public override void GenerateLoot()
 		{
-			AddLoot( LootPack.Average, 2 );
+			AddLoot( LootPack.FilthyRich, 1 );
 		}
 
 		public override void OnThink()
@@ -214,7 +214,7 @@ namespace Server.Mobiles
 			Hits += 50;
 			Frozen = false;
 
-			if ( !Alive || target == null || target.Deleted || !target.Alive || !target.InRange( m_NewLocation, 10 ) )
+			if ( !Alive || target == null || target.Deleted || !target.Alive || !target.InRange( m_NewLocation, 10 ) || target.Map != m_NewMap )
 			{
 				MoveToWorld( m_NewLocation, m_NewMap );
 			}

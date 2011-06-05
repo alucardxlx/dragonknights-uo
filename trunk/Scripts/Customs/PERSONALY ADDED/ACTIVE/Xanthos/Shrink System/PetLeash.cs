@@ -54,14 +54,15 @@ namespace Xanthos.ShrinkSystem
 		public override void OnDoubleClick( Mobile from )
 		{
 			bool isStaff = from.AccessLevel != AccessLevel.Player;
-
-			if ( !IsChildOf( from.Backpack ) )
-				from.SendLocalizedMessage( 1042001 ); // That must be in your pack for you to use it.
-
+			
+			if (isStaff)
+				from.Target = new ShrinkTarget( from, this, isStaff );
+			else if ( !IsChildOf( from.Backpack ) )
+				from.SendMessage( 38,"That must be in your pack for you to use it." ); // That must be in your pack for you to use it.
 			else if ( isStaff || from.Skills[ SkillName.AnimalTaming ].Value >= ShrinkConfig.TamingRequired )
 				from.Target = new ShrinkTarget( from, this, isStaff );
 			else
-				from.SendMessage( "You must have at least " + ShrinkConfig.TamingRequired + " animal taming to use a pet leash." );
+				from.SendMessage( 38,"You must have at least " + ShrinkConfig.TamingRequired + " animal taming to use a pet leash." );
 		}
 
 		public override void Serialize( GenericWriter writer )

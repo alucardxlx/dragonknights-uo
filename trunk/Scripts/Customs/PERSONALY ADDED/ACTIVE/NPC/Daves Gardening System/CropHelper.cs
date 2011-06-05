@@ -173,7 +173,7 @@ namespace Server.Items.Crops
 			// Test for Frozen into Map
 			if ( !ground )
 			{
-				Tile[] tiles = map.Tiles.GetStaticTiles( x, y );
+				StaticTile[] tiles = map.Tiles.GetStaticTiles( x, y );
 				for ( int i = 0; i < tiles.Length; ++i )
 				{
 					if ( ( tiles[i].ID & 0x3FFF ) == 0x32C9 )

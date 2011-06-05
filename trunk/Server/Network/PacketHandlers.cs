@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: PacketHandlers.cs 389 2009-10-04 08:19:19Z mark $
+ *   $Id: PacketHandlers.cs 644 2010-12-23 09:18:45Z asayre $
  *
  ***************************************************************************/
 
@@ -57,7 +57,7 @@ namespace Server.Network
 		Encoded = 0xC0
 	}
 
-	public class PacketHandlers
+	public static class PacketHandlers
 	{
 		private static PacketHandler[] m_Handlers;
 		private static PacketHandler[] m_6017Handlers;
@@ -147,6 +147,7 @@ namespace Server.Network
 			Register( 0xD1,   2,  true, new OnPacketReceive( LogoutReq ) );
 			Register( 0xD6,   0,  true, new OnPacketReceive( BatchQueryProperties ) );
 			Register( 0xD7,   0,  true, new OnPacketReceive( EncodedCommand ) );
+			Register( 0xE1,   0, false, new OnPacketReceive( ClientType ) );
 			Register( 0xEF,  21, false, new OnPacketReceive( LoginServerSeed ) );
 
 			Register6017( 0x08, 15, true, new OnPacketReceive( DropReq6017 ) );
@@ -400,7 +401,7 @@ namespace Server.Network
 				if ( (msgSize / 7) > 100 )
 					return;
 
-				ArrayList buyList = new ArrayList( msgSize/7 );
+				List<BuyItemResponse> buyList = new List<BuyItemResponse>( msgSize / 7 );
 				for ( ;msgSize>0;msgSize-=7)
 				{
 					byte layer = pvSrc.ReadByte();
@@ -442,7 +443,7 @@ namespace Server.Network
 			int count = pvSrc.ReadUInt16();
 			if ( count < 100 && pvSrc.Size == (1+2+4+2+(count*6)) )
 			{
-				ArrayList sellList = new ArrayList( count );
+				List<SellItemResponse> sellList = new List<SellItemResponse>( count );
 
 				for (int i=0;i<count;i++)
 				{
@@ -764,8 +765,8 @@ namespace Server.Network
 				{
 					int skillIndex;
 
-					try{ skillIndex = Convert.ToInt32( command.Split( ' ' )[0] ); }
-					catch{ break; }
+					if ( !int.TryParse( command.Split( ' ' )[0], out skillIndex ) )
+						break;
 
 					Skills.UseSkill( m, skillIndex );
 
@@ -775,8 +776,8 @@ namespace Server.Network
 				{
 					int booktype;
 
-					try{ booktype = Convert.ToInt32( command ); }
-					catch{ booktype = 1; }
+					if ( !int.TryParse( command, out booktype ) )
+						booktype = 1;
 
 					EventSink.InvokeOpenSpellbookRequest( new OpenSpellbookRequestEventArgs( m, booktype ) );
 
@@ -1083,7 +1084,7 @@ namespace Server.Network
 			int flags = pvSrc.ReadByte();
 			Serial serial = pvSrc.ReadInt32();
 			int x = pvSrc.ReadInt16(), y = pvSrc.ReadInt16(), z = pvSrc.ReadInt16();
-			int graphic = pvSrc.ReadInt16();
+			int graphic = pvSrc.ReadUInt16();
 
 			if ( targetID == unchecked( (int) 0xDEADBEEF ) )
 				return;
@@ -1127,13 +1128,20 @@ namespace Server.Network
 								}
 								else
 								{
-									Tile[] tiles = map.Tiles.GetStaticTiles( x, y, !t.DisallowMultis );
+									StaticTile[] tiles = map.Tiles.GetStaticTiles( x, y, !t.DisallowMultis );
 
 									bool valid = false;
 
+									if ( state.HighSeas ) {
+										ItemData id = TileData.ItemTable[graphic&TileData.MaxItemValue];
+										if ( id.Surface ) {
+											z -= id.Height;
+										}
+									}
+
 									for ( int i = 0; !valid && i < tiles.Length; ++i )
 									{
-										if ( tiles[i].Z == z && (tiles[i].ID & 0x3FFF) == (graphic & 0x3FFF) )
+										if ( tiles[i].Z == z && tiles[i].ID == graphic )
 											valid = true;
 									}
 
@@ -1263,7 +1271,7 @@ namespace Server.Network
 		{
 			Mobile m = state.Mobile;
 
-			if ( state.IsPost7000 ) {
+			if ( state.StygianAbyss ) {
 				state.Send( new MobileUpdate( m ) );
 				state.Send( new MobileIncoming( m, m ) );
 			} else {
@@ -1851,6 +1859,16 @@ namespace Server.Network
 			EventSink.InvokeClientVersionReceived( new ClientVersionReceivedArgs( state, version ) );
 		}
 
+		public static void ClientType( NetState state, PacketReader pvSrc )
+		{
+			pvSrc.ReadUInt16();
+
+			int type = pvSrc.ReadUInt16();
+			CV version = state.Version = new CV( pvSrc.ReadString() );
+
+			//EventSink.InvokeClientVersionReceived( new ClientVersionReceivedArgs( state, version ) );//todo
+		}
+
 		public static void MobileQuery( NetState state, PacketReader pvSrc )
 		{
 			Mobile from = state.Mobile;
@@ -1964,7 +1982,7 @@ namespace Server.Network
 
 					state.BlockAllPackets = true;
 
-					state.Flags = flags;
+					state.Flags = (ClientFlags)flags;
 
 					state.Mobile = m;
 					m.NetState = state;
@@ -1989,7 +2007,7 @@ namespace Server.Network
 
 			state.Sequence = 0;
 
-			if ( state.IsPost7000 ) {
+			if ( state.StygianAbyss ) {
 				state.Send( new MobileUpdate( m ) );
 				state.Send( new MobileUpdate( m ) );
 
@@ -2097,7 +2115,7 @@ namespace Server.Network
 
 			Race race = null;
 
-			if ( state.IsPost7000 ) {
+			if ( state.StygianAbyss ) {
 				byte raceID = (byte)(genderRace < 4 ? 0 : ((genderRace / 2) - 1));
 				race = Race.Races[raceID];
 			} else {
@@ -2129,7 +2147,7 @@ namespace Server.Network
 					}
 				}
 
-				state.Flags = flags;
+				state.Flags = (ClientFlags)flags;
 
 				CharacterCreatedEventArgs args = new CharacterCreatedEventArgs(
 					state, a,
@@ -2239,8 +2257,7 @@ namespace Server.Network
 				m_AuthIDWindow.Remove( authID );
 
 				state.Version = ap.Version;
-			}
-			else if ( m_ClientVerification ) {
+			} else if ( m_ClientVerification ) {
 				Console.WriteLine( "Login: {0}: Invalid client detected, disconnecting", state );
 				state.Dispose();
 				return;
@@ -2271,8 +2288,7 @@ namespace Server.Network
 				state.CityInfo = e.CityInfo;
 				state.CompressionEnabled = true;
 
-				if ( Core.AOS )
-					state.Send( SupportedFeatures.Instantiate( state ) );
+				state.Send( SupportedFeatures.Instantiate( state ) );
 
 				state.Send( new CharacterList( state.Account, state.CityInfo ) );
 			}
@@ -2303,25 +2319,25 @@ namespace Server.Network
 			}
 		}
 
-        public static void LoginServerSeed( NetState state, PacketReader pvSrc )
-        {
-            state.m_Seed = pvSrc.ReadInt32();
-            state.Seeded = true;
+		public static void LoginServerSeed( NetState state, PacketReader pvSrc )
+		{
+			state.m_Seed = pvSrc.ReadInt32();
+			state.Seeded = true;
 
-            if ( state.m_Seed == 0 )
-            {
-                Console.WriteLine("Login: {0}: Invalid client detected, disconnecting", state);
-                state.Dispose();
-                return;
-            }
+			if ( state.m_Seed == 0 )
+			{
+				Console.WriteLine("Login: {0}: Invalid client detected, disconnecting", state);
+				state.Dispose();
+				return;
+			}
 
-            int clientMaj = pvSrc.ReadInt32();
-            int clientMin = pvSrc.ReadInt32();
-            int clientRev = pvSrc.ReadInt32();
-            int clientPat = pvSrc.ReadInt32();
+			int clientMaj = pvSrc.ReadInt32();
+			int clientMin = pvSrc.ReadInt32();
+			int clientRev = pvSrc.ReadInt32();
+			int clientPat = pvSrc.ReadInt32();
 
-            state.Version = new ClientVersion( clientMaj, clientMin, clientRev, clientPat );
-        }
+			state.Version = new ClientVersion( clientMaj, clientMin, clientRev, clientPat );
+		}
 
 		public static void AccountLogin( NetState state, PacketReader pvSrc )
 		{

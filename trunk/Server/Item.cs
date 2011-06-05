@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Item.cs 274 2007-12-17 20:41:34Z mark $
+ *   $Id: Item.cs 649 2010-12-26 05:18:57Z asayre $
  *
  ***************************************************************************/
 
@@ -544,6 +544,7 @@ namespace Server
 		Weight,
 	}
 
+	[Flags]
 	public enum ExpandFlag
 	{
 		None		= 0x00,
@@ -558,7 +559,7 @@ namespace Server
 		Weight		= 0x80
 	}
 
-	public class Item : IEntity, IHued, IComparable<Item>, ISerializable
+	public class Item : IEntity, IHued, IComparable<Item>, ISerializable, ISpawnable
 	{
 		public static readonly List<Item> EmptyItems = new List<Item>();
 
@@ -602,6 +603,8 @@ namespace Server
 
 		#region Packet caches
 		private Packet m_WorldPacket;
+		private Packet m_WorldPacketSA;
+		private Packet m_WorldPacketHS;
 		private Packet m_RemovePacket;
 
 		private Packet m_OPLPacket;
@@ -822,37 +825,37 @@ namespace Server
 			info.m_Items = new List<Item>();
 
 			return info.m_Items;
-        }
+		}
 
-        #region Mondain's Legacy
+		#region Mondain's Legacy
 
-        public static System.Drawing.Bitmap GetBitmap( int itemID )
-        {
-            try 
-			{ 
-				return Ultima.Art.GetStatic( itemID ); 
+		public static System.Drawing.Bitmap GetBitmap( int itemID )
+		{
+			try
+			{
+				return Ultima.Art.GetStatic( itemID );
 			}
-            catch ( Exception e ) 
-			{ 
-				Console.WriteLine( e.ToString() ); 
+			catch ( Exception e )
+			{
+				Console.WriteLine( e.ToString() );
 			}
 
-            return null;
-        }
+			return null;
+		}
 
-        public static void Measure( System.Drawing.Bitmap bmp, out int xMin, out int yMin, out int xMax, out int yMax )
-        {
-            try 
-            { 
-            	Ultima.Art.Measure( bmp, out xMin, out yMin, out xMax, out yMax ); 
-            }
-            catch ( Exception e ) 
-            { 
-            	Console.WriteLine( e.ToString() ); 
-            	xMin = yMin = xMax = yMax = 0;
-            }
-        }
-        #endregion
+		public static void Measure( System.Drawing.Bitmap bmp, out int xMin, out int yMin, out int xMax, out int yMax )
+		{
+			try
+			{
+				Ultima.Art.Measure( bmp, out xMin, out yMin, out xMax, out yMax );
+			}
+			catch ( Exception e ) 
+			{
+				Console.WriteLine( e.ToString() );
+				xMin = yMin = xMax = yMax = 0;
+			}
+		}
+		#endregion
 
 		private void SetFlag( ImplFlag flag, bool value )
 		{
@@ -1157,6 +1160,11 @@ namespace Server
 				((Mobile)m_Parent).GetChildNameProperties( list, item );
 		}
 
+		public virtual bool IsChildVisibleTo( Mobile m, Item child )
+		{
+			return true;
+		}
+
 		public void Bounce( Mobile from )
 		{
 			if ( m_Parent is Item )
@@ -1396,7 +1404,7 @@ namespace Server
 				m_Location = location;
 				this.OnLocationChange( oldRealLocation );
 
-				Packet.Release( ref m_WorldPacket );
+				ReleaseWorldPackets();
 
 				List<Item> items = LookupItems();
 
@@ -1464,7 +1472,7 @@ namespace Server
 				m_Location = location;
 				this.OnLocationChange( oldRealLocation );
 
-				Packet.Release( ref m_WorldPacket );
+				ReleaseWorldPackets();
 
 				eable = m_Map.GetClientsInRange( m_Location, GetMaxUpdateRange() );
 
@@ -1757,6 +1765,57 @@ namespace Server
 			}
 		}
 
+		public Packet WorldPacketSA
+		{
+			get
+			{
+				// This needs to be invalidated when any of the following changes:
+				//  - ItemID
+				//  - Amount
+				//  - Location
+				//  - Hue
+				//  - Packet Flags
+				//  - Direction
+
+				if ( m_WorldPacketSA == null )
+				{
+					m_WorldPacketSA = new WorldItemSA( this );
+					m_WorldPacketSA.SetStatic();
+				}
+
+				return m_WorldPacketSA;
+			}
+		}
+
+		public Packet WorldPacketHS
+		{
+			get
+			{
+				// This needs to be invalidated when any of the following changes:
+				//  - ItemID
+				//  - Amount
+				//  - Location
+				//  - Hue
+				//  - Packet Flags
+				//  - Direction
+
+				if ( m_WorldPacketHS == null )
+				{
+					m_WorldPacketHS = new WorldItemHS( this );
+					m_WorldPacketHS.SetStatic();
+				}
+
+				return m_WorldPacketHS;
+			}
+		}
+
+		public void ReleaseWorldPackets()
+		{
+			Packet.Release( ref m_WorldPacket );
+			Packet.Release( ref m_WorldPacketSA );
+			Packet.Release( ref m_WorldPacketHS );
+		}
+
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool Visible
 		{
@@ -1766,7 +1825,7 @@ namespace Server
 				if ( GetFlag( ImplFlag.Visible ) != value )
 				{
 					SetFlag( ImplFlag.Visible, value );
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 
 					if ( m_Map != null )
 					{
@@ -1805,7 +1864,7 @@ namespace Server
 				if ( GetFlag( ImplFlag.Movable ) != value )
 				{
 					SetFlag( ImplFlag.Movable, value );
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 					Delta( ItemDelta.Update );
 				}
 			}
@@ -2304,7 +2363,7 @@ namespace Server
 					}
 
 					if ( GetSaveFlag( flags, SaveFlag.DupeSource ) )
-						m_DupeSource = reader.ReadItem();		
+						m_DupeSource = reader.ReadItem();
 
 					if ( GetSaveFlag( flags, SaveFlag.Direction ) )
 						m_Direction = (Direction)reader.ReadByte();
@@ -2688,7 +2747,12 @@ namespace Server
 		}
 
 		protected virtual Packet GetWorldPacketFor( NetState state ) {
-			return this.WorldPacket;
+			if ( state.HighSeas )
+				return this.WorldPacketHS;
+			else if ( state.StygianAbyss )
+				return this.WorldPacketSA;
+			else
+				return this.WorldPacket;
 		}
 
 		public virtual bool IsVirtualItem{ get{ return false; } }
@@ -2719,7 +2783,10 @@ namespace Server
 		{
 			get
 			{
-				return 1020000 + (m_ItemID & 0x3FFF);
+				if ( m_ItemID < 0x4000 )
+					return 1020000 + m_ItemID;
+				else
+					return 1078872 + m_ItemID;
 			}
 		}
 
@@ -2745,7 +2812,7 @@ namespace Server
 		{
 			get
 			{
-				if ( m_ItemID < 0 || m_ItemID >= 0x4000 )
+				if ( m_ItemID < 0 || m_ItemID > TileData.MaxItemValue || this is BaseMulti )
 					return 0;
 
 				int weight = TileData.ItemTable[m_ItemID].Weight;
@@ -2804,7 +2871,7 @@ namespace Server
 		{
 			get
 			{
-				return ( m_ItemID & 0x3FFF );
+				return m_ItemID;
 			}
 		}
 
@@ -2820,7 +2887,7 @@ namespace Server
 				if ( m_Hue != value )
 				{
 					m_Hue = value;
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 
 					Delta( ItemDelta.Update );
 				}
@@ -3036,7 +3103,7 @@ namespace Server
 							{
 								if ( rootParent.CanSee( this ) && rootParent.InRange( worldLoc, GetUpdateRange( rootParent ) ) )
 								{
-									if ( ns.IsPost6017 )
+									if ( ns.ContainerGridLines )
 										ns.Send( new ContainerContentUpdate6017( this ) );
 									else
 										ns.Send( new ContainerContentUpdate( this ) );
@@ -3073,7 +3140,7 @@ namespace Server
 									{
 										if ( tradeRecip.CanSee( this ) && tradeRecip.InRange( worldLoc, GetUpdateRange( tradeRecip ) ) )
 										{
-											if ( ns.IsPost6017 )
+											if ( ns.ContainerGridLines )
 												ns.Send( new ContainerContentUpdate6017( this ) );
 											else
 												ns.Send( new ContainerContentUpdate( this ) );
@@ -3111,7 +3178,7 @@ namespace Server
 									{
 										if ( mob.CanSee( this ) )
 										{
-											if ( ns.IsPost6017 )
+											if ( ns.ContainerGridLines )
 												ns.Send( new ContainerContentUpdate6017( this ) );
 											else
 												ns.Send( new ContainerContentUpdate( this ) );
@@ -3146,7 +3213,7 @@ namespace Server
 							} else {
 								if ( p == null ) {
 									if ( m_Parent is Item ) {
-										if ( state.IsPost6017 )
+										if ( state.ContainerGridLines )
 											state.Send( new ContainerContentUpdate6017( this ) );
 										else
 											state.Send( new ContainerContentUpdate( this ) );
@@ -3257,8 +3324,8 @@ namespace Server
 
 		public virtual void FreeCache()
 		{
+			ReleaseWorldPackets();
 			Packet.Release( ref m_RemovePacket );
-			Packet.Release( ref m_WorldPacket );
 			Packet.Release( ref m_OPLPacket );
 			Packet.Release( ref m_PropertyList );
 		}
@@ -3418,6 +3485,7 @@ namespace Server
 			return true;
 		}
 
+		//TODO: Move to CompactInfo.
 		private ISpawner m_Spawner;
 
 		public ISpawner Spawner{ get{ return m_Spawner; } set{ m_Spawner = value; } }
@@ -3515,7 +3583,7 @@ namespace Server
 							}
 
 							m_Location = value;
-							Packet.Release( ref m_WorldPacket );
+							ReleaseWorldPackets();
 
 							SetLastMoved();
 
@@ -3536,14 +3604,14 @@ namespace Server
 						else if ( m_Parent is Item )
 						{
 							m_Location = value;
-							Packet.Release( ref m_WorldPacket );
+							ReleaseWorldPackets();
 
 							Delta( ItemDelta.Update );
 						}
 						else
 						{
 							m_Location = value;
-							Packet.Release( ref m_WorldPacket );
+							ReleaseWorldPackets();
 						}
 
 						if ( m_Parent == null )
@@ -3552,7 +3620,7 @@ namespace Server
 					else
 					{
 						m_Location = value;
-						Packet.Release( ref m_WorldPacket );
+						ReleaseWorldPackets();
 					}
 
 					this.OnLocationChange( oldLocation );
@@ -3596,7 +3664,7 @@ namespace Server
 					int oldPileWeight = this.PileWeight;
 
 					m_ItemID = value;
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 
 					int newPileWeight = this.PileWeight;
 
@@ -3678,7 +3746,7 @@ namespace Server
 				if ( (LightType)m_Direction != value )
 				{
 					m_Direction = (Direction)value;
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 
 					Delta( ItemDelta.Update );
 				}
@@ -3697,7 +3765,7 @@ namespace Server
 				if ( m_Direction != value )
 				{
 					m_Direction = value;
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 
 					Delta( ItemDelta.Update );
 				}
@@ -3720,7 +3788,7 @@ namespace Server
 					int oldPileWeight = this.PileWeight;
 
 					m_Amount = value;
-					Packet.Release( ref m_WorldPacket );
+					ReleaseWorldPackets();
 
 					int newPileWeight = this.PileWeight;
 
@@ -3872,8 +3940,8 @@ namespace Server
 
 			int maxZ = from.Z + 16;
 
-			Tile landTile = map.Tiles.GetLandTile( x, y );
-			TileFlag landFlags = TileData.LandTable[landTile.ID & 0x3FFF].Flags;
+			LandTile landTile = map.Tiles.GetLandTile( x, y );
+			TileFlag landFlags = TileData.LandTable[landTile.ID & TileData.MaxLandValue].Flags;
 
 			int landZ = 0, landAvg = 0, landTop = 0;
 			map.GetAverageZ( x, y, ref landZ, ref landAvg, ref landTop );
@@ -3884,12 +3952,12 @@ namespace Server
 					z = landAvg;
 			}
 
-			Tile[] tiles = map.Tiles.GetStaticTiles( x, y, true );
+			StaticTile[] tiles = map.Tiles.GetStaticTiles( x, y, true );
 
 			for ( int i = 0; i < tiles.Length; ++i )
 			{
-				Tile tile = tiles[i];
-				ItemData id = TileData.ItemTable[tile.ID & 0x3FFF];
+				StaticTile tile = tiles[i];
+				ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
 				if ( !id.Surface )
 					continue;
@@ -3908,7 +3976,7 @@ namespace Server
 
 			foreach ( Item item in eable )
 			{
-				if ( item.ItemID >= 0x4000 )
+				if ( item is BaseMulti || item.ItemID > TileData.MaxItemValue )
 					continue;
 
 				items.Add( item );
@@ -3940,8 +4008,8 @@ namespace Server
 
 			for ( int i = 0; i < tiles.Length; ++i )
 			{
-				Tile tile = tiles[i];
-				ItemData id = TileData.ItemTable[tile.ID & 0x3FFF];
+				StaticTile tile = tiles[i];
+				ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
 				int checkZ = tile.Z;
 				int checkTop = checkZ + id.CalcHeight;
@@ -4034,8 +4102,8 @@ namespace Server
 
 			for ( int i = 0; i < tiles.Length; ++i )
 			{
-				Tile tile = tiles[i];
-				ItemData id = TileData.ItemTable[tile.ID & 0x3FFF];
+				StaticTile tile = tiles[i];
+				ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
 				int checkZ = tile.Z;
 				int checkTop = checkZ + id.CalcHeight;
@@ -4336,7 +4404,7 @@ namespace Server
 		{
 			get
 			{
-				return TileData.ItemTable[m_ItemID & 0x3FFF];
+				return TileData.ItemTable[m_ItemID & TileData.MaxItemValue];
 			}
 		}
 
@@ -4497,7 +4565,7 @@ namespace Server
 
 				InvalidateProperties();
 
-				Packet.Release( ref m_WorldPacket );
+				ReleaseWorldPackets();
 
 				Delta( ItemDelta.Update );
 			}

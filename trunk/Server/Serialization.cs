@@ -5,7 +5,7 @@
  *   copyright            : (C) The RunUO Software Team
  *   email                : info@runuo.com
  *
- *   $Id: Serialization.cs 247 2007-09-14 05:59:15Z mark $
+ *   $Id: Serialization.cs 644 2010-12-23 09:18:45Z asayre $
  *
  ***************************************************************************/
 
@@ -34,7 +34,7 @@ namespace Server
 {
 	public abstract class GenericReader
 	{
-		public GenericReader() { }
+		protected GenericReader() { }
 
 		public abstract string ReadString();
 		public abstract DateTime ReadDateTime();
@@ -90,7 +90,7 @@ namespace Server
 
 	public abstract class GenericWriter
 	{
-		public GenericWriter() { }
+		protected GenericWriter() { }
 
 		public abstract void Close();
 
@@ -1217,7 +1217,11 @@ namespace Server
 
 				if( m_Owner.m_Closed )
 					m_Owner.m_File.Close();
+
 				AsyncWriter.m_ThreadCount--;
+
+				if (AsyncWriter.m_ThreadCount <= 0)
+					World.NotifyDiskWriteComplete();
 			}
 		}
 

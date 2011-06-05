@@ -32,7 +32,8 @@ namespace Server.Commands
     public static void Dump_OnCommand( CommandEventArgs e ) 
     { 
 		Mobile from = e.Mobile; 
-		from.LocalOverheadMessage( MessageType.Regular, 0x1150, true, "Select the container you want to dump items FROM."); 
+//		from.PublicOverheadMessage( MessageType.Regular, 0x1150, true, "Select the container you want to dump items FROM.");
+		from.PrivateOverheadMessage( MessageType.Regular, 0x1150, true, "Select the container you want to dump items FROM.", from.NetState);
 		from.Target = new PackFromTarget( from);
 	}
 	private class PackFromTarget : Target
@@ -57,17 +58,20 @@ namespace Server.Commands
 				// Container that is either in a pack or a child thereof
 				if ( xx.IsChildOf( from.Backpack) || xx == from.Backpack)
 				{
-					from.LocalOverheadMessage( MessageType.Regular, 0x33, true, "Select the container you want to dump items INTO."); 
+//					from.PublicOverheadMessage( MessageType.Regular, 0x33, true, "Select the container you want to dump items INTO.");
+					from.PrivateOverheadMessage( MessageType.Regular, 0x34, true, "Select the container you want to dump items INTO.", from.NetState);
 					from.Target = new PackToTarget( from, xx );
 				}
 				else
 				{
-					from.LocalOverheadMessage( MessageType.Regular, 0x22, true, "The container to dump FROM must be in your main backpack or BE your main backpack."); 
+//					from.PublicOverheadMessage( MessageType.Regular, 0x22, true, "The container to dump FROM must be in your main backpack or BE your main backpack.");
+					from.PrivateOverheadMessage( MessageType.Regular, 0x22, true, "The container to dump FROM must be in your main backpack or BE your main backpack.", from.NetState);
 				}
 			}
 			else
 			{
-				from.LocalOverheadMessage( MessageType.Regular, 0x22, true, "That is not a container!"); 
+//				from.PublicOverheadMessage( MessageType.Regular, 0x22, true, "That is not a container!");
+				from.PrivateOverheadMessage( MessageType.Regular, 0x22, true, "That is not a container!", from.NetState);
 			}
 		}
 	}
@@ -95,24 +99,29 @@ namespace Server.Commands
 				//make sure they aren't targeting same container
 				if (xx == FromCont)
 				{
-					from.LocalOverheadMessage( MessageType.Regular, 0x22, true, "The container to dump INTO must be different from the one you are dumping FROM."); 
+//					from.PublicOverheadMessage( MessageType.Regular, 0x22, true, "The container to dump INTO must be different from the one you are dumping FROM.");
+					from.PrivateOverheadMessage( MessageType.Regular, 0x22, true, "The container to dump INTO must be different from the one you are dumping FROM.", from.NetState);
 					return;
 				}
                 if (xx == FromCont || xx.IsChildOf(FromCont))
                 {
-					from.LocalOverheadMessage( MessageType.Regular, 0x22, true, "You cannot sort INTO a subcontainer of the same container you are sorting FROM."); 
+//					from.PublicOverheadMessage( MessageType.Regular, 0x22, true, "You cannot sort INTO a subcontainer of the same container you are sorting FROM."); 
+					from.PrivateOverheadMessage( MessageType.Regular, 0x22, true, "You cannot sort INTO a subcontainer of the same container you are sorting FROM.", from.NetState);
 					return;
                 }
 				Item[] items =  FromCont.FindItemsByType( typeof(Item), true );
 				foreach (Item item in items) 
 				{
 					if(!(xx.TryDropItem( from, item, true )))
-						from.SendMessage("That container is too full!");
+//						from.SendMessage("That container is too full!");
+						from.PrivateOverheadMessage( MessageType.Regular, 0x22, true, "That container is too full!", from.NetState);
 				}
 			}
 			else
 			{
-				from.LocalOverheadMessage( MessageType.Regular, 0x22, true, "That is not a container!"); 
+//				from.PublicOverheadMessage( MessageType.Regular, 0x22, true, "That is not a container!");
+				from.PrivateOverheadMessage( MessageType.Regular, 0x22, true, "That is not a container!", from.NetState);
+
 			}
 		}
 	}	

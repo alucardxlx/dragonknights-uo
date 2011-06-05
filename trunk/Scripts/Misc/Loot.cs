@@ -651,12 +651,12 @@ namespace Server
 			return Construct( m_WeaponTypes, m_RangedWeaponTypes, m_ArmorTypes, m_HatTypes, m_ShieldTypes, m_JewelryTypes );
 		}
 		
-		//added for Chest of Heirlooms inventory
+		#region Chest of Heirlooms
 		public static Item ChestOfHeirloomsContains()
 		{
 			return Construct( m_SEArmorTypes, m_SEHatTypes, m_SEWeaponTypes, m_SERangedWeaponTypes, m_JewelryTypes );
 		}
-		// end of Chest of Heirlooms inventory
+		#endregion
 
 		public static Item RandomGem()
 		{
@@ -735,12 +735,10 @@ namespace Server
 			return Construct( m_LibraryBookTypes ) as BaseBook;
 		}
 
-		#region Mondain's Legacy
 		public static BaseTalisman RandomTalisman()
 		{
 			BaseTalisman talisman = new BaseTalisman( BaseTalisman.GetRandomItemID() );
 
-			talisman.MaxCharges = BaseTalisman.GetRandomCharges();
 			talisman.Summoner = BaseTalisman.GetRandomSummoner();
 
 			if ( talisman.Summoner.IsEmpty )
@@ -748,19 +746,20 @@ namespace Server
 				talisman.Removal = BaseTalisman.GetRandomRemoval();
 
 				if ( talisman.Removal != TalismanRemoval.None )
+				{
+					talisman.MaxCharges = BaseTalisman.GetRandomCharges();
 					talisman.MaxChargeTime = 1200;
-				else
-					talisman.MaxCharges = 0;
+				}
 			}
-			else if ( talisman.MaxCharges > 0 )
+			else
 			{
+				talisman.MaxCharges = Utility.RandomMinMax( 10, 50 );
+
 				if ( talisman.Summoner.IsItem )
 					talisman.MaxChargeTime = 60;
 				else
 					talisman.MaxChargeTime = 1800;
 			}
-			else
-				talisman.MaxChargeTime = 1800;
 
 			talisman.Blessed = BaseTalisman.GetRandomBlessed();
 			talisman.Slayer = BaseTalisman.GetRandomSlayer();
@@ -773,8 +772,6 @@ namespace Server
 
 			return talisman;
 		}
-		#endregion
-
 		#endregion
 
 		#region Construction methods

@@ -46,6 +46,8 @@ namespace Server.Spells.Necromancy
 				 * The effect lasts for ((Spirit Speak skill level - target's Resist Magic skill level) / 50 ) + 20 seconds.
 				 */
 
+				 if ( m.Spell != null )
+					m.Spell.OnCasterHurt();
 				m.PlaySound( 0x1FB );
 				m.PlaySound( 0x258 );
 				m.FixedParticles( 0x373A, 1, 17, 9903, 15, 4, EffectLayer.Head );
@@ -130,38 +132,38 @@ namespace Server.Spells.Necromancy
 	}
 
 	public class MRExpireTimer : Timer
-    {
-    	private Mobile m_Caster;
-    	private Mobile m_Target;
-    	private DateTime m_End;
-        
-        public MRExpireTimer( Mobile caster, Mobile target, TimeSpan delay ) : base( TimeSpan.FromSeconds( 1.0 ), TimeSpan.FromSeconds( 1.0 ) )
-    	{
-		    m_Caster = caster;
-		    m_Target = target;
-		    m_End = DateTime.Now + delay;
-            Priority = TimerPriority.TwoFiftyMS;
-	    }
-        
-        public void RenewDelay(TimeSpan delay)
-        {
-		    m_End = DateTime.Now + delay;
-        }
+	{
+		private Mobile m_Caster;
+		private Mobile m_Target;
+		private DateTime m_End;
 
-        public void Halt()
-        {
-            Stop();
-        }
+		public MRExpireTimer( Mobile caster, Mobile target, TimeSpan delay ) : base( TimeSpan.FromSeconds( 1.0 ), TimeSpan.FromSeconds( 1.0 ) )
+		{
+			m_Caster = caster;
+			m_Target = target;
+			m_End = DateTime.Now + delay;
+			Priority = TimerPriority.TwoFiftyMS;
+		}
 
-    	protected override void OnTick()
-    	{
-		    if ( m_Target.Deleted || !m_Target.Alive || DateTime.Now >= m_End )
-		    {
-			    MindRotSpell.ClearMindRotScalar( m_Target );
-			    Stop();
-		    }
-	    }
-    }
+		public void RenewDelay(TimeSpan delay)
+		{
+			m_End = DateTime.Now + delay;
+		}
+
+		public void Halt()
+		{
+			Stop();
+		}
+
+		protected override void OnTick()
+		{
+			if ( m_Target.Deleted || !m_Target.Alive || DateTime.Now >= m_End )
+			{
+				MindRotSpell.ClearMindRotScalar( m_Target );
+				Stop();
+			}
+		}
+	}
 
 	public class MRBucket
 	{

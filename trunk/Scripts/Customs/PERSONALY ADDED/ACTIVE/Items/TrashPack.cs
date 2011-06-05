@@ -142,7 +142,7 @@ namespace Server.Items
 
 			protected override void OnTick()
 			{
-				m_Pack.Empty( 501479 ); // Emptying the TrashBag!
+				m_Pack.Empty( 501479 ); // Emptying the Trashcan!
 			}
 		}
 	}

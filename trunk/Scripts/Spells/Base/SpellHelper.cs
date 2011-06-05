@@ -73,10 +73,13 @@ namespace Server.Spells
 
 		public static bool CheckMulti( Point3D p, Map map )
 		{
-			return CheckMulti( p, map, true );
+			return CheckMulti( p, map, true, 0);
 		}
-
-		public static bool CheckMulti( Point3D p, Map map, bool houses )
+		public static bool CheckMulti(Point3D p, Map map, bool houses)
+		{
+			return CheckMulti(p, map, houses, 0);
+		}
+		public static bool CheckMulti( Point3D p, Map map, bool houses, int housingrange )
 		{
 			if( map == null || map == Map.Internal )
 				return false;
@@ -87,17 +90,18 @@ namespace Server.Spells
 			{
 				BaseMulti multi = sector.Multis[i];
 
-				if( multi is BaseHouse )
+				if( houses && multi is BaseHouse )
 				{
-					if( houses && ((BaseHouse)multi).IsInside( p, 16 ) )
+					BaseHouse bh = (BaseHouse)multi;
+
+					if(bh.IsInside( p, 16 ) || (housingrange > 0 && bh.InRange(p, housingrange)))
 						return true;
 				}
-				else if( multi.Contains( p ) )
+				else if( multi.Contains( p ))
 				{
 					return true;
 				}
 			}
-
 			return false;
 		}
 
@@ -195,7 +199,7 @@ namespace Server.Spells
 				int z = t.Z;
 
 				if( (t.Flags & TileFlag.Surface) == 0 )
-					z -= TileData.ItemTable[t.ItemID & 0x3FFF].CalcHeight;
+					z -= TileData.ItemTable[t.ItemID & TileData.MaxItemValue].CalcHeight;
 
 				p = new Point3D( t.X, t.Y, z );
 			}
@@ -562,18 +566,19 @@ namespace Server.Spells
 				new TravelValidator( IsTokunoDungeon ),
 				new TravelValidator( IsLampRoom ),
 				new TravelValidator( IsGuardianRoom ),
+				new TravelValidator( IsHeartwood ),
 			};
 
 		private static bool[,] m_Rules = new bool[,]
 			{
-						/*T2A(Fel)		Ilshenar		Wind(Tram),	Wind(Fel),	Dungeons(Fel),	Solen(Tram),	Solen(Fel), CrystalCave(Malas),	Gauntlet(Malas),	Gauntlet(Ferry),	Stronghold,		ChampionSpawn, Dungeons(Tokuno[Malas]), LampRoom(Doom),	GuardianRoom(Doom) */
-/* Recall From */		{ true,		true,			true,			true,		true,			true,			true,		true,				true,				true,				true,			true,			true,				false,				false },
-/* Recall To */			{ true,		true,			true,			true,		true,			true,			true,		true,				true,				true,				true,			true,			false,				false,				false },
-/* Gate From */			{ true,		true,			true,			true,		true,			true,			true,		true,				true,				true,				true,			true,			false,				false,				false },
-/* Gate To */			{ true,		true,			true,			true,		true,			true,			true,		true,				true,				true,				true,			true,			false,				false,				false },
-/* Mark In */			{ true,		true,			true,			true,		true,			true,			true,		true,				true,				true,				true,			true,			false,				false,				false },
-/* Tele From */			{ true,			true,			true,			true,		true,			true,			true,		true,				true,				true,				true,			true,			true,				true,				true },
-/* Tele To */			{ true,			true,			true,			true,		true,			true,			true,		true,				true,				true,				true, 			true,			true,				true,				true },
+						/*T2A(Fel)		Ilshenar		Wind(Tram),		Wind(Fel),		Dungeons(Fel),		Solen(Tram),		Solen(Fel),		CrystalCave(Malas),		Gauntlet(Malas),		Gauntlet(Ferry),		Stronghold,		ChampionSpawn,		Dungeons(Tokuno[Malas]),		LampRoom(Doom),		GuardianRoom(Doom),		Heartwood */
+/* Recall From */		{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				true,							false,				false,					true },
+/* Recall To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
+/* Gate From */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
+/* Gate To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
+/* Mark In */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
+/* Tele From */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				true,							true,				true,					true },
+/* Tele To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true, 			true,				true,							true,				true,					true },
 			};
 
 		public static bool CheckTravel( Mobile caster, TravelCheckType type )
@@ -793,6 +798,13 @@ namespace Server.Spells
 			return ( x >= 356 && y >= 5 && x < 375 && y < 25 );
 		}
 
+		public static bool IsHeartwood( Map map, Point3D loc )
+		{
+			int x = loc.X, y = loc.Y;
+
+			return (map == Map.Trammel || map == Map.Felucca) && (x >= 6911 && y >= 254 && x < 7167 && y < 511);
+		}
+
 		public static bool IsInvalid( Map map, Point3D loc )
 		{
 			if( map == null || map == Map.Internal )
@@ -980,7 +992,11 @@ namespace Server.Spells
 				WeightOverloading.DFA = dfa;
 
 				int damageGiven = AOS.Damage( target, from, iDamage, phys, fire, cold, pois, nrgy );
-				DoLeech( damageGiven, from, target );
+
+				if ( from != null ) // sanity check
+				{
+					DoLeech( damageGiven, from, target );
+				}
 
 				WeightOverloading.DFA = DFAlgorithm.Standard;
 			}
@@ -996,23 +1012,24 @@ namespace Server.Spells
 		public static void DoLeech( int damageGiven, Mobile from, Mobile target )
 		{
 			TransformContext context = TransformationSpellHelper.GetContext( from );
-			if ( context != null && context.Type == typeof( WraithFormSpell ) )
+
+			if ( context != null ) /* cleanup */
 			{
-				int wraithLeech = ( 5 + (int)( ( 15 * from.Skills.SpiritSpeak.Value ) / 100 ) ); // Wraith form gives 5-20% mana leech
-				int manaLeech = AOS.Scale( damageGiven, wraithLeech );
-				if ( manaLeech != 0 )
+				if ( context.Type == typeof( WraithFormSpell ) )
 				{
-					// Mana leeched by the Wraith Form spell is actually stolen, not just leeched.
-					target.Mana -= manaLeech;
-					from.Mana += manaLeech;
-					from.PlaySound( 0x44D );
-					//from.SendMessage(String.Format("You Leeched {0} Mana", manaLeech));
+					int wraithLeech = ( 5 + (int)( ( 15 * from.Skills.SpiritSpeak.Value ) / 100 ) ); // Wraith form gives 5-20% mana leech
+					int manaLeech = AOS.Scale( damageGiven, wraithLeech );
+					if ( manaLeech != 0 )
+					{
+						from.Mana += manaLeech;
+						from.PlaySound( 0x44D );
+					}
 				}
-			}
-			if ( context != null && context.Type == typeof( VampiricEmbraceSpell ) )
-			{
-				from.Hits += AOS.Scale( damageGiven, 20 );
-				from.PlaySound( 0x44D );
+				else if ( context.Type == typeof( VampiricEmbraceSpell ) )
+				{
+					from.Hits += AOS.Scale( damageGiven, 20 );
+					from.PlaySound( 0x44D );
+				}
 			}
 		}
 
@@ -1098,7 +1115,11 @@ namespace Server.Spells
 				WeightOverloading.DFA = m_DFA;
 
 				int damageGiven = AOS.Damage( m_Target, m_From, m_Damage, m_Phys, m_Fire, m_Cold, m_Pois, m_Nrgy );
-				DoLeech( damageGiven, m_From, m_Target );
+
+				if ( m_From != null ) // sanity check
+				{
+					DoLeech( damageGiven, m_From, m_Target );
+				}
 
 				WeightOverloading.DFA = DFAlgorithm.Standard;
 

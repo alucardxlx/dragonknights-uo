@@ -1,6 +1,7 @@
 using System;
 using Server;
 using Server.Mobiles;
+using Server.Factions;
 
 namespace Server.Misc
 {
@@ -179,6 +180,9 @@ namespace Server.Misc
 
 		private static bool AllowGain( Mobile from, Skill skill, object obj )
 		{
+			if ( Core.AOS && Faction.InSkillLoss( from ) )	//Changed some time between the introduction of AoS and SE.
+				return false;
+
 			if ( AntiMacroCode && from is PlayerMobile && UseAntiMacro[skill.Info.SkillID] )
 				return ((PlayerMobile)from).AntiMacroCheck( skill, obj );
 			else
@@ -227,12 +231,17 @@ namespace Server.Misc
                         toGain *= Utility.RandomMinMax(2, 4);
                 #endregion
 
-                #region Scroll of Alacrity
-                PlayerMobile pm = from as PlayerMobile;
+				#region Scroll of Alacrity
+				PlayerMobile pm = from as PlayerMobile;
 
-                if (from is PlayerMobile)
-                    if (pm != null && skill.SkillName == pm.AcceleratedSkill && pm.AcceleratedStart > DateTime.Now)
-                        toGain *= Utility.RandomMinMax(2, 5);
+				if ( from is PlayerMobile )
+				{
+					if ( pm != null && skill.SkillName == pm.AcceleratedSkill && pm.AcceleratedStart > DateTime.Now )
+					{
+						pm.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skillgain scroll.
+						toGain = Utility.RandomMinMax(2, 5);
+					}
+				}
                 #endregion
 
 				if ( !from.Player || (skills.Total + toGain) <= skills.Cap )

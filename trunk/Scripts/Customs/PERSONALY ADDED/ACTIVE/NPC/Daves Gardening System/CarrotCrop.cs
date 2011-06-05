@@ -236,7 +236,7 @@ namespace Server.Items.Crops
 		}
 
 		public override void OnDoubleClick( Mobile from ) 
-		{ 
+		{
 			if ( m_sower == null || m_sower.Deleted ) 
 				m_sower = from;
 

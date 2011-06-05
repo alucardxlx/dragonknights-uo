@@ -97,8 +97,30 @@ namespace Server.Commands
 
 						Container pack = from.Backpack;
 
+						ArrayList ItemsToDelete = new ArrayList();
+
+						foreach (Item item in from.Items)
+						{
+							if (item.Layer != Layer.Bank && item.Layer != Layer.Hair && item.Layer != Layer.FacialHair && item.Layer != Layer.Mount && item.Layer != Layer.Backpack)
+							{
+								ItemsToDelete.Add(item);
+							}
+						}
+						foreach (Item item in ItemsToDelete)
+						{
+							item.Delete();
+						}
+
 						if ( pack == null )
 						{
+							pack = new Backpack();
+							pack.Movable = false;
+
+							from.AddItem( pack );
+						}
+						else
+						{
+							pack.Delete();
 							pack = new Backpack();
 							pack.Movable = false;
 
@@ -123,9 +145,9 @@ namespace Server.Commands
 							Spellbook book2 = new NecromancerSpellbook( (ulong)0xffff );
 							Spellbook book3 = new BookOfChivalry();
 							Spellbook book4 = new BookOfBushido();
-                            Spellbook book5 = new BookOfNinjitsu();
+							Spellbook book5 = new BookOfNinjitsu();
 
-                            PackItem(new GMHidingStone());
+							PackItem(new GMHidingStone());
 
 							PackItem( book1 );
 							PackItem( book2 );

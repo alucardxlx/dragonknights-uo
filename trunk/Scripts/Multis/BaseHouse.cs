@@ -291,15 +291,19 @@ namespace Server.Multis
 
 			ArrayList list = m_Secures;
 
-			for ( int i = 0; list != null && i < list.Count; ++i )
+			if ( list != null )
 			{
-				SecureInfo si = (SecureInfo)list[i];
+				for ( int i = 0; i < list.Count; ++i )
+				{
+					SecureInfo si = (SecureInfo)list[i];
 
-				fromSecures += si.Item.TotalItems;
+					fromSecures += si.Item.TotalItems;
+				}
+
+				fromLockdowns += list.Count;
 			}
 
-			if ( m_LockDowns != null )
-				fromLockdowns += m_LockDowns.Count;
+			fromLockdowns += GetLockdowns();
 
 			if ( !NewVendorSystem )
 			{
@@ -876,8 +880,7 @@ namespace Server.Multis
 		{
 			int v = 0;
 
-			if ( m_LockDowns != null )
-				v += m_LockDowns.Count;
+			v += GetLockdowns();
 
 			if ( m_Secures != null )
 				v += m_Secures.Count;
@@ -1091,12 +1094,12 @@ namespace Server.Multis
 			if ( this is HouseFoundation && y < (mcl.Height-1) && p.Z >= this.Z )
 				return true;
 
-			Tile[] tiles = mcl.Tiles[x][y];
+			StaticTile[] tiles = mcl.Tiles[x][y];
 
 			for ( int j = 0; j < tiles.Length; ++j )
 			{
-				Tile tile = tiles[j];
-				int id = tile.ID & 0x3FFF;
+				StaticTile tile = tiles[j];
+				int id = tile.ID & TileData.MaxItemValue;
 				ItemData data = TileData.ItemTable[id];
 
 				// Slanted roofs do not count; they overhang blocking south and east sides of the multi
@@ -1134,7 +1137,7 @@ namespace Server.Multis
 
 		private static List<BaseHouse> m_AllHouses = new List<BaseHouse>();
 
-		public BaseHouse( int multiID, Mobile owner, int MaxLockDown, int MaxSecure ) : base( multiID | 0x4000 )
+		public BaseHouse( int multiID, Mobile owner, int MaxLockDown, int MaxSecure ) : base( multiID )
 		{
 			m_AllHouses.Add( this );
 
@@ -1888,6 +1891,7 @@ namespace Server.Multis
 
 				if ( info != null )
 				{
+					m.CloseGump( typeof ( SetSecureLevelGump ) );
 					m.SendGump( new Gumps.SetSecureLevelGump( m_Owner, info, this ) );
 				}
 				else if ( item.Parent != null )
@@ -1914,7 +1918,7 @@ namespace Server.Multis
 				}
 				else
 				{
-					info = new SecureInfo( (Container)item, SecureLevel.CoOwners );
+					info = new SecureInfo( (Container)item, SecureLevel.Owner );
 
 					item.IsLockedDown = false;
 					item.IsSecure = true;
@@ -1923,6 +1927,7 @@ namespace Server.Multis
 					m_LockDowns.Remove( item );
 					item.Movable = false;
 
+					m.CloseGump( typeof ( SetSecureLevelGump ) );
 					m.SendGump( new Gumps.SetSecureLevelGump( m_Owner, info, this ) );
 				}
 			}
@@ -2069,7 +2074,7 @@ namespace Server.Multis
 			{
 				from.SendLocalizedMessage( 501346 ); // Uh oh...a bigger boot may be required!
 			}
-			else if ( IsFriend( targ ) )
+			else if ( IsFriend( targ ) && !Core.ML )
 			{
 				from.SendLocalizedMessage( 501348 ); // You cannot eject a friend of the house!
 			}
@@ -2265,7 +2270,7 @@ namespace Server.Multis
 					{
 						c.IsLockedDown = false;
 						c.IsSecure = false;
-						m_Secures.Remove( c );
+						m_Secures.Remove( info );
 						c.Destroy();
 						break;
 					}
@@ -2825,14 +2830,36 @@ namespace Server.Multis
 		public ArrayList Bans{ get{ return m_Bans; } set{ m_Bans = value; } }
 		public ArrayList Doors{ get{ return m_Doors; } set{ m_Doors = value; } }
 
+		public int GetLockdowns()
+		{
+			int count = 0;
+
+			if ( m_LockDowns != null )
+			{
+				for ( int i = 0; i < m_LockDowns.Count; ++i )
+				{
+					if ( m_LockDowns[i] is Item )
+					{
+						Item item = (Item)m_LockDowns[i];
+
+						if ( !(item is Container) )
+							count += item.TotalItems;
+					}
+
+					count++;
+				}
+			}
+
+			return count;
+		}
+
 		public int LockDownCount
 		{
 			get
 			{
 				int count = 0;
 
-				if ( m_LockDowns != null )
-					count += m_LockDowns.Count;
+				count += GetLockdowns();
 
 				if ( m_Secures != null )
 				{
@@ -3849,6 +3876,7 @@ namespace Server.Multis
 			ISecurable sec = GetSecurable( Owner.From, m_Item );
 
 			if ( sec != null )
+				Owner.From.CloseGump( typeof ( SetSecureLevelGump ) );
 				Owner.From.SendGump( new SetSecureLevelGump( Owner.From, sec, BaseHouse.FindHouseAt( m_Item ) ) );
 		}
 	}
