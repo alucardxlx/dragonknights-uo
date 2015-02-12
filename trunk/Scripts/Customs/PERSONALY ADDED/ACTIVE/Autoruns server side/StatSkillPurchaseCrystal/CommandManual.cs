@@ -65,6 +65,17 @@ namespace Server.Gumps
 //                // Misc
 //                "[mp",
 //                "[door",
+                // Special Commands
+                "[account-password-changer",
+                "[afk",
+                "[changecharacter",
+                "[e",
+                "[findplayervendor",
+                "[getpet",
+                "[myauction",
+                "[viewforums",
+                "what is my status",
+
             };
         public static string[] m_CommandDescription = new string[]
             {
@@ -116,9 +127,9 @@ namespace Server.Gumps
 //
                 "Dump all items from one container to another container. The first container must be your backpack or a bag inside your backpack.",
 //
-                "Dump all items of a particular type from one container to another container. The first container must be your backpack or a bag inside your backpack. The item type is one of the following:"+
-                "<br>\"gems\", \"regs\", \"scrolls\", \"potions\", \"jewelry\", \"wands\", \"hides\", \"armor\", \"clothing\", \"weapons\"." +
-                "<br>You can also just type [sort and it will give you a list of valid itemtypes you can use.",
+//                "Dump all items of a particular type from one container to another container. The first container must be your backpack or a bag inside your backpack. The item type is one of the following:"+
+//                "<br>\"gems\", \"regs\", \"scrolls\", \"potions\", \"jewelry\", \"wands\", \"hides\", \"armor\", \"clothing\", \"weapons\"." +
+//                "<br>You can also just type [sort and it will give you a list of valid itemtypes you can use.",
 //
                 "This command allows you to assign a bag inside your backpack, that all the items you crafted will go into. The default is your backpack.",
 //
@@ -187,6 +198,18 @@ namespace Server.Gumps
 //                "This command gives you a target cursor, and you can target an item to evaluate its magic point, which is how much the magic dealer will reward you if you drop that item on him to recycle. Always good to use this command to check an item before you recycle it to be sure it is worth it.",
 //
 //                "Opens or closes all doors within 2 tiles range. A locked door will open only if you have the right key in your backpack to unlock it.",
+                  //Special Commands
+
+                  
+                "A keyword command which allows you to change your password for your account.",
+                "A keyword command which will alert other players that come around you thaat you are afk. Example \"[afk at work\" will put a message over your head saying that your afk at work and how long you been afk.",
+                "A keyword command which allows you to change characters without having to log out and back in. You must be in a instant log area in order to use this.",
+                "A keyword command which allows you to do an emote. Example: \"[e laugh\" will make your character laugh. to pull up a menu of different emotes you can do, just type: \"[e\" and a menu will pop up.",
+                "A keyword command which will help find the different player vendors in the world.",
+                "A keyword command which will help you to retrieve your pet. If it is lost or left behind in a dungeon. For a FEE of course.",
+                "A keyword command which will pull up the autction menu",
+                "A keyword command which will pull up the in game forums board menu.",
+                "A keyword that does not use the \"[\". By speaking these words it will tell you your status, with a little joke with it also. \"Remember just to move around and you will be fine.\"",
 
             };
     }
@@ -232,10 +255,10 @@ namespace Server.Gumps
     {
         public static void Initialize()
         {
-            CommandSystem.Register("Command", AccessLevel.Player, new CommandEventHandler(Command_OnCommand));
+            CommandSystem.Register("Commands", AccessLevel.Player, new CommandEventHandler(Command_OnCommand));
         }
 
-        [Usage("Command")]
+        [Usage("Commands")]
         [Description("List most commonly used player commands and their descriptions.")]
         private static void Command_OnCommand(CommandEventArgs e)
         {
@@ -518,6 +541,16 @@ namespace Server.Gumps
 		//// Misc
 		//MP,
 		//Door,
+		//Special Commands
+        AccountPasswordChanger,
+        afk,
+        ChangeCharacter,
+        e,
+        findplayervendor,
+        GetPet,
+        myauction,
+        viewforums,
+        whatismystatus,
     }
 
     public class CommandsGumpGroup
@@ -586,7 +619,7 @@ namespace Server.Gumps
         	                      	//CommandName.OwnBag,
         	                      	CommandName.Dump,
         	                      	//CommandName.Sort,
-        	                      	//CommandName.CraftBag,
+        	                      	CommandName.CraftBag,
         	                      	CommandName.SellBag,
         	                      	CommandName.SellOptions,
         	                      	}
@@ -632,6 +665,21 @@ namespace Server.Gumps
 			//                    CommandName.MP,
 			//                    CommandName.Door,
 			//				} ),
+			new CommandsGumpGroup( "Special Commands", new CommandName[]
+			                      {
+			                      	CommandName.AccountPasswordChanger,
+			                      	CommandName.afk,
+			                      	CommandName.ChangeCharacter,
+			                      	CommandName.e,
+			                      	CommandName.findplayervendor,
+			                      	CommandName.GetPet,
+			                      	CommandName.myauction,
+			                      	CommandName.viewforums,
+			                      	CommandName.whatismystatus,
+
+			                      }
+			                     ),
+			
 			};
         
         public static CommandsGumpGroup[] Groups

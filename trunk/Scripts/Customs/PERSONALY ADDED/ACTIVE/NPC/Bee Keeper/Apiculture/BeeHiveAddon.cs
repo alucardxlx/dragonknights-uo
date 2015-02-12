@@ -797,6 +797,14 @@ namespace Server.Engines.Apiculture
 		{	
 			m_Hive = hive;
 		}
+//I ADDED
+		public override bool HandlesOnMovement { get { return true; } }
+		
+		public override void OnMovement(Mobile from, Point3D oldLocation)
+        {
+			from.CloseGump(typeof(apiBeeHiveMainGump));
+        }
+//I ADDED FIN
 
 		public override void OnDoubleClick(Mobile from)
 		{
@@ -811,6 +819,15 @@ namespace Server.Engines.Apiculture
 				LabelTo( from, "That beehive is empty.  Use an axe to redeed it." );
 				return;
 			}
+//I ADDED
+			Point3D loc = this.GetWorldLocation();
+			if ( !from.InLOS( loc ) || !from.InRange( loc, 2 ) )
+			{
+				from.LocalOverheadMessage( MessageType.Regular, 0x3E9, 1019045 ); // I can't reach that.
+				return;
+			}
+			from.CloseGump(typeof(apiBeeHiveMainGump));
+//I ADDED FIN
 			from.SendGump( new apiBeeHiveMainGump( from, m_Hive ) );
 		}
 

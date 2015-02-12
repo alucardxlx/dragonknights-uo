@@ -49,7 +49,7 @@ namespace Server.Items
          if ( !from.Player ) 
             return; 
 
-         if ( from.InRange( GetWorldLocation(), 1 ) ) 
+         if ( from.InRange( GetWorldLocation(), 2 ) ) 
             UseGate( from ); 
          else 
             from.SendLocalizedMessage( 500446 ); // That is too far away. 

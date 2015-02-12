@@ -321,6 +321,8 @@ namespace Arya.Savings
 				return (SavingsAccount)bank.FindItemByType( typeof( SavingsAccount ));
 		}
 
+		[Usage( "InstallSavings" )] 
+		[Description( "Install savings accounts" )] 
 		private static void InstallSavings_OnCommand( CommandEventArgs e )
 		{
 			InstallSavingsAccounts( e.Mobile );

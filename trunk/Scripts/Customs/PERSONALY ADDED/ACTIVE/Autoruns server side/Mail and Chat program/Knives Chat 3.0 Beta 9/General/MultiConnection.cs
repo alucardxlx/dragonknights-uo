@@ -62,7 +62,7 @@ namespace Knives.Chat3
                 c_Connecting = false;
                 c_Connected = true;
             }
-            catch (Exception e)
+            catch (Exception /*e*/)// I HID e to stop warning message.
             {
                 c_Server = false;
                 //Console.WriteLine(e.Message);
@@ -131,7 +131,7 @@ namespace Knives.Chat3
                     if (data.Mobile.HasGump(typeof(MultiGump)))
                         GumpPlus.RefreshGump(data.Mobile, typeof(MultiGump));
             }
-            catch (Exception e)
+            catch (Exception /*e*/)// I HID e to stop warning message.
             {
                 Errors.Report("Error opening stream for slave.");
                 //Console.WriteLine(e.Message);
@@ -162,7 +162,7 @@ namespace Knives.Chat3
                     if (data.Mobile.HasGump(typeof(MultiGump)))
                         GumpPlus.RefreshGump(data.Mobile, typeof(MultiGump));
             }
-            catch (Exception e)
+            catch (Exception /*e*/)// I HID e to stop warning message.
             {
                 Errors.Report("Error disconnecting slave.");
                 //Console.WriteLine(e.Message);
@@ -181,7 +181,7 @@ namespace Knives.Chat3
                 //sok.Close();
                 WaitForData(sok);
             }
-            catch (Exception e)
+            catch (Exception /*e*/)// I HID e to stop warning message.
             {
                 //Console.WriteLine("Connection Died");
                 //Console.WriteLine(e.Message);
@@ -198,7 +198,7 @@ namespace Knives.Chat3
                 //Console.WriteLine("Waiting for input.");
                 sok.BeginReceive(pak.Buffer, 0, pak.Buffer.Length, SocketFlags.None, new AsyncCallback(OnDataReceived), pak);
             }
-            catch (Exception e)
+            catch (Exception /*e*/)// I HID e to stop warning message.
             {
                 if (c_Server)
                 {
@@ -249,7 +249,7 @@ namespace Knives.Chat3
 
                 WaitForData(pak.Socket);
             }
-            catch (Exception e)
+            catch (Exception /*e*/)// I HID e to stop warning message.
             {
                 if (c_Server)
                     CloseMaster();

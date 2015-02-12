@@ -82,6 +82,11 @@ namespace Server.Mobiles
 		}
 		public override bool OnBeforeDeath()
 			{
+			PackItem(new HulkPotion());
+			PackItem(new HulkPotion());
+			PackItem(new HulkPotion());
+			PackItem(new HulkPotion());
+			PackItem(new HulkPotion());
 			PackItem(new IncredibleHulkStatuette());
 			PackGold(1000, 1500);
 			return base.OnBeforeDeath();//NOT SURE?????

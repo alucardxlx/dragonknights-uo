@@ -1155,6 +1155,11 @@ namespace Server.Mobiles
 
 				Point3D loc = ( m is BaseVendor ? this.Location : GetSpawnPosition() );
 
+				if(m.CanSwim == true)
+				{
+					loc = GetSpawnPosition(m);
+				}
+
 				m.OnBeforeSpawn( loc, map );
 				InvalidateProperties();
 
@@ -1221,6 +1226,11 @@ namespace Server.Mobiles
 
 				Point3D loc = ( m is BaseVendor ? this.Location : GetSpawnPosition() );
 
+				if ( m.CanSwim == true )
+				{
+					loc = GetSpawnPosition(m);
+				}
+
 				m.OnBeforeSpawn( loc, map );
 				InvalidateProperties();
 
@@ -1286,6 +1296,10 @@ namespace Server.Mobiles
 				
 
 				Point3D loc = ( m is BaseVendor ? this.Location : GetSpawnPosition() );
+				if ( m.CanSwim == true)
+				{
+					loc = GetSpawnPosition(m);
+				}
 
 				m.OnBeforeSpawn( loc, map );
 				InvalidateProperties();
@@ -1352,6 +1366,10 @@ namespace Server.Mobiles
 				
 
 				Point3D loc = ( m is BaseVendor ? this.Location : GetSpawnPosition() );
+				if ( m.CanSwim == true)
+				{
+					loc = GetSpawnPosition(m);
+				}
 
 				m.OnBeforeSpawn( loc, map );
 				InvalidateProperties();
@@ -1418,6 +1436,10 @@ namespace Server.Mobiles
 				
 
 				Point3D loc = ( m is BaseVendor ? this.Location : GetSpawnPosition() );
+				if ( m.CanSwim == true)
+				{
+					loc = GetSpawnPosition(m);
+				}
 
 				m.OnBeforeSpawn( loc, map );
 				InvalidateProperties();
@@ -1484,6 +1506,10 @@ namespace Server.Mobiles
 				
 
 				Point3D loc = ( m is BaseVendor ? this.Location : GetSpawnPosition() );
+				if ( m.CanSwim == true)
+				{
+					loc = GetSpawnPosition(m);
+				}
 
 				m.OnBeforeSpawn( loc, map );
 				InvalidateProperties();
@@ -1527,6 +1553,40 @@ namespace Server.Mobiles
 			}
 		}
 
+		//SeaCreatures
+		// FIX: Sea Creatures spawning all at same spot.
+		public Point3D GetSpawnPosition( Mobile m )
+		{
+			Map map = Map;
+
+			if ( map == null )
+				return Location;
+
+			// Try 10 times to find a Spawnable location.
+			for ( int i = 0; i < 10; i++ )
+			{
+				int x, y;
+
+				if ( m_HomeRange > 0 ) {
+					x = Location.X + (Utility.Random( (m_HomeRange * 2) + 1 ) - m_HomeRange);
+					y = Location.Y + (Utility.Random( (m_HomeRange * 2) + 1 ) - m_HomeRange);
+				} else {
+					x = Location.X;
+					y = Location.Y;
+				}
+
+				int z = Map.GetAverageZ( x, y );
+
+				if ( Map.CanFit( x, y, this.Z, 16, true, true, false ) )
+					return new Point3D( x, y, this.Z );
+				else if ( Map.CanFit( x, y, z, 16, true, true, false ) )
+					return new Point3D( x, y, z );
+			}
+
+			return this.Location;
+		}
+
+		//Non-SeaCreatures
 		public Point3D GetSpawnPosition()
 		{
 			Map map = Map;

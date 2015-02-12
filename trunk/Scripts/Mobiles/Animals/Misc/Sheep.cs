@@ -7,7 +7,7 @@ using Server.Network;
 namespace Server.Mobiles
 {
 	[CorpseName( "a sheep corpse" )]
-	public class Sheep : BaseCreature, ICarvable
+	public class Sheep : BaseCreature, ICarvable, IScissorable
 	{
 		private DateTime m_NextWoolTime;
 
@@ -32,7 +32,24 @@ namespace Server.Mobiles
 
 			NextWoolTime = DateTime.Now + TimeSpan.FromHours( 3.0 ); // TODO: Proper time delay
 		}
-
+		
+		public bool Scissor( Mobile from, Scissors scissors )
+		{
+			if ( DateTime.Now < m_NextWoolTime )
+			{
+				// This sheep is not yet ready to be shorn.
+				PrivateOverheadMessage( MessageType.Regular, 0x3B2, 500449, from.NetState );
+				return false;
+			}
+			
+			from.SendLocalizedMessage( 500452 ); // You place the gathered wool into your backpack.
+			from.AddToBackpack( new Wool( Map == Map.Felucca ? 2 : 1 ) );
+			
+			NextWoolTime = DateTime.Now + TimeSpan.FromHours( 3.0 ); // TODO: Proper time delay
+			
+			return true;
+		}
+		
 		public override void OnThink()
 		{
 			base.OnThink();

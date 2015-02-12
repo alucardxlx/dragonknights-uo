@@ -20,13 +20,15 @@ namespace Arya.Auction
 		{
 			CommandHandlers.Register( "InitAuction", AccessLevel.Administrator, new CommandEventHandler( OnInitAuction ) );
 			CommandHandlers.Register( "MyAuction", AccessLevel.Player, new CommandEventHandler( OnMyAuction ) );
+			CommandHandlers.Register( "MyAuctions", AccessLevel.Player, new CommandEventHandler( OnMyAuction ) );
 			CommandHandlers.Register( "Auction", AccessLevel.GameMaster, new CommandEventHandler( OnAuction ) );
 			CommandHandlers.Register( "AuctionAdmin", AccessLevel.Administrator, new CommandEventHandler( OnAuctionAdmin ) );
 		}
 
 		#region Placing the control stone
 
-		[ Usage( "InitAuction" ), Description( "Initializes the auction system by bringing up a target for the creation of the auction control stone. If the system is already running this command will bring the user to the stone's location" ) ]
+		[Usage( "InitAuction" )]
+		[Description( "Initializes the auction system by bringing up a target for the creation of the auction control stone. If the system is already running this command will bring the user to the stone's location" ) ]
 		private static void OnInitAuction( CommandEventArgs e )
 		{
 			if ( AuctionSystem.Running )
@@ -63,7 +65,8 @@ namespace Arya.Auction
 
 		#region MyAuction
 
-		[ Usage( "MyAuction" ), Description( "Displays all the auctions a player has created or has bid on. This command can't be used to access the full system, therefore it cannot be used to create new auctions." ) ]
+		[Usage( "MyAuction" )]
+		[Description( "Displays all the auctions a player has created or has bid on. This command can't be used to access the full system, therefore it cannot be used to create new auctions." ) ]
 		private static void OnMyAuction( CommandEventArgs e )
 		{
 			if ( AuctionSystem.Running )
@@ -80,7 +83,8 @@ namespace Arya.Auction
 
 		#region Auction
 
-		[ Usage( "Auction" ), Description( "Displays the main auction system gump" ) ]
+		[Usage( "Auction" )]
+		[Description( "Displays the main auction system gump" ) ]
 		private static void OnAuction( CommandEventArgs e )
 		{
 			if ( AuctionSystem.Running )
@@ -97,7 +101,8 @@ namespace Arya.Auction
 
 		#region Auction Admin
 
-		[ Usage( "AuctionAdmin" ), Description( "Invokes the auction system administration gump" ) ]
+		[Usage( "AuctionAdmin" )]
+		[Description( "Invokes the auction system administration gump" ) ]
 		private static void OnAuctionAdmin( CommandEventArgs e )
 		{
 			if ( AuctionSystem.Running )

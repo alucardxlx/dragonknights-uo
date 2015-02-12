@@ -1273,7 +1273,6 @@ namespace Server.Engines.Craft
                     }
 //I Added For craftbacg above. The original below
 //originaly was there above                    from.AddToBackpack(item);
-
 					if (from.AccessLevel > AccessLevel.Player)
 						CommandLogging.WriteLine(from, "Crafting {0} with craft system {1}", CommandLogging.Format(item), craftSystem.GetType().Name);
 

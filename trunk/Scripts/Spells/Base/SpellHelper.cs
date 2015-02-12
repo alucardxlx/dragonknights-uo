@@ -567,18 +567,19 @@ namespace Server.Spells
 				new TravelValidator( IsLampRoom ),
 				new TravelValidator( IsGuardianRoom ),
 				new TravelValidator( IsHeartwood ),
+				new TravelValidator( IsHiddenVillage ),
 			};
 
 		private static bool[,] m_Rules = new bool[,]
 			{
-						/*T2A(Fel)		Ilshenar		Wind(Tram),		Wind(Fel),		Dungeons(Fel),		Solen(Tram),		Solen(Fel),		CrystalCave(Malas),		Gauntlet(Malas),		Gauntlet(Ferry),		Stronghold,		ChampionSpawn,		Dungeons(Tokuno[Malas]),		LampRoom(Doom),		GuardianRoom(Doom),		Heartwood */
-/* Recall From */		{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				true,							false,				false,					true },
-/* Recall To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
-/* Gate From */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
-/* Gate To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
-/* Mark In */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true },
-/* Tele From */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				true,							true,				true,					true },
-/* Tele To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true, 			true,				true,							true,				true,					true },
+						/*T2A(Fel)		Ilshenar		Wind(Tram),		Wind(Fel),		Dungeons(Fel),		Solen(Tram),		Solen(Fel),		CrystalCave(Malas),		Gauntlet(Malas),		Gauntlet(Ferry),		Stronghold,		ChampionSpawn,		Dungeons(Tokuno[Malas]),		LampRoom(Doom),		GuardianRoom(Doom),		Heartwood,		HiddenVillage */
+/* Recall From */		{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				true,							false,				false,					true,			true },
+/* Recall To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true,			false },
+/* Gate From */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true,			false },
+/* Gate To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true,			false },
+/* Mark In */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				false,							false,				false,					true,			false },
+/* Tele From */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true,			true,				true,							true,				true,					true,			true },
+/* Tele To */			{ true,			true,			true,			true,			true,				true,				true,			true,					true,					true,					true, 			true,				true,							true,				true,					true,			false },
 			};
 
 		public static bool CheckTravel( Mobile caster, TravelCheckType type )
@@ -803,6 +804,16 @@ namespace Server.Spells
 			int x = loc.X, y = loc.Y;
 
 			return (map == Map.Trammel || map == Map.Felucca) && (x >= 6911 && y >= 254 && x < 7167 && y < 511);
+		}
+
+		public static bool IsHiddenVillage( Map map, Point3D loc )
+		{
+			if ( map != Map.Trammel )
+				return false;
+
+			int x = loc.X, y = loc.Y;
+
+			return ( x >= 5120 && y >= 1089 && x < 5203 && y < 1215 );
 		}
 
 		public static bool IsInvalid( Map map, Point3D loc )

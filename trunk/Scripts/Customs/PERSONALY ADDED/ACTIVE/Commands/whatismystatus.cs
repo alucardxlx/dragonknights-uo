@@ -37,7 +37,7 @@ namespace Server.Misc
 			{
 				PlayerMobile from = (PlayerMobile)m; 
 				
-                                if ( e.Speech.ToLower().IndexOf( "[what is my status" ) >= 0 ) 
+                                if ( e.Speech.ToLower().IndexOf( "what is my status" ) >= 0 ) 
 				{
 					from.Animate( 0, 6, 22, false, false, 200 );
 					from.PlaySound( from.Female ? 791 : 1063 );

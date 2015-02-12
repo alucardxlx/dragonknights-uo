@@ -144,18 +144,18 @@ namespace Arya.Auction
 			// BUTTON 0: View auction details
 			if ( auction != null )
 			{
-				AddLabel(125, 85, Misc.kRedHue, auction.ItemName );
+				AddLabel(125, 85, 33, auction.ItemName );
 
 				AddButton(65, 112, 9762, 9763, 0, GumpButtonType.Reply, 0);
-				AddLabel(85, 110, Misc.kLabelHue, AuctionSystem.ST[ 27 ] );
+				AddLabel(85, 110, 88, AuctionSystem.ST[ 27 ] );
 			}				
 			else
 			{
-				AddLabel( 125, 85, Misc.kRedHue, AuctionSystem.ST[ 28 ] );
+				AddLabel( 125, 85, 33, AuctionSystem.ST[ 28 ] );
 			}
 			
 			AddHtml( 75, 170, 413, 120, m_HtmlMessage, (bool)true, (bool)false);
-			AddLabel(75, 150, Misc.kLabelHue, AuctionSystem.ST[ 29 ] );
+			AddLabel(75, 150, 88, AuctionSystem.ST[ 29 ] );
 
 			// BUTTON 1: OK
 			// BUTTON 2: CANCEL
@@ -164,19 +164,19 @@ namespace Arya.Auction
 			{
 				// Information mode: show only OK button at bottom with the OK text
 				AddButton( 45, 345, 1147, 1149, 1, GumpButtonType.Reply, 0 );
-				AddLabel( 125, 355, Misc.kLabelHue, m_OkText );
+				AddLabel( 125, 355, 88, m_OkText );
 			}
 			else
 			{
 				AddButton(45, 300, 1147, 1149, 1, GumpButtonType.Reply, 0);
-				AddLabel(125, 310, Misc.kLabelHue, m_OkText);
+				AddLabel(125, 310, 88, m_OkText);
 				AddButton(45, 345, 1144, 1146, 2, GumpButtonType.Reply, 0);
-				AddLabel(125, 355, Misc.kLabelHue, m_CancelText);
+				AddLabel(125, 355, 88, m_CancelText);
 			}
 
 			if ( m_ShowExpiration && auction != null )
 			{
-				AddLabel( 55, 405, Misc.kRedHue, 
+				AddLabel( 55, 405, 33, 
 					string.Format( AuctionSystem.ST[ 30 ] ,
 					auction.PendingTimeLeft.Days, auction.PendingTimeLeft.Hours ) );
 			}
@@ -201,17 +201,27 @@ namespace Arya.Auction
 			{
 				sender.Mobile.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 31 ] );
 				return;
-			}
+            }
+
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 2)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 
 			switch ( info.ButtonID )
 			{
 				case 0: // View auction details
 
-					if ( m_InformationMode && ! m_VerifyAuction )
-						// This is an outbid message, no need to return after visiting the auction
-						sender.Mobile.SendGump( new AuctionViewGump( sender.Mobile, Auction ) );
-					else
-						sender.Mobile.SendGump( new AuctionViewGump( sender.Mobile, Auction, new AuctionGumpCallback( ResendMessage ) ) );
+                    if (m_InformationMode && !m_VerifyAuction)
+                    {
+                        sender.Mobile.CloseGump(typeof(AuctionViewGump));
+                        // This is an outbid message, no need to return after visiting the auction
+                        sender.Mobile.SendGump(new AuctionViewGump(sender.Mobile, Auction));
+                    }
+                    else
+                        sender.Mobile.SendGump(new AuctionViewGump(sender.Mobile, Auction, new AuctionGumpCallback(ResendMessage)));
 					break;
 
 				case 1: // OK

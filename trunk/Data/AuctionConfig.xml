@@ -30,7 +30,7 @@
 		-->
 		<MaxReserveMultiplier type="double">3.0</MaxReserveMultiplier>
 		
-		<BlackHue type="int">500000</BlackHue>
+		<BlackHue type="int">2000</BlackHue>
 		<AllowPetsAuction type="bool">true</AllowPetsAuction>
 		
 		<AuctionAdminAcessLevel type="AccessLevel">Administrator</AuctionAdminAcessLevel>
@@ -41,11 +41,11 @@
 		
 			Example:
 		
-			<ClilocLocation type="string">C:\RunUO\Misc\cliloc.enu</ClilocLocation>
+			<ClilocLocation type="string">C:\Program Files (x86)\EA Games\Ultima Online Mondain's Legacy\cliloc.enu</ClilocLocation>
 		-->
-		<ClilocLocation type="string">C:\PROGRA~1\EAGAME~1\ULTIMA~1\cliloc.enu</ClilocLocation>
+		<ClilocLocation type="string">C:\Program Files (x86)\EA Games\Ultima Online Mondain's Legacy\cliloc.enu</ClilocLocation>
 
-		<EnableLogging type="bool">true</EnableLogging>
+		<EnableLogging type="bool">false</EnableLogging>
 		
 		<!--
 			When a bid is placed within 5 minutes from the auction's ending, the auction duration will be
@@ -68,8 +68,8 @@
 			Savings Account configuration.
 		-->
 
-		<GoldInterestRate type="double">0.04</GoldInterestRate>
-		<TokensInterestRate type="double">0.03</TokensInterestRate>
+		<GoldInterestRate type="double">0.00</GoldInterestRate>
+		<TokensInterestRate type="double">0.00</TokensInterestRate>
 		<EnableTokens type="bool">false</EnableTokens>		<!-- Enable Daat99 Tokens? -->
 
 	</AuctionSystem>	

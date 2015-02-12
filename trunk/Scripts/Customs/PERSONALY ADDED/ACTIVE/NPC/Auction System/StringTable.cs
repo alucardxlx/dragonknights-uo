@@ -30,7 +30,7 @@ namespace Arya.Auction
 			m_Table.Add( 7, "Close" );
 			m_Table.Add( 8, "Welcome to the Auction House" );
 			m_Table.Add( 9, "Auction An Item" );
-			m_Table.Add( 10, "View All Auctions" );
+			m_Table.Add( 10, "View Auctions (newest first)" );
 			m_Table.Add( 11, "View Your Auctions" );
 			m_Table.Add( 12, "View Your Bids" );
 			m_Table.Add( 13, "View Your Pendencies" );
@@ -129,7 +129,7 @@ namespace Arya.Auction
 			m_Table.Add( 107, "to continue and commit this auction." );
 			m_Table.Add( 108, "Cancel and exit" );
 			m_Table.Add( 109, "The starting bid must be at least 1 gold coin." );
-			m_Table.Add( 110, "The reserve must be greater or equal than the starting bid" );
+            m_Table.Add( 110, "The reserve must be greater than or equal to the starting bid, leave blank for auto reserve to equal starting");
 			m_Table.Add( 111, "An auction must last at least {0} days." );
 			m_Table.Add( 112, "An auction can last at most {0} days." );
 			m_Table.Add( 113, "Please speicfy a name for your auction" );
@@ -231,13 +231,13 @@ namespace Arya.Auction
 			// VERSION 1.7 Begins here
 
 			m_Table.Add( 208, "Allow Buy Now For:" );
-			m_Table.Add( 209, "If you chose to use the Buy Now feature, please specify a value higher than the reserve" );
+			m_Table.Add( 209, "If you chose to use the Buy Now feature, please specify a value equal or higher than the reserve. Adjusting to meet reserve" );
 			m_Table.Add( 210, "Buy this item now for {0} gold" );
 
 			m_Table.Add( 105, @"<basefont color=#FF0000>Auction Agreement<br>
 <basefont color=#FFFFFF>By completing and submitting this form you agree to take part in the auction system. The item you are auctioning will be removed from your inventory and will be returned to you only if you cancel this auction, if the auction is unsuccesfull and the item isn't sold, or if staff forces the auction system to stop.
 <basefont color=#FF0000>Starting Bid:<basefont color=#FFFFFF> This is the minimum bid accepted for this item. Set this value to something reasonable, and possibly lower than what you expect to collect for the item in the end.
-<basefont color=#FF0000>Reserve:<basefont color=#FFFFFF> This value will not be know to the bidders, and you should consider it as a safe price for your item. If the final bid reaches this value, the sale will be automatically finalized by the system. If on the other hand the highest bid is somewhere between the starting bid and the reserve, you will be given the option of choosing whether to sell the item or not. You will have 7 days after the end of the auction to take this decision. If you don't, the auction system will assume you decided not to sell and will return the item to you and the money to the highest bidder. Bidders will not see the value of the reserve, but only a statement saying whether it has been reached or not.
+<basefont color=#FF0000>Reserve:<basefont color=#FFFFFF> This value will not be known to the bidders, and you should consider it as a safe price for your item. If the final bid reaches this value, the sale will be automatically finalized by the system. If on the other hand the highest bid is somewhere between the starting bid and the reserve, you will be given the option of choosing whether to sell the item or not. You will have 7 days after the end of the auction to take this decision. If you don't, the auction system will assume you decided not to sell and will return the item to you and the money to the highest bidder. Bidders will not see the value of the reserve, but only a statement saying whether it has been reached or not.
 <basefont color=#FF0000>Duration:<basefont color=#FFFFFF> This value specifies how many days the auction will last from its creation time. At the end of this period, the system will proceed to either finalize the sale, return the item and the highest bid, or wait for a decision in case of a reserve not reached issue.
 <basefont color=#FF0000>Buy Now:<basefont color=#FFFFFF> This options allows you to specify a safe price at which you are willing to sell the item before the end of the auction. If the buyer is willing to pay this price, they will be able to purchase the item right away without any further bids.
 <basefont color=#FF0000>Name:<basefont color=#FFFFFF> This should be a short name defining your auction. The system will suggest a name based on the item you're selling, but you might wish to change it in some circumstances.
@@ -274,7 +274,12 @@ Once you commit this auction you will not be able to retrieve your item until th
 			//
 			// VERSION 1.13
 			//
-			m_Table.Add( 231, "Container: {0}" );
+            m_Table.Add(231, "Container: {0}");
+            m_Table.Add(232, "Tames");
+            m_Table.Add(233, "Cancel Auction");
+            m_Table.Add(234, "Buy now not enabled for this item");
+            m_Table.Add(235, "Minimum bid");
+            m_Table.Add(236, "View Auctions (ending first)");
 		}
 
 		/// <summary>

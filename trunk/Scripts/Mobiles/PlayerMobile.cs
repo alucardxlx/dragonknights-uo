@@ -4691,7 +4691,7 @@ namespace Server.Mobiles
 					if ((pet is PackLlama || pet is PackHorse || pet is Beetle || pet is HordeMinionFamiliar) && (pet.Backpack != null && pet.Backpack.Items.Count > 0))
 						continue;
 
-					if (pet is BaseEscortable)
+					if (pet is BaseEscortable || pet is PersonalAttendant )
 						continue;
 
 					pet.ControlTarget = null;

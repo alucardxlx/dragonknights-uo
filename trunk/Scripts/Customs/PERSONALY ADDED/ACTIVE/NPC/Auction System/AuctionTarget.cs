@@ -6,9 +6,9 @@
 //
 #endregion AuthorHeader
 using System;
-
 using Server;
 using Server.Targeting;
+using Server.Gumps;
 
 namespace Arya.Auction
 {
@@ -18,12 +18,12 @@ namespace Arya.Auction
 	public class AuctionTarget : Target
 	{
 		private AuctionTargetCallback m_Callback;
-
+		
 		public AuctionTarget( AuctionTargetCallback callback, int range, bool allowground ) : base( range, allowground, TargetFlags.None )
 		{
 			m_Callback = callback;
 		}
-
+		
 		protected override void OnTarget(Mobile from, object targeted)
 		{
 			try
@@ -32,10 +32,27 @@ namespace Arya.Auction
 			}
 			catch
 			{
-				Console.WriteLine( "The auction system cannot access the cliloc.enu file. Please review the system instructions for proper installation" );
+//				Console.WriteLine( "The auction system cannot access the cliloc.enu file. Please review the system instructions for proper installation" );
+				if (targeted != null)
+				{
+//					from.SendMessage ("target ! null");
+					if (targeted is Item)
+					{
+						((Item)targeted).Visible = true;
+						from.SendGump(new AuctionWontAcceptNoticeGump(from));
+					}
+					else
+					{
+						from.SendGump( new NoticeGump( 1060637, 30720, "Please let a GM know - Aution Target Else.", 0xFFC000, 320, 240, null, null ) );
+					}
+				}
+				else
+				{
+					from.SendMessage ("targeted was null");
+				}
 			}
 		}
-
+		
 		protected override void OnTargetCancel(Mobile from, TargetCancelType cancelType)
 		{
 			if ( AuctionSystem.Running )

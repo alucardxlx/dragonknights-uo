@@ -17,7 +17,7 @@ namespace Arya.Auction
 	public class AuctionItemCheck : AuctionCheck
 	{
 		private static int ItemSoldHue = 2119;
-		private static int ItemReturnedHue = 52;
+		private static int ItemReturnedHue = 335;  // 52;   335 is sorta reddish-pink. But I don't want them to mix with bank checks...
 		private Item m_Item;
 
 		/// <summary>
@@ -33,11 +33,11 @@ namespace Arya.Auction
 			m_ItemName = auction.ItemName;			
 			m_Item = auction.Item;
 
-			if ( m_Item != null )
+			/*if ( m_Item != null )
 			{
 				AuctionSystem.ControlStone.RemoveItem( m_Item );
 				m_Item.Parent = this; // This will avoid cleanup
-			}
+			}*/
 
 			switch ( result )
 			{
@@ -128,8 +128,10 @@ namespace Arya.Auction
 				to.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 116 ] );
 				return false;
 			}
-			else if ( to.BankBox.TryDropItem( to, item, false ))
+			else //if ( to.BankBox.TryDropItem( to, item, false ) )
 			{
+				item.Internalize();
+				to.BankBox.AddItem( item );
 				item.UpdateTotals();
 				DeliveryComplete();
 				Delete();
@@ -137,7 +139,7 @@ namespace Arya.Auction
 				return true;
 			}
 
-			return false;
+			//return false;
 		}
 
 		public override void OnDelete()

@@ -133,7 +133,7 @@ namespace Server.Gumps
                     int row;
                     btn = (index) + 101;
                     row = index % 12;
-                    bool online;
+//                    bool online;//Trying to clear up yellow on startup - said declaired but never used.
                     PlayerVendor pv = m_List[index] as PlayerVendor;
                     Account a = pv.Owner.Account as Account;
 

@@ -59,7 +59,11 @@ You can make your own, (Via the House Placement Tool), which each account has a 
 
 <BASEFONT COLOR=#006400>PLAYER'S COMMANDS:<BASEFONT COLOR=#000000>
 
+<BASEFONT COLOR=#0000FF>[Commands<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - brings up a menu of the basic commands. Take note of the special commands, for they are not common on different servers.
+
 <BASEFONT COLOR=#0000FF>[MyAuction<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - brings up a limited auction gump. Players can only access auctions they're already participating in. They can't use this menu to create new auctions or to place bids on items they haven't bid on before. There is a Auctioner in MoonGlow.
+
+<BASEFONT COLOR=#0000FF>[viewforums<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - brings up a forum gump. Players can use this ingame forum just as you would any regular website forum to post messages, ect. There are also special bulletin boards threw out the world / towns / and can be crafted, that when you double click on them, will bring up the gump.
 
 <BASEFONT COLOR=#0000FF>[grab options<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - to setup your grab options.
 
@@ -78,7 +82,7 @@ IE: [afk bathroom break
 
 <BASEFONT COLOR=#0000FF>[point<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - to point at a location so that another player would see the item your talking about.
 
-<BASEFONT COLOR=#0000FF>[what is my status<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - to show your status such as online time, fame, karma. *Note there is a joke that happens also with it.
+<BASEFONT COLOR=#0000FF>what is my status<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - With out the "[", just say the words to show your status such as online time, fame, karma. *Note there is a joke that happens also with it. Just move afterwards and you will be fine.
 
 <BASEFONT COLOR=#0000FF>motd<BASEFONT COLOR=#000000><BASEFONT COLOR=#000316> - to access the Message Of The Day
 

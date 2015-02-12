@@ -10,8 +10,10 @@ using Server.Items;
 
 namespace Server.Items
 {
-    public class WaterwellAddon : BaseAddon
+    public class WaterwellAddon : BaseAddon, IWaterSource
     {
+    	public int Quantity {get{ return 180; } set{} }// for watersource
+
         public override BaseAddonDeed Deed
         {
             get

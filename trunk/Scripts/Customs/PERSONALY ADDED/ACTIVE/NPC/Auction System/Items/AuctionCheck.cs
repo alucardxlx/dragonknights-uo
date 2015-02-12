@@ -154,8 +154,29 @@ namespace Arya.Auction
 			else
 			{
 				// Send item retrieval gump
-				from.CloseGump( typeof( AuctionDeliveryGump ) );
-				from.SendGump( new AuctionDeliveryGump( this ) );
+				//from.CloseGump( typeof( AuctionDeliveryGump ) );
+				//from.SendGump( new AuctionDeliveryGump( this ) );
+
+                from.CloseGump(typeof(AuctionNoticeGump));//close notice gump
+                if (this is AuctionGoldCheck)
+                {
+                    if (!this.Deliver(from))
+                    {
+                        from.CloseGump(typeof(AuctionDeliveryGump));
+                        from.CloseGump(typeof(AuctionNoticeGump));
+                        from.SendGump(new AuctionDeliveryGump(this));
+                    }
+                    if (this.Auction != null)
+                    {
+                        from.CloseGump(typeof(AuctionDeliveryGump));
+                        from.SendGump(new AuctionDeliveryGump(this));
+                    }
+                }
+                else
+                {
+                    from.CloseGump(typeof(AuctionDeliveryGump));
+                    from.SendGump(new AuctionDeliveryGump(this));
+                }
 			}
 		}		
 

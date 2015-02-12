@@ -54,7 +54,13 @@ namespace Arya.Auction
 				{
 					m_Message.SendTo( sender.Mobile );
 				}
-			}
+            }
+            int buttonid = info.ButtonID;
+            if (buttonid < 1 || buttonid > 1)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 		}
 	}
 }

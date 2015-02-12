@@ -45,8 +45,9 @@ namespace Server.Items
             {
                 case 0:
                     defender.FixedParticles(0x3709, 10, 30, 5052, EffectLayer.LeftFoot);
-                    attacker.Say("Feel the hate Hell holds for you!!!"); break;
+                    attacker.Say("Feel the hate Hell holds for you!!!");
                     SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 20, 20, 20, 20);
+                    break;
             }
 		
 			base.OnHit( attacker, defender, damageBonus );

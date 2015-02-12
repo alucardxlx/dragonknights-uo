@@ -1,1 +1,2 @@
-This version is working with 7.0.12.0
+This version is working with UOML 7.0.12.0
+DotNet 2.0

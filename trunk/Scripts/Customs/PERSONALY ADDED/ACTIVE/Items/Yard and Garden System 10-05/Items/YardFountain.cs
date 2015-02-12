@@ -30,7 +30,7 @@ namespace Server.Items
 		public int Price
 		{
 			get{ return m_Value; }
-			set{ m_Value = m_Value; }
+			set{ m_Value = value; }//changed = VALUE from m_Value; was causing a yellow issue of if set somewhere else.
 		}
 
 //PIECES\\

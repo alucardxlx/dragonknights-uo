@@ -76,11 +76,14 @@ namespace Server.Mobiles
 			ControlSlots = 4;
 			MinTameSkill = 95.1;
 
-
-			AddItem( new Sandals(1) );//This is their only rare drop Unless you comment out the movable : false
-
 			int hue = Utility.RandomMinMax( 1410, 1450 );  //Random Zog Green
 
+//			AddItem( new Sandals(1) );//This is their only rare drop Unless you comment out the movable : false
+
+			Item sandals = new Sandals();
+			sandals.Hue = hue;
+			sandals.Movable = false;
+			AddItem(sandals);
 
 			Item chest = new ChainChest();
 			chest.Hue = hue;
@@ -182,7 +185,7 @@ namespace Server.Mobiles
 				if ( disarm != null && disarm.Movable )
 					m.AddToBackpack( disarm );
 
-				m.BodyMod = 277;
+				m.BodyMod = 1070;
 				m.HueMod = 0;
 
 				new ExpirePolymorphTimer( m ).Start();

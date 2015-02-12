@@ -52,18 +52,18 @@ namespace Arya.Auction
 			AddImageTiled(0, 0, 297, 282, 5174);
 			AddImageTiled(1, 1, 295, 280, 2702);
 			AddAlphaRegion(1, 1, 295, 280);
-			AddLabel(12, 5, Misc.kRedHue, AuctionSystem.ST[ 86 ] );
+			AddLabel(12, 5, 33, AuctionSystem.ST[ 86 ] );
 
-			AddLabel(160, 5, Misc.kGreenHue, string.Format( AuctionSystem.ST[ 18 ] , m_Page + 1, numOfPages ) );
+			AddLabel(160, 5, 273, string.Format( AuctionSystem.ST[ 18 ] , m_Page + 1, numOfPages ) );
 			AddImageTiled(10, 30, 277, 221, 5174);
 			AddImageTiled(11, 31, 39, 19, 9274);
 			AddAlphaRegion(11, 31, 39, 19);
 			AddImageTiled(51, 31, 104, 19, 9274);
 			AddAlphaRegion(51, 31, 104, 19);
-			AddLabel(55, 30, Misc.kGreenHue, AuctionSystem.ST[ 87 ] );
+			AddLabel(55, 30, 273, AuctionSystem.ST[ 87 ] );
 			AddImageTiled(156, 31, 129, 19, 9274);
 			AddAlphaRegion(156, 31, 129, 19);
-			AddLabel(160, 30, Misc.kGreenHue, AuctionSystem.ST[ 88 ] );
+			AddLabel(160, 30, 273, AuctionSystem.ST[ 88 ] );
 
 			for ( int i = 0; i < 10; i++ )
 			{
@@ -77,14 +77,14 @@ namespace Arya.Auction
 				if ( m_Page * 10 + i < m_Bids.Count )
 				{
 					Bid bid = m_Bids[ m_Page * 10 + i ] as Bid;
-					AddLabel(15, 50 + i * 20, Misc.kLabelHue, ( m_Page * 10 + i + 1 ).ToString() );
-					AddLabelCropped( 55, 50 + i * 20, 100, 19, Misc.kLabelHue, bid.Mobile != null ? bid.Mobile.Name : AuctionSystem.ST[ 78 ] );
-					AddLabel(160, 50 + i * 20, Misc.kLabelHue, bid.Amount.ToString("#,0" ));
+					AddLabel(15, 50 + i * 20, 88, ( m_Page * 10 + i + 1 ).ToString() );
+					AddLabelCropped( 55, 50 + i * 20, 100, 19, 88, bid.Mobile != null ? bid.Mobile.Name : AuctionSystem.ST[ 78 ] );
+					AddLabel(160, 50 + i * 20, 88, bid.Amount.ToString("#,0" ));
 				}
 			}
 
 			AddButton(10, 255, 4011, 4012, 0, GumpButtonType.Reply, 0);
-			AddLabel(48, 257, Misc.kLabelHue, AuctionSystem.ST[ 89 ] );
+			AddLabel(48, 257, 88, AuctionSystem.ST[ 89 ] );
 			
 			// PREV PAGE: 1
 			if ( m_Page > 0 )
@@ -105,7 +105,13 @@ namespace Arya.Auction
 			{
 				sender.Mobile.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 15 ] );
 				return;
-			}
+            }
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 2)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 
 			switch ( info.ButtonID )
 			{

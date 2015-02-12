@@ -283,13 +283,14 @@ namespace Xanthos.Evo
 			if ( defender == null || defender.Deleted )
 				return;
 
-			if ( defender is TrainingElemental && m_Stage >= m_MaxTrainingStage && null != ControlMaster )
+//ORIGINALY			if ( defender is TrainingElemental && m_Stage >= m_MaxTrainingStage && null != ControlMaster )
+			if ( defender is TrainingElemental && m_Stage >= 3 && null != ControlMaster )
 			{
 				Emote( "*stops fighting*" );
 				Combatant = null;
 				ControlTarget = ControlMaster;
 				ControlOrder = OrderType.Follow;
-				ControlMaster.SendMessage ( "Your pet can no longer gain experience points fighting Training Elementals!");
+				ControlMaster.SendMessage ( 38,"Your pet can no longer gain experience points fighting Training Elementals!");
 			}
 			else if ( defender is BaseCreature )
 			{

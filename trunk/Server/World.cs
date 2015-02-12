@@ -70,7 +70,7 @@ namespace Server {
 		{
 			if( m_DiskWriteHandle.Set())
 			{
-				Console.WriteLine("Closing Save Files...");
+				Console.WriteLine("Closing Save Files... {0}", DateTime.Now);
 			}
 		}
 
@@ -779,7 +779,7 @@ namespace Server {
 			SaveStrategy strategy = SaveStrategy.Acquire();
 			Console.WriteLine( "Core: Using {0} save strategy {1}", strategy.Name.ToLowerInvariant(), DateTime.Now );
 
-			Console.Write( "World: Saving... {0}", DateTime.Now );
+			Console.WriteLine( "World: Saving... {0}", DateTime.Now );
 
 			Stopwatch watch = Stopwatch.StartNew();
 
@@ -813,6 +813,7 @@ namespace Server {
 			strategy.ProcessDecay();
 
 			Console.WriteLine( "done in {0:F2} seconds. - {1}", watch.Elapsed.TotalSeconds, DateTime.Now );
+			Console.WriteLine( "Total Online players at this save:[{0}].", Server.Network.NetState.Instances.Count );
 
 			if ( message )
 				Broadcast( 0x35, true, "World save complete. The entire process took {0:F1} seconds.", watch.Elapsed.TotalSeconds );

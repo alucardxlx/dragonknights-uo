@@ -77,22 +77,21 @@ namespace Server.Engines.Craft
 			bool autoloop = false;
 			if (context !=null && context.AutoLoop)
 			autoloop = true;
-
 			AddButton(320, 342, autoloop ? 209 : 208, autoloop ? 208 : 209, GetButtonID(6, 11), GumpButtonType.Reply, 0);
 			AddHtml(355, 345, 150, 18, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", FontColor, "Auto Loop"), false, false);
-
 			AddHtml(320, 370, 150, 18, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", FontColor, "Make Count"), false, false);
 			int count = 0;
 			if (context != null && context.TotalCount > 0)
 			count = context.TotalCount;
-
-			AddImageTiled(414, 370, 52, 22, 2624);
-			AddImageTiled(415, 371, 50, 20, 2524);
-
-			AddTextEntry(415, 371, 50, 20, 261, 100, count>0 ? count.ToString():"");
-
-
-
+//			AddImageTiled(415, 371, 50, 20, 2524);//bage
+			AddImageTiled(414, 370, 52, 22, 2624);//black
+			AddTextEntry(415, 371, 50, 20, 1152, 100, count>0 ? count.ToString():"");
+//original
+//			AddImageTiled(414, 370, 52, 22, 2624);//black
+//			AddImageTiled(415, 371, 50, 20, 2524);//bage
+//
+//			AddTextEntry(415, 371, 50, 20, 261, 100, count>0 ? count.ToString():"");
+//original
 //I ADDED
 
 			// Mark option
@@ -438,7 +437,6 @@ namespace Server.Engines.Craft
 			{
 			context.Count = 0;
 			context.TotalCount = 0;
-
 			TextRelay text = info.GetTextEntry(100);
 			if (text.Text != null)
 			{
@@ -447,7 +445,6 @@ namespace Server.Engines.Craft
 			    if (keywords.Length > 0)
 			    {
 			        string keyword = keywords[0];
-
 			        try
 			        {
      				   int value;
@@ -463,7 +460,6 @@ namespace Server.Engines.Craft
 			    }
 			}
 		}
-
 //I ADDED
 
 			switch ( type )
@@ -679,9 +675,7 @@ namespace Server.Engines.Craft
 							m_From.SendGump(new CraftGump(m_From, m_CraftSystem, m_Tool, null, m_Page));
 							break;
 						}
-
 //I ADDED
-
 					}
 
 					break;

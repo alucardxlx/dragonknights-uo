@@ -21,7 +21,8 @@ namespace Arya.Auction
 	{
 		private Auctioner m_Auctioner;
 
-		public TradeHouseEntry( Auctioner auctioner ) : base( 6103, 10 )
+		public TradeHouseEntry( Auctioner auctioner ) : base( 0102, 10 )//original 6103,10 6103 - Note 6103 (needs to be the last 4 numbers of the gothic number), 10 is distance range if char out of range it will show darkened and not able to use "0102 is Main Menu"
+
 		{
 			m_Auctioner = auctioner;
 		}
@@ -50,10 +51,16 @@ namespace Arya.Auction
 	/// Summary description for Auctioner.
 	/// </summary>
 	public class Auctioner : BaseVendor
-	{
-		private List<SBInfo> m_SBInfos = new List<SBInfo>(); 
-		protected override List<SBInfo> SBInfos{ get { return m_SBInfos; } } 
-		
+    {
+        private List<SBInfo> m_SBInfos = new List<SBInfo>();
+        protected override List<SBInfo> SBInfos { get { return m_SBInfos; } }
+
+        //protected override System.Collections.ArrayList SBInfos
+        //{
+         //   get { return new ArrayList(); }
+        //}
+
+
 		[ Constructable ]
 		public Auctioner() : base ( "the Auctioner" )
 		{
@@ -99,6 +106,21 @@ namespace Arya.Auction
 			}
 		}
 
+		public override void OnDoubleClick( Mobile m )
+		{
+			if ( ! m.CheckAlive() )
+				return;
+
+			if ( AuctionSystem.Running )
+			{
+				m.SendGump( new AuctionGump( m ) );
+			}
+			else if ( this != null )
+			{
+				this.SayTo( m, AuctionSystem.ST[ 145 ] );
+			}
+		}		
+		
 		public Auctioner( Serial serial ) : base( serial )
 		{
 		}
@@ -126,14 +148,6 @@ namespace Arya.Auction
 		{
 		}
 
-//		protected override System.Collections.ArrayList SBInfos
-//		{
-//			get
-//			{
-//				return new ArrayList();
-//			}
-//		}
-
 		public override void OnSpeech(SpeechEventArgs e)
 		{
 			if ( e.Speech.ToLower().IndexOf( "auction" ) > -1 )
@@ -154,7 +168,7 @@ namespace Arya.Auction
 				}
 			}
 			else if ( e.Speech.ToLower().IndexOf( "version" ) > -1 )
-				SayTo( e.Mobile, "Auction version 2.1, by Xanthos and Arya" );
+				SayTo( e.Mobile, "Auction version 2.2, by Clayton" );
 
 			base.OnSpeech (e);
 		}

@@ -22,7 +22,7 @@ namespace Xanthos.Evo
 			m_PregnancyTerm = 0.0; // originaly was 0.10
 			m_AbsoluteStatValues = false;
 			m_MaxEvoResistance = 100;
-			m_MaxTrainingStage = 7;// At what stage can evo to?
+			m_MaxTrainingStage = 7;// At what stage stop atack training dummy and leveling
 			m_CanAttackPlayers = false;
 
 			m_RandomHues = new int[] { 1157, 1175, 1172, 1170, 2703, 2473, 2643, 1156, 2704, 2734, 2669, 2621, 2859, 2716, 2791, 2927, 2974, 1161, 2717, 2652, 2821, 2818, 2730, 2670, 2678, 2630, 2641, 2644, 2592, 2543, 2526, 2338, 2339, 1793, 1980, 1983 };

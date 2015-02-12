@@ -42,6 +42,11 @@ namespace Server.Items
 		ManaLesser,
 		Mana,
 		ManaGreater,
+		Hulk
+//		DarkGlow  //already had
+//		Parasitic,  //already had
+//		Invisibility  //already had
+		
 //I ADDED POTIONS
 
 	}

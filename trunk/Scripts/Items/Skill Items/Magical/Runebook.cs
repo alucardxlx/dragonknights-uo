@@ -269,7 +269,9 @@ namespace Server.Items
 			rune.Marked = true;
 
 			from.AddToBackpack( rune );
-
+//I ADDED
+			Effects.PlaySound( from.Location, from.Map, 66);
+//I ADDED FIN
 			from.SendLocalizedMessage( 502421 ); // You have removed the rune.
 		}
 
@@ -353,6 +355,9 @@ namespace Server.Items
 				}
 
 				from.CloseGump( typeof( RunebookGump ) );
+//I ADDED
+				Effects.PlaySound( from.Location, from.Map, 85);
+//I ADDED FIN
 				from.SendGump( new RunebookGump( from, this ) );
 
 				m_Openers.Add( from );

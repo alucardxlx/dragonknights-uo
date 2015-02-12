@@ -749,11 +749,12 @@ namespace Server.Engines.Craft
 
 			index = AddCraft( typeof( DragonChest ), 1053114, 1029793, 85.0, 135.0, typeof( RedScales ), 1060883, 36, 1060884 );
 			SetUseSubRes2( index, true );
-
+//I ADDED
                         index = AddCraft( typeof( TallDragonBrazierAddonDeed ), 1053114, "Tall Dragon Brazier", 100.0, 140.0, typeof( IronIngot ), "Ingots", 50, "You do not have sufficent Ingots to make that." );
                         AddRes( index, typeof( RedScales ), "Dragon Scales", 40, "You do not have sufficient Dragon Scales to make that." );
                         AddRes( index, typeof( FireRuby ), "Fire Ruby", 30, "You do not have sufficient Fire Rubys to make that." );
-			SetUseSubRes2( index, true );
+                        SetUseSubRes2( index, true );
+//I ADDED FIN
 			#endregion
 			
 			// Set the overridable material

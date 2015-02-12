@@ -18,11 +18,13 @@ namespace Arya.Auction
 	/// The main gump for the auction house
 	/// </summary>
 	public class AuctionGump : Gump
-	{
+    {
+        private ArrayList m_List;
 		public AuctionGump( Mobile user ) : base( 50, 50 )
 		{
 			user.CloseGump( typeof( AuctionGump ) );
-			MakeGump();
+            MakeGump();
+            m_List = new ArrayList(AuctionSystem.Auctions);
 		}
 
 		private void MakeGump()
@@ -47,29 +49,33 @@ namespace Arya.Auction
 
 			AddLabel(160, 45, 151, AuctionSystem.ST[ 8 ] );
 
-			// Create new auction: B1
-			AddLabel(100, 130, Misc.kLabelHue, AuctionSystem.ST[ 9 ] );
-			AddButton(60, 130, 4005, 4006, 1, GumpButtonType.Reply, 0);
+            // Create new auction: B1
+            AddLabel(95, 120, 88, AuctionSystem.ST[9]);
+            AddButton(60, 120, 4005, 4006, 1, GumpButtonType.Reply, 0);
 
-			// View all auctions: B2
-			AddLabel(285, 130, Misc.kLabelHue, AuctionSystem.ST[ 10 ] );
-			AddButton(245, 130, 4005, 4006, 2, GumpButtonType.Reply, 0);
+            // View all auctions: B2 sort by newest first
+            AddLabel(270, 120, 88, AuctionSystem.ST[10]);
+            AddButton(235, 120, 4005, 4006, 2, GumpButtonType.Reply, 0);
 
-			// View your auctions: B3
-			AddLabel(100, 165, Misc.kLabelHue, AuctionSystem.ST[ 11 ] );
-			AddButton(60, 165, 4005, 4006, 3, GumpButtonType.Reply, 0);
+            // View all auctions: B6 sort by closing first
+            AddLabel(270, 145, 88, AuctionSystem.ST[236]);
+            AddButton(235, 145, 4005, 4006, 6, GumpButtonType.Reply, 0);
 
-			// View your bids: B4
-			AddLabel(285, 165, Misc.kLabelHue, AuctionSystem.ST[ 12 ] );
-			AddButton(245, 165, 4005, 4006, 4, GumpButtonType.Reply, 0);
+            // View your auctions: B3
+            AddLabel(270, 170, 88, AuctionSystem.ST[11]);
+            AddButton(235, 170, 4005, 4006, 3, GumpButtonType.Reply, 0);
 
-			// View pendencies: B5
-			AddButton( 60, 200, 4005, 4006, 5, GumpButtonType.Reply, 0 );
-			AddLabel( 100, 200, Misc.kLabelHue, AuctionSystem.ST[ 13 ] );
+            // View your bids: B4
+            AddLabel(95, 170, 88, AuctionSystem.ST[12]);
+            AddButton(60, 170, 4005, 4006, 4, GumpButtonType.Reply, 0);
 
-			// Exit: B0
-			AddLabel(285, 205, Misc.kLabelHue, AuctionSystem.ST[ 14 ] );
-			AddButton(245, 200, 4017, 4018, 0, GumpButtonType.Reply, 0);
+            // View pendencies: B5
+            AddButton(60, 195, 4005, 4006, 5, GumpButtonType.Reply, 0);
+            AddLabel(95, 195, 88, AuctionSystem.ST[13]);
+
+            // Exit: B0
+            AddLabel(270, 195, 88, AuctionSystem.ST[14]);
+            AddButton(235, 195, 4017, 4018, 0, GumpButtonType.Reply, 0);
 		}
 
 		public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
@@ -79,6 +85,14 @@ namespace Arya.Auction
 				sender.Mobile.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 15 ] );
 				return;
 			}
+
+            int buttonid = info.ButtonID;
+
+            if (buttonid < 0 || buttonid > 6)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 
 			switch ( info.ButtonID )
 			{
@@ -90,7 +104,18 @@ namespace Arya.Auction
 					break;
 
 				case 2: // View all auctions
-					sender.Mobile.SendGump( new AuctionListing( sender.Mobile, AuctionSystem.Auctions, true, true ) );
+
+                    AuctionComparer cmp = null;
+                    cmp = new AuctionComparer(AuctionSorting.Date, false);//Sort by date newest first
+                    if (cmp != null)
+                    {
+                        m_List.Sort(cmp);
+                    }
+
+                    sender.Mobile.SendGump(new AuctionListing(sender.Mobile, m_List, true, true));
+
+
+                    // sender.Mobile.SendGump( new AuctionListing( sender.Mobile, AuctionSystem.Auctions, true, true ) );
 					break;
 
 				case 3: // View your auctions
@@ -106,7 +131,19 @@ namespace Arya.Auction
 				case 5: // View pendencies
 
 					sender.Mobile.SendGump( new AuctionListing( sender.Mobile, AuctionSystem.GetPendencies( sender.Mobile ), true, true ) );
-					break;
+                    break;
+
+                case 6: // View all auctions sorted by ending first
+
+                    cmp = new AuctionComparer(AuctionSorting.TimeLeft, true);//Sort by ending first
+                    if (cmp != null)
+                    {
+                        m_List.Sort(cmp);
+                    }
+
+                    sender.Mobile.SendGump(new AuctionListing(sender.Mobile, m_List, true, false));
+                    break;
+
 			}
 		}
 

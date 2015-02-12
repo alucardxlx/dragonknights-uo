@@ -252,12 +252,28 @@ namespace Server.Engines.Craft
 			AddCraft(typeof(FullApron), 1015283, 1025437, 29.0, 54.0, typeof(Cloth), 1044286, 10, 1044287);
 
 			if (Core.SE)
-//I added
+//I ADDED
 			AddCraft( typeof( Bag ), 1015283, "Bag", 50.00, 75.00, typeof( Leather ), "Leather", 3, "You do not have sufficent leather to make that." );
 			AddCraft( typeof( Backpack ), 1015283, "Backpack", 75.00, 100.00, typeof( Leather ), "Leather", 6, "You do not have sufficent leather to make that." );
 			AddCraft( typeof( Pouch ), 1015283, "Pouch", 100.00, 140.00, typeof( Leather ), "Leather", 9, "You do not have sufficent leather to make that." );
 			AddCraft( typeof( BlankScroll ), 1015283, "BlankScroll", 0.00, 140.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
-//I added fin
+			index = AddCraft( typeof( Rope ), 1015283, "Rope", 40.00, 140.00, typeof( DarkYarn ), "Ball of Yarn", 200, "You do not have sufficent Yarn to make that." );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 100, 1073463);
+			AddRes(index, typeof( WheatSheaf ), 1044489, 100, 1044490 );
+			AddRes(index, typeof( Flax ), "Flax", 100, "You do not have sufficent Flax to make that." );
+			index = AddCraft( typeof( PillowSmall0x1397 ), 1015283, "Small Pillow", 40.00, 140.00, typeof( Cloth ), 1044286, 10, 1044287 );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 30, 1073463);
+			AddRes(index, typeof( Feather ), 1044562, 20, 1044563 );
+			index = AddCraft( typeof( PillowMedium0x13ab ), 1015283, "Medium Pillow", 50.00, 140.00, typeof( Cloth ), 1044286, 15, 1044287 );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 30, 1073463);
+			AddRes( index, typeof( Feather ), 1044562, 25, 1044563 );
+			index = AddCraft( typeof( PillowLarge0x13a4 ), 1015283, "Large Pillow", 60.00, 140.00, typeof( Cloth ), 1044286, 20, 1044287 );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 60, 1073463);
+			AddRes( index, typeof( Feather ), 1044562, 50, 1044563 );
+			index = AddCraft( typeof( PillowExtraLarge0x163a ), 1015283, "Extra Large Pillow", 70.00, 140.00, typeof( Cloth ), 1044286, 30, 1044287 );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 90, 1073463);
+			AddRes( index, typeof( Feather ), 1044562, 100, 1044563 );
+//I ADDED FIN
 			{
 				index = AddCraft(typeof(Obi), 1015283, 1030219, 20.0, 45.0, typeof(Cloth), 1044286, 6, 1044287);
 				SetNeededExpansion(index, Expansion.SE);

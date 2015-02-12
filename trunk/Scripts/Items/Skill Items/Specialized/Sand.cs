@@ -8,19 +8,19 @@ namespace Server.Items
 	{
 		int ICommodity.DescriptionNumber { get { return LabelNumber; } }
 		bool ICommodity.IsDeedable { get { return true; } }
-
 		public override int LabelNumber{ get{ return 1044626; } } // sand
-
+		
 		[Constructable]
 		public Sand() : this( 1 )
 		{
 		}
 
 		[Constructable]
-		public Sand( int amount ) : base( 0x11EA )
+		public Sand( int amount ) : base( 0x11ea )
 		{
 			Stackable = Core.ML;
-			Weight = 1.0;
+			Amount = amount;
+			Weight = 0.1;
 		}
 
 		public Sand( Serial serial ) : base( serial )

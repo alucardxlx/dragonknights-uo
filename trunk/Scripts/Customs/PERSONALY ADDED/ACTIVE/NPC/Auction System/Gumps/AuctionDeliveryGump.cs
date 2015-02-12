@@ -50,8 +50,11 @@ namespace Arya.Auction
 				// Delivering gold
 				goldHue = 143;
 				itemHue = 730;
-				AddImage(200, 39, 2530);
-				AddLabel(70, 220, Misc.kLabelHue, AuctionSystem.ST[ 2 ] );
+                AddImage(200, 39, 2530);
+                if (!m_Check.Delivered)
+                {
+                    AddLabel(70, 220, 88, AuctionSystem.ST[2]);
+                }
 			}
 			else
 			{
@@ -59,7 +62,7 @@ namespace Arya.Auction
 				goldHue = 730;
 				itemHue = 143;
 				AddImage(135, 39, 2530);
-				AddLabel(70, 220, Misc.kLabelHue, AuctionSystem.ST[ 3 ] );
+				AddLabel(70, 220, 88, AuctionSystem.ST[ 3 ] );
 			}
 
 			AddLabel(145, 35, itemHue, AuctionSystem.ST[ 4 ] );
@@ -69,29 +72,39 @@ namespace Arya.Auction
 			AddImage(45, 100, 2091);
 
 			// Item name
-			AddLabelCropped( 55, 75, 200, 20, Misc.kLabelHue, m_Check.ItemName );
+			AddLabelCropped( 55, 75, 200, 20, 88, m_Check.ItemName );
 
 			AddHtml( 45, 115, 215, 100, m_Check.HtmlDetails, (bool)false, (bool)false);
 
 			// Button 1 : Place in bank
-			AddButton(45, 223, 5601, 5605, 1, GumpButtonType.Reply, 0);
+
+            if (!m_Check.Delivered)
+            {
+                AddButton(45, 223, 5601, 5605, 1, GumpButtonType.Reply, 0);
+            }
 
 			// Button 2 : View Auction
 			if ( m_Check.Auction != null )
 			{
 				AddButton(45, 243, 5601, 5605, 2, GumpButtonType.Reply, 0);
-				AddLabel(70, 240, Misc.kLabelHue, AuctionSystem.ST[ 6 ] );
+				AddLabel(70, 240, 88, AuctionSystem.ST[ 6 ] );
 			}
 
 			// Button 0 : Close
 			AddButton(45, 263, 5601, 5605, 0, GumpButtonType.Reply, 0);
-			AddLabel(70, 260, Misc.kLabelHue, AuctionSystem.ST[ 7 ] );
+			AddLabel(70, 260, 88, AuctionSystem.ST[ 7 ] );
 
 			AddImage(225, 240, 9004);
 		}
 
 		public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
-		{
+        {
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 2)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 			switch ( info.ButtonID )
 			{
 				case 1: // Place in bank
@@ -105,7 +118,8 @@ namespace Arya.Auction
 				case 2: // View auction
 
 					if ( m_Check.Auction != null )
-					{
+                    {
+                        sender.Mobile.CloseGump(typeof(AuctionViewGump));
 						sender.Mobile.SendGump( new AuctionViewGump( sender.Mobile, m_Check.Auction, null ));
 					}
 					else

@@ -31,19 +31,22 @@ namespace Arya.Auction
 			m_Page = page;
 			m_List = new ArrayList( items );
 			m_ReturnToAuction = returnToAuction;
-			MakeGump();
+            MakeGump(m);
+            Mobile from = m;
 		}
 
 		public AuctionListing( Mobile m, ArrayList items, bool searchEnabled, bool returnToAuction ) : this( m, items, searchEnabled, returnToAuction, 0 )
-		{
+        {
+            Mobile from = m;
 		}
 
-		private void MakeGump()
+        private void MakeGump(Mobile m)
 		{
 			Closable = true;
 			Disposable = true;
 			Dragable = true;
-			Resizable = false;
+            Resizable = false;
+            Mobile from = m;
 
 			AddPage(0);
 
@@ -57,7 +60,7 @@ namespace Arya.Auction
 			AddImage(421, 20, 10410);
 			AddImage(410, 20, 10430);
 			AddImageTiled(90, 32, 323, 16, 10254);
-			AddLabel(160, 45, Misc.kGreenHue, AuctionSystem.ST[ 8 ] );
+			AddLabel(160, 45, 273, AuctionSystem.ST[ 8 ] );
 			AddImage(420, 330, 10412);
 			AddImage(420, 175, 10411);
 			AddImage(0, 175, 10401);
@@ -65,12 +68,12 @@ namespace Arya.Auction
 			// Search: BUTTON 1
 			if ( m_EnableSearch )
 			{
-				AddLabel(305, 120, Misc.kLabelHue, AuctionSystem.ST[ 16 ] );
+				AddLabel(305, 120, 88, AuctionSystem.ST[ 16 ] );
 				AddButton(270, 120, 4005, 4006, 1, GumpButtonType.Reply, 0);
 			}
 
 			// Sort: BUTTON 2
-			AddLabel(395, 120, Misc.kLabelHue, AuctionSystem.ST[ 17 ] );
+			AddLabel(395, 120, 88, AuctionSystem.ST[ 17 ] );
 			AddButton(360, 120, 4005, 4006, 2, GumpButtonType.Reply, 0);
 
 			while ( m_Page * 10 >= m_List.Count )
@@ -79,11 +82,11 @@ namespace Arya.Auction
 			if ( m_List.Count > 0 )
 			{
 				// Display the page number
-				AddLabel( 360, 95, Misc.kRedHue, string.Format( AuctionSystem.ST[ 18 ] , m_Page + 1, ( m_List.Count - 1 ) / 10 + 1 ) );
-				AddLabel(70, 120, Misc.kRedHue, string.Format( AuctionSystem.ST[ 19 ] , m_List.Count ) );
+				AddLabel( 360, 95, 33, string.Format( AuctionSystem.ST[ 18 ] , m_Page + 1, ( m_List.Count - 1 ) / 10 + 1 ) );
+				AddLabel(70, 120, 33, string.Format( AuctionSystem.ST[ 19 ] , m_List.Count ) );
 			}
 			else
-				AddLabel( 70, 120, Misc.kRedHue, AuctionSystem.ST[ 20 ] );
+				AddLabel( 70, 120, 33, AuctionSystem.ST[ 20 ] );
 
 			// Display items: BUTTONS 10 + i
 
@@ -94,28 +97,51 @@ namespace Arya.Auction
 				for ( int i = 0; i < 10 && ( m_Page * 10 + i ) < m_List.Count; i++ )
 				{
 					AuctionItem item = m_List[ m_Page * 10 + i ] as AuctionItem;
+					AddButton(75, 153 + i * 20, 5601, 5605, 10 + i, GumpButtonType.Reply, 0);
 
-					AddButton(115, 153 + i * 20, 5601, 5605, 10 + i, GumpButtonType.Reply, 0);
-					AddLabelCropped( 140, 150 + i * 20, 260, 20, Misc.kLabelHue, item.ItemName );
-				}
-			}
+                    AddLabelCropped(100, 150 + i * 20, 260, 20, 88, "$" + item.MinNewBid);
+                    AddLabelCropped(175, 150 + i * 20, 260, 20, 88, item.ItemName);
+                     try
+            {
+                    if (item.HighestBid.Mobile != null)
+                    {
+                        if (from == item.HighestBid.Mobile)
+                        {
+                            AddLabelCropped(100, 150 + i * 20, 260, 20, 273, "$" + item.MinNewBid);
+                            AddLabelCropped(175, 150 + i * 20, 260, 20, 273, item.ItemName);
+                        }                       
+                    }
+				
+            }
+            catch { }
+            try
+            {
+                if (item.IsOwner(from))
+                    {
+                        AddLabelCropped(100, 150 + i * 20, 260, 20, 143, "$" + item.MinNewBid);
+                        AddLabelCropped(175, 150 + i * 20, 260, 20, 143, item.ItemName);
+                    }
+            }
+            catch { }
+        }
+    }
 
-			// Next page: BUTTON 3
+    // Next page: BUTTON 3  if (m_Auction.IsOwner(m_User))
 			if ( ( m_Page + 1 ) * 10 < m_List.Count )
 			{
-				AddLabel(355, 360, Misc.kLabelHue, AuctionSystem.ST[ 22 ] );
+				AddLabel(355, 360, 88, AuctionSystem.ST[ 22 ] );
 				AddButton(315, 360, 4005, 4006, 3, GumpButtonType.Reply, 0);
 			}
 
 			// Previous page: BUTTON 4
 			if ( m_Page > 0 )
 			{
-				AddLabel(180, 360, Misc.kLabelHue, AuctionSystem.ST[ 21 ] );
+				AddLabel(180, 360, 88, AuctionSystem.ST[ 21 ] );
 				AddButton(280, 360, 4014, 4015, 4, GumpButtonType.Reply, 0);
 			}
 			
 			// Close: BUTTON 0
-			AddLabel(115, 360, Misc.kLabelHue, AuctionSystem.ST[ 7 ] );
+			AddLabel(115, 360, 88, AuctionSystem.ST[ 7 ] );
 			AddButton(75, 360, 4017, 4018, 0, GumpButtonType.Reply, 0);
 		}
 
@@ -126,7 +152,7 @@ namespace Arya.Auction
 				sender.Mobile.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 15 ] );
 				return;
 			}
-
+            
 			switch( info.ButtonID )
 			{
 				case 0: // Exit

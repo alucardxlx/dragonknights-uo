@@ -35,18 +35,24 @@ namespace Arya.Auction
 			AddImageTiled(0, 0, 350, 250, 5174);
 			AddImageTiled(1, 1, 348, 248, 2702);
 			AddAlphaRegion(1, 1, 348, 248);
-			AddLabel(70, 15, Misc.kRedHue, AuctionSystem.ST[ 96 ] );
+			AddLabel(70, 15, 33, AuctionSystem.ST[ 96 ] );
 			AddHtml( 30, 45, 285, 130, AuctionSystem.ST[ 97 ] , (bool)false, (bool)false);
 
 			// Close: Button 1
 			AddButton(30, 185, 4017, 4017, 1, GumpButtonType.Reply, 0);
-			AddLabel(70, 185, Misc.kRedHue, AuctionSystem.ST[ 98 ] );
+			AddLabel(70, 185, 33, AuctionSystem.ST[ 98 ] );
 			AddButton(30, 215, 4014, 4015, 0, GumpButtonType.Reply, 0);
-			AddLabel(70, 215, Misc.kGreenHue, AuctionSystem.ST[ 99 ] );
+			AddLabel(70, 215, 273, AuctionSystem.ST[ 99 ] );
 		}
 
 		public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
-		{
+        {
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 1)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 			if ( info.ButtonID == 1 )
 			{
 				AuctionSystem.ForceDelete( sender.Mobile );

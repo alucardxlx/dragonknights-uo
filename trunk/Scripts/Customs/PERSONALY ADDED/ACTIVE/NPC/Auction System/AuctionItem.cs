@@ -7,6 +7,7 @@
 #endregion AuthorHeader
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Ultima;
@@ -160,7 +161,7 @@ namespace Arya.Auction
 				sb.AppendFormat( AuctionSystem.ST[ 151 ] , creature.Int );
 
 				int index = 0;
-				Skill skill = null;
+				Server.Skill skill = null;
 
 				while ( ( skill = creature.Skills[ index++ ] ) != null )
 				{
@@ -226,12 +227,32 @@ namespace Arya.Auction
 
 		static AuctionItem()
 		{
+			Console.WriteLine( "AuctionItem.cs: AuctionItem(): DEBUG: Beginning AuctionItem()" );
+
 			string clilocFolder = null;
 
-			if ( AuctionConfig.ClilocLocation != null )
+			if ( AuctionConfig.ClilocLocation != null && AuctionConfig.ClilocLocation != "" )  // TESTING by Alari - 4/20/2008
 			{
+				Console.WriteLine( "AuctionItem.cs: AuctionItem(): DEBUG: AuctionConfig.ClilocLocation NOT null! Value: \"{0}\"", AuctionConfig.ClilocLocation );
 				clilocFolder = Path.GetDirectoryName( AuctionConfig.ClilocLocation );
-				Ultima.Client.Directories.Insert( 0, clilocFolder );
+                Ultima.Client.Directories.Insert(0, clilocFolder);
+				Console.WriteLine( "AuctionItem.cs: AuctionItem(): DEBUG: clilocFolder set to:");
+				Console.WriteLine( "This:{0}", clilocFolder );
+				
+			}
+			else  // TESTING by Alari - 4:20 AM 4/19/2007
+			{
+				Console.WriteLine( "AuctionItem.cs: AuctionItem(): DEBUG: AuctionConfig.ClilocLocation is NULL, proceeding with auto-detection..." );
+				clilocFolder = Core.FindDataFile( "cliloc.enu" );
+				if ( clilocFolder != null )
+				{
+					Ultima.Client.Directories.Insert( 0, clilocFolder );
+					Console.WriteLine( "AuctionItem.cs: AuctionItem(): DEBUG: Cliloc detection worked! {0}", clilocFolder );
+				}
+				else
+				{
+					Console.WriteLine( "AuctionItem.cs: AuctionItem(): DEBUG: Cliloc detection failed." );
+				}
 			}
 
 			m_StringList = new StringList( "ENU" );
@@ -594,8 +615,8 @@ namespace Arya.Auction
 		private DateTime m_StartTime;
 		private DateTime m_EndTime;
 		private TimeSpan m_Duration = TimeSpan.FromDays( 7 );
-		private int m_MinBid = 1000;
-		private int m_Reserve = 2000;
+		private int m_MinBid = 100;
+		private int m_Reserve = 100;
 		private string m_Description = "";
 		private ArrayList m_Bids;
 		private string m_WebLink = "";
@@ -947,27 +968,48 @@ namespace Arya.Auction
 			get
 			{
 				if ( m_MinBid <= 100 )
-					return 10;
+                    return 50; //return 10;
+
+                if (m_MinBid <= 250)
+                    return 75; 
 
 				if ( m_MinBid <= 500 )
-					return 20;
+                    return 100; //return 20;
+
+                if (m_MinBid <= 750)
+                    return 200; 
 
 				if ( m_MinBid <= 1000 )
-					return 50;
+                    return 300; //return 50;
+
+                if (m_MinBid <= 2500)
+                    return 400; 
 
 				if ( m_MinBid <= 5000 )
-					return 100;
+                    return 500; //return 100;
+
+                if (m_MinBid <= 7500)
+                    return 600; 
 
 				if ( m_MinBid <= 10000 )
-					return 200;
+                    return 700; //return 200;
+
+                if (m_MinBid <= 15000)
+                    return 800; 
 
 				if ( m_MinBid <= 20000 )
-					return 250;
+                    return 1000; //return 250;
+
+                if (m_MinBid <= 30000)
+                    return 1500; 
+
+                if (m_MinBid <= 40000)
+                    return 2000; 
 
 				if ( m_MinBid <= 50000 )
-					return 500;
+                    return 3000; //return 500;
 
-				return 1000;
+				return 4000;
 			}
 		}
 
@@ -1272,7 +1314,7 @@ namespace Arya.Auction
 			if ( Creature )
 			{
 				return ( Pet != null && Pet.CanBeControlledBy( m ) );
-			}
+            }
 
 			return true;
 		}
@@ -1306,7 +1348,7 @@ namespace Arya.Auction
 					return false;
 				}
 			}
-			else if ( amount <= m_MinBid )
+			else if ( amount < m_MinBid )
 			{
 				from.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 177 ] );
 				return false;
@@ -1319,7 +1361,7 @@ namespace Arya.Auction
 			else
 				delta = amount - m_MinBid;
 
-			if ( BidIncrement > delta )
+            if (BidIncrement > delta && HasBids)
 			{
 				from.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 204 ], BidIncrement );
 				return false;
@@ -1335,6 +1377,8 @@ namespace Arya.Auction
 					HighestBid.Outbid( this ); // Return money to previous highest bidder
 				}
 
+                World.Broadcast(0x35, true, "A {0} just recieved a {1} bid on [Myauction ", m_ItemName, amount);
+                           
 				m_Bids.Insert( 0, bid );
 				AuctionLog.WriteBid( this );
 
@@ -1404,7 +1448,7 @@ namespace Arya.Auction
 			{
 				case ItemFate.Delete :
 
-					check.ForceDelete();
+					check.Delete();
 					comments = "The item has been deleted";
 					break;
 
@@ -1418,7 +1462,7 @@ namespace Arya.Auction
 
 					GiveItemTo( m, check );
 					comments = "The item has been claimed by the staff";
-					break;
+                    break;
 			}
 
 			AuctionLog.WriteEnd( this, AuctionResult.StaffRemoved, m, comments );
@@ -1456,8 +1500,13 @@ namespace Arya.Auction
 					AuctionCheck gold = new AuctionGoldCheck( this, AuctionResult.Succesful );
 					GiveItemTo( m_Owner, gold );
 
-					// Over, this auction no longer exists
-					AuctionLog.WriteEnd( this, AuctionResult.Succesful, m, null );
+                    // Over, this auction no longer exists m_Auction.ItemName
+                    AuctionLog.WriteEnd(this, AuctionResult.Succesful, m, null);
+
+                    if (HighestBid != null)
+                    {
+                        World.Broadcast(95, true, "{0} just sold for {1} gold with {2} bids", this.ItemName, HighestBid.Amount, Bids.Count);
+                    }
 				}
 				else
 				{

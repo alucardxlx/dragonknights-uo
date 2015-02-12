@@ -237,7 +237,12 @@ namespace Server.Engines.Craft
 				AddRecipe( index, (int) BowRecipes.AssassinsShortbow );
 				SetNeededExpansion( index, Expansion.ML );
 			}
-
+//I ADDED
+			AddCraft( typeof( FeatherPileX6 ), "Misc Deco", "A Pile Of Feathers", 0.0, 140.0, typeof( Feather ), 1044562, 6, 1044563);
+			AddCraft( typeof( ShaftPileX12 ), "Misc Deco", "A Pile Of Shafts", 0.0, 140.0, typeof( Shaft ), 1044560, 12, 1044561);
+			AddCraft( typeof( ArrowPileX13 ), "Misc Deco", "A Pile Of Arrows", 0.0, 140.0, typeof( Arrow ), "Arrows", 13, "You do not have sufficent arrows to make that.");
+			AddCraft( typeof( CrossBowBoltPileX13 ), "Misc Deco", "A Pile Of CrossBow Bolts", 0.0, 140.0, typeof( Bolt ), "Bolts", 13, "You do not have sufficent bolts to make that.");
+//I ADDED FIN
 			SetSubRes( typeof( Log ), 1072643 );
 
 			AddSubRes( typeof( Log ),			1021848, 0.0, 1072653 );
