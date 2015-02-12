@@ -8,6 +8,7 @@
 using System;
 
 using Server;
+using Server.Items;
 
 namespace Arya.Auction
 {
@@ -17,8 +18,20 @@ namespace Arya.Auction
 	public class Bid
 	{
 		private Mobile m_Mobile;
-		private int m_Amount;
-		private DateTime m_Time;
+        private int m_Amount;
+        private int m_Item;
+        private DateTime m_Time;
+        private string m_Name;
+        public string Name
+        {
+            get
+            {
+                if (m_Item != 0)
+                    return m_Name;
+                else
+                    return "N/A";
+            }
+        }
 
 		[ CommandProperty( AccessLevel.Administrator ) ]
 		/// <summary>
@@ -37,6 +50,11 @@ namespace Arya.Auction
 		{
 			get { return m_Amount; }
 		}
+
+        public int Item
+        {
+            get { return m_Item; }
+        }
 
 		[ CommandProperty( AccessLevel.Administrator ) ]
 		/// <summary>

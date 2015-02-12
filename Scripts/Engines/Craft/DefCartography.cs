@@ -79,10 +79,21 @@ namespace Server.Engines.Craft
 
 		public override void InitCraftList()
 		{
+			int index = -1;
+			
 			AddCraft( typeof( LocalMap ), 1044448, 1015230, 10.0, 70.0, typeof( BlankMap ), 1044449, 1, 1044450 );
 			AddCraft( typeof(  CityMap ), 1044448, 1015231, 25.0, 85.0, typeof( BlankMap ), 1044449, 1, 1044450 );
 			AddCraft( typeof( SeaChart ), 1044448, 1015232, 35.0, 95.0, typeof( BlankMap ), 1044449, 1, 1044450 );
 			AddCraft( typeof( WorldMap ), 1044448, 1015233, 39.5, 99.5, typeof( BlankMap ), 1044449, 1, 1044450 );
+//I ADDED
+			index = AddCraft( typeof( RackOfCanvasesWide0x0f71), "Misc", "Rack Of Wide Canvases", 70.00, 140.00, typeof( Cloth ), 1044286, 30, 1044287 );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 20, 1073463);
+			AddRes( index, typeof( Log ), 1044041, 20, 1044351 );
+			index = AddCraft( typeof( RackOfCanvasesTall0x0f72), "Misc", "Rack Of Tall Canvases", 70.00, 140.00, typeof( Cloth ), 1044286, 30, 1044287 );
+			AddRes(index, typeof(SpoolOfThread), 1073462, 20, 1073463);
+			AddRes( index, typeof( Log ), 1044041, 20, 1044351 );
+//I ADDED FIN
+			
 		}
 	}
 }

@@ -24,18 +24,24 @@ namespace Server.Items
 
             if ( t.IsBonded == true )
             { 
-               from.SendMessage( "That pet is already bonded!" );
+               from.SendMessage( 38,"That pet is already bonded!" );
             } 
             else if ( t.ControlMaster != from ) 
             { 
-               from.SendMessage( "That is not your pet!" ); 
+               from.SendMessage( 38,"That is not your pet!" ); 
             } 
             else  
              
                { 
 
 			t.IsBonded = !t.IsBonded;
-			from.SendMessage( "You bond with the pet!" );
+			from.SendMessage( 68,"You bond with the pet!" );
+			Effects.SendLocationParticles(EffectItem.Create(t.Location, t.Map, EffectItem.DefaultDuration), 0x376A, 1, 29, 0x47D, 2, 9962, 0);
+			Effects.SendLocationParticles(EffectItem.Create(new Point3D(t.X, t.Y, t.Z - 7), t.Map, EffectItem.DefaultDuration), 0x37C4, 1, 29, 0x47D, 2, 9502, 0);
+
+			Effects.SendLocationParticles(EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration), 0x376A, 1, 29, 0x47D, 2, 9962, 0);
+			Effects.SendLocationParticles(EffectItem.Create(new Point3D(from.X, from.Y, from.Z - 7), from.Map, EffectItem.DefaultDuration), 0x37C4, 1, 29, 0x47D, 2, 9502, 0);
+			from.Animate( 20, 5, 1, true, false, 0 );
 			from.PlaySound( 0x201 );
 			from.PlaySound( 0x212 );
 
@@ -45,7 +51,7 @@ namespace Server.Items
          } 
          else 
          { 
-            from.SendMessage( "That is not a valid traget." );  
+            from.SendMessage( 38,"That is not a valid traget." );  
          } 
       } 
    } 
@@ -90,7 +96,7 @@ namespace Server.Items
          } 
          else 
          { 
-            from.SendMessage( "Choose the pet you wish to bond with." );  
+            from.SendMessage( 68,"Choose the pet you wish to bond with." );  
             from.Target = new BondingTarget( this ); // Call our target 
           } 
       }    

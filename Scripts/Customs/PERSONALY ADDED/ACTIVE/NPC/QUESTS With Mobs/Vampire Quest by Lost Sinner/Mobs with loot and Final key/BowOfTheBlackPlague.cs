@@ -44,15 +44,18 @@ namespace Server.Items
 
             switch (Utility.Random(5))
             {
-                case 0:
-                    defender.FixedParticles(0x3789, 10, 25, 5032, EffectLayer.Head);
-                    attacker.Say("Death will Always Triumph!!!"); break;
-                    SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 0, 0, 30, 0);
+            	case 0:
+            		{
+            			defender.FixedParticles(0x3789, 10, 25, 5032, EffectLayer.Head);
+            			attacker.Say("Death will Always Triumph!!!");
+            			SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 0, 0, 30, 0);
+            			break;
+            		}
             }
-		
-			base.OnHit( attacker, defender, damageBonus );
+            
+            base.OnHit( attacker, defender, damageBonus );
 		}
-	
+		
 		public BowOfTheBlackPlague( Serial serial ) : base( serial )
 		{
 		}

@@ -116,7 +116,130 @@ namespace Server.Engines.Craft
 
         public override void InitCraftList()
         {
-            int index = AddCraft(typeof(Bottle), 1044050, 1023854, 52.5, 102.5, typeof(Sand), 1044625, 1, 1044627);
+//I ADDED and Modded
+			int index = AddCraft( typeof( PedestalWithCrystal0x2fd4 ), "Crystals", "Pedestal With Crystal", 100.0, 140.0, typeof( StonePedestal0x1223 ), "Stone Pedestal", 1, "You do not have a stone pedestal." );
+        	AddRes(index, typeof(GammaCrystalFragment), "Gamma Crystal Fragments", 100, "You do not have enough gamma crystal fragments to make that item.");
+        	
+        	index = AddCraft( typeof( CrystalBrazier0x35ef ), "Crystals", "Crystal Brazer", 100.0, 140.0, typeof( GammaCrystal ), "Gamma Crystal", 100, "You do not have enough gamma crystal to make that item." );
+        	AddRes(index, typeof(GammaCrystalFragment), "Gamma Crystal Fragments", 100, "You do not have enough gamma crystal fragments to make that item.");
+        	AddRes(index, typeof(Sapphire), "Sapphire", 100, "You do not have enough sapphire to make that item.");
+        	
+        	index = AddCraft( typeof( CrystalStatue0x35fc ), "Crystals", "Crystal Statue", 114.0, 140.0, typeof( GammaCrystal ), "Gamma Crystal", 100, "You do not have enough gamma crystal to make that item." );
+        	AddRes(index, typeof(GammaCrystalFragment), "Gamma Crystal Fragments", 100, "You do not have enough gamma crystal fragments to make that item.");
+        	AddRes(index, typeof(Sapphire), "Sapphire", 100, "You do not have enough sapphire to make that item.");
+        	
+        	index = AddCraft( typeof( SmallSoulForge0x44c7 ), "Crystals", "Small Soul Forge", 119.0, 140.0, typeof( GammaCrystal ), "Gamma Crystal", 100, "You do not have enough gamma crystal to make that item." );
+        	AddRes(index, typeof(GammaCrystalFragment), "Gamma Crystal Fragments", 100, "You do not have enough gamma crystal fragments to make that item.");
+        	AddRes(index, typeof(Sapphire), "Sapphire", 100, "You do not have enough sapphire to make that item.");
+        	AddRes(index, typeof(IronIngot), 1044036, 100, 1044037);
+        	
+        	index = AddCraft( typeof( CrystalThrone0x35ed ), "Crystals", "Crystal Throne", 124.0, 140.0, typeof( GammaCrystal ), "Gamma Crystal", 100, "You do not have enough gamma crystal to make that item." );
+        	AddRes(index, typeof(GammaCrystalFragment), "Gamma Crystal Fragments", 400, "You do not have enough gamma crystal fragments to make that item.");
+        	AddRes(index, typeof(Sapphire), "Sapphire", 400, "You do not have enough sapphire to make that item.");
+///////////////////////        	
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x483B ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 01", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x483E ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 02", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4841 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 03", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4844 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 04", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4847 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 05", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x484A ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 06", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x484D ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 07", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4850 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 08", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4853 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 09", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4856 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 10", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4859 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 11", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x485C ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 12", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x485F ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 13", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4862 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 14", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4865 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 15", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4868 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 16", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x486B ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 17", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x486E ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 18", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4871 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 19", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4874 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 20", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4877 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 21", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x487A ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 22", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x487D ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 23", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4880 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 24", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+			index = AddCraft( typeof( AlchemicalSymbolGlowSA0x4883 ), "Gamma Glowing Runes ", "Gamma Alchemical SymBol 25", 93.75, 140.0, typeof( GammaCrystalFragment ), "Gamma Crystal Fragments", 3, "You do not have enough gamma crystal fragments to make that item." );
+			AddRes(index, typeof(GlassBrick), "Glass Bricks", 16, "You do not have enough glass bricks to make that.");
+			AddRes(index, typeof(GammaCrystalDust), "Gamma Dust", 16, "You do not have enough gamma dust to make that.");
+
+
+//I ADDED and Modded FIN
+            index = AddCraft(typeof(Bottle), 1044050, 1023854, 52.5, 102.5, typeof(Sand), 1044625, 1, 1044627);
             SetUseAllRes(index, true);
 
             AddCraft(typeof(SmallFlask), 1044050, 1044610, 52.5, 102.5, typeof(Sand), 1044625, 2, 1044627);
@@ -130,11 +253,37 @@ namespace Server.Engines.Craft
             AddCraft(typeof(EmptyVialsWRack), 1044050, 1044616, 65.0, 115.0, typeof(Sand), 1044625, 8, 1044627);
             AddCraft(typeof(FullVialsWRack), 1044050, 1044617, 65.0, 115.0, typeof(Sand), 1044625, 9, 1044627);
             AddCraft(typeof(SpinningHourglass), 1044050, 1044618, 75.0, 125.0, typeof(Sand), 1044625, 10, 1044627);
-
+            
             if (Core.ML)
             {
                 index = AddCraft(typeof(HollowPrism), 1044050, 1072895, 100.0, 150.0, typeof(Sand), 1044625, 8, 1044627);
                 SetNeededExpansion(index, Expansion.ML);
+//I ADDED
+				index = AddCraft(typeof(HealingFairyJar),1044050, "Healing Fairy Jar: Empty", 100.0, 150.0, typeof(Sand),1044625, 40, 1044627);
+				AddRes(index, typeof(Diamond), 1062608, 10, 1044240);
+				SetNeededExpansion(index, Expansion.ML);
+				
+				index = AddCraft(typeof(GlassDust),"Resources", "Pure Glass Dust", 124.0, 140.0, typeof(Sand),1044625, 50, 1044627);
+				index = AddCraft(typeof(GlassBrick),"Resources", "Pure Glass Bricks", 124.0, 140.0, typeof(GlassDust),"Glass Dust", 100, "You do not have enough glass dust to make that.");
+				index = AddCraft(typeof(GammaCrystalDust),"Resources", "Pure Gamma Crystal Dust", 124.0, 140.0, typeof(GammaCrystalFragment),"Gamma Crystal Fragment", 50, "You do not have enough gamma crystal fragments to make that.");
+
+
+				index = AddCraft( typeof( AlchemicalSymbolGlowML0x0E5C ), "Sapphire Glowing Runes", "Sapphire Alchemical SymBol 1", 93.75, 140.0, typeof( Sapphire ), "Sapphire", 100, "You do not have enough Sapphires to make that item." );
+				AddRes(index, typeof(GlassDust), "Glass Dust", 10, "You do not have enough glass dust to make that.");
+
+				index = AddCraft( typeof( AlchemicalSymbolGlowML0x0E5F ), "Sapphire Glowing Runes", "Sapphire Alchemical SymBol 2", 93.75, 140.0, typeof( Sapphire ), "Sapphire", 100, "You do not have enough Sapphires to make that item." );
+				AddRes(index, typeof(GlassDust), "Glass Dust", 10, "You do not have enough glass dust to make that.");
+
+				index = AddCraft( typeof( AlchemicalSymbolGlowML0x0E62 ), "Sapphire Glowing Runes", "Sapphire Alchemical SymBol 3", 93.75, 140.0, typeof( Sapphire ), "Sapphire", 100, "You do not have enough Sapphires to make that item." );
+				AddRes(index, typeof(GlassDust), "Glass Dust", 10, "You do not have enough glass dust to make that.");
+
+				index = AddCraft( typeof( AlchemicalSymbolGlowML0x0E65 ), "Sapphire Glowing Runes", "Sapphire Alchemical SymBol 4", 93.75, 140.0, typeof( Sapphire ), "Sapphire", 100, "You do not have enough Sapphires to make that item." );
+				AddRes(index, typeof(GlassDust), "Glass Dust", 10, "You do not have enough glass dust to make that.");
+
+				index = AddCraft( typeof( AlchemicalSymbolGlowML0x0E68 ), "Sapphire Glowing Runes", "Sapphire Alchemical SymBol 5", 93.75, 140.0, typeof( Sapphire ), "Sapphire", 100, "You do not have enough Sapphires to make that item." );
+				AddRes(index, typeof(GlassDust), "Glass Dust", 10, "You do not have enough glass dust to make that.");
+				
+//I ADDED FIN
             }
         }
     }

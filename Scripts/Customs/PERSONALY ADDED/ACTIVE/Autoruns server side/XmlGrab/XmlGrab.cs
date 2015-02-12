@@ -159,12 +159,18 @@ namespace Server.Commands
 				}
 	
 				// otherwise add to ground items list if loot options indicate
-				else if ( !( item is PlayerMobile ) )
-				{
+//ORIGINALY HERE-Trying to clear up yellow startup saying that item moble never is
+//				else if ( !( item is PlayerMobile ) )
+//				{
+//					if(lootoptions.GetGroundItems)
+//						if (!(item is Corpse))
+//							grounditems.Add( item );
+//				}
+//END ORIGINALY HERE
+				else
 					if(lootoptions.GetGroundItems)
 						if (!(item is Corpse))
 							grounditems.Add( item );
-				}
 			}
 
 			// see if we really want any of the junk lying on the ground

@@ -639,7 +639,7 @@ namespace Server.Mobiles
 			}
 		}
 
-		protected List<Item> GetItems()
+		public List<Item> GetItems()//originaly here changed for webstatus.cs: original: protected List<Item> GetItems()
 		{
 			List<Item> list = new List<Item>();
 

@@ -1,0 +1,230 @@
+using System;
+using System.IO;
+using System.Text;
+using Server;
+using Server.Network;
+using Server.Guilds;
+
+//
+using Server.Items;
+using Server.Mobiles;
+using Server.Accounting;
+//
+
+namespace Server.Misc
+{
+	public class StatusPage : Timer
+	{
+		public static bool Enabled = true;
+
+		public static void Initialize()
+		{
+			if ( Enabled )
+				new StatusPage().Start();
+		}
+
+		public StatusPage() : base( TimeSpan.FromSeconds( 5.0 ), TimeSpan.FromSeconds( 60.0 ) )
+		{
+			Priority = TimerPriority.FiveSeconds;
+		}
+
+		private static string Encode( string input )
+		{
+			StringBuilder sb = new StringBuilder( input );
+
+			sb.Replace( "&", "&amp;" );
+			sb.Replace( "<", "&lt;" );
+			sb.Replace( ">", "&gt;" );
+			sb.Replace( "\"", "&quot;" );
+			sb.Replace( "'", "&apos;" );
+
+			return sb.ToString();
+		}
+
+		protected override void OnTick()
+		{
+//			World.Broadcast( 0x35, true, "STARTING STATUS" );
+			if ( !Directory.Exists( "web" ) )
+				Directory.CreateDirectory( "web" );
+			
+			using ( StreamWriter op = new StreamWriter( "web/status.html" ) )
+			{
+				op.WriteLine( "<html>" );
+				
+#region WEB TOP				
+				
+				op.WriteLine( "   <head>" );
+				op.WriteLine( "      <title>DragonKnights UO Server Status</title>");
+				op.WriteLine( "   </head>" );
+				op.WriteLine( "   <body bgcolor=\"black\">" );
+				op.WriteLine( "<img src= http://aaaservices.homeip.net/UO/DragonKnights%20-%20logo.jpg <br> " );
+				op.WriteLine( "      <h3><font color =\"gold\">UltimaOnline Server Status</font></h3>" );
+				op.WriteLine( "<b><font color =\"gold\">Current Server Version # :</font></b><font color=\"green\"> 7.0.12.0</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Status Page Last Updated:</font></b><font color=\"green\"> "+DateTime.Now.ToString() + "</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Total World Items:</font></b><font color=\"green\"> "+World.Items.Count.ToString()+"</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Total World Mobiles:</font></b><font color=\"green\"> " + World.Mobiles.Count.ToString() + "</font><br>");
+				op.WriteLine( "<b><font color =\"gold\">Total Online:</font></b><font color=\"green\"> " + NetState.Instances.Count.ToString() + "</font><br>");
+				op.WriteLine( "<br>" );
+#endregion WEB TOP				
+				
+				
+#region online client table
+				op.WriteLine( "<font color=\"green\">      <table width=\"100%\">" );
+				op.WriteLine( "         <tr></font>" );
+				op.WriteLine( "            <td bgcolor=\"white\"><font color =\"black\"><b><img src= http://aaaservices.homeip.net/UO/OLW.png align=\"absmiddle\"> ONLINE PLAYERS:</b></font></td>" );
+				op.WriteLine( "         </tr>" );
+				op.WriteLine( "      </table>" );
+
+				
+				op.WriteLine( "<font color=\"green\">      <table width=\"100%\">" );
+				op.WriteLine( "         <tr></font>" );
+				op.WriteLine( "            <td bgcolor=\"white\"><font color=\"black\"><img src= http://aaaservices.homeip.net/UO/OLW.png align=\"absmiddle\"> Name</font></td><td bgcolor=\"white\"><font color=\"black\">Location</font></td><td bgcolor=\"white\"><font color=\"black\">Kills</font></td><td bgcolor=\"white\"><font color=\"black\">Karma / Fame</font></td>" );
+				op.WriteLine( "         </tr>" );
+				
+				if (NetState.Instances.Count > 0)
+				{
+					#region list online players
+					foreach ( NetState state in NetState.Instances )
+					{
+						Mobile m = state.Mobile;
+						
+						if ( m != null )
+						{
+							Guild g = m.Guild as Guild;
+							op.Write( "         <tr><td><img src= http://aaaservices.homeip.net/UO/OLB.png align=\"absmiddle\"> " );
+							
+							
+							switch (m.AccessLevel)
+							{
+								case AccessLevel.Player:
+									op.Write( "<font color = FFFFFF><b>Player</b> - " );
+									break;
+								case AccessLevel.Counselor:
+									op.Write( "<font color = 008000><b>Counselor</b> - " );
+									break;
+								case AccessLevel.GameMaster:
+									op.Write( "<font color = FF0000><b>GameMaster</b> - " );
+									break;
+								case AccessLevel.Seer:
+									op.Write( "<font color = FF0000><b>Seer</b> - " );
+									break;
+								case AccessLevel.Administrator:
+									op.Write( "<font color = FF0000><b>Administrator</b> - " );
+									break;
+								case AccessLevel.Developer:
+									op.Write( "<font color = FF0000><b>Developer</b> - " );
+									break;
+								case AccessLevel.Owner:
+									op.Write( "<font color = 0000FF><b>Owner</b> - " );
+									break;
+							}
+							
+							
+							if ( g != null )
+							{
+								op.Write( Encode( m.Name ) );
+								op.Write( " [ " );
+								string title = m.GuildTitle;
+								
+								
+								if ( title != null )
+									title = title.Trim();
+								
+								else
+									title = "";
+								
+								
+								if ( title.Length > 0 )
+								{
+									op.Write( Encode( title ) );
+									op.Write( ", " );
+								}
+								
+								op.Write( Encode( g.Abbreviation ) );
+								
+								op.Write( " ] " );
+							}
+							
+							else
+							{
+								op.Write( Encode( m.Name ) );
+							}
+							
+							op.Write( "</td><td><font color = 008000>" );
+							op.Write( m.X );
+							op.Write( ", " );
+							op.Write( m.Y );
+							op.Write( ", " );
+							op.Write( m.Z );
+							op.Write( " (" );
+							op.Write( m.Map );
+							op.Write( ")</td><td><font color = FF0000>" );
+							op.Write( m.Kills );
+							op.Write( "</td><td><font color = 800080>" );
+							op.Write( m.Karma );
+							op.Write( " / " );
+							op.Write( m.Fame );
+							op.WriteLine( "</td></tr>" );
+						}
+						
+					}
+					
+					#endregion list online players
+				}
+				
+				else
+				{
+					op.WriteLine( "<td><b><font color =\"red\">Nobody but us chickens! =P</font></b></td></tr>" );
+				}
+				
+				op.WriteLine( "      </table>" );
+#endregion online client table
+				
+				
+#region player vendors table
+				
+				
+				op.WriteLine( "<br>" );
+				op.WriteLine( "<font color=\"green\">      <table width=\"100%\">" );
+				op.WriteLine( "         <tr></font>" );
+				op.WriteLine( "            <td bgcolor=\"white\"><font color =\"black\"><b><img src= http://aaaservices.homeip.net/UO/COEW.png align=\"absmiddle\"> PLAYER VENDOR SHOPS:</b></font></td>" );
+				op.WriteLine( "         </tr>" );
+				op.WriteLine( "      </table>" );
+
+
+				
+				op.WriteLine( "<font color=\"green\">      <table width=\"100%\">" );
+				op.WriteLine( "         <tr></font>" );
+				op.WriteLine( "            <td bgcolor=\"white\"><font color=\"black\"><img src= http://aaaservices.homeip.net/UO/COEW.png align=\"absmiddle\"> Owners Name</font></td><td bgcolor=\"white\"><font color=\"black\">Shops Name</font></td><td bgcolor=\"white\"><font color=\"black\">Vendors Name</font></td><td bgcolor=\"white\"><font color=\"black\">Location</font></td>" );
+				op.WriteLine( "         </tr>" );
+				
+				
+				foreach ( Mobile mob in World.Mobiles.Values )
+				{
+					if ( mob is PlayerVendor )
+					{
+						PlayerVendor pv = mob as PlayerVendor;
+						op.Write( "         <tr><td bgcolor=\"red\"><font color = \"black\"><img src= http://aaaservices.homeip.net/UO/COER.png align=\"absmiddle\"> " );
+						
+						op.WriteLine( pv.Owner.Name );
+						op.Write( "</td><td bgcolor=\"red\"><font color = \"black\">" );
+						
+						op.WriteLine( pv.ShopName );
+						op.Write( "</td><td bgcolor=\"red\"><font color = \"black\">" );
+						
+						op.WriteLine( pv.Name );
+						op.Write( "</td><td bgcolor=\"red\"><font color = \"black\">" );
+						op.WriteLine( pv.Map + " - " + pv.Location );
+						op.Write( "</td></tr>" );
+					}
+				}
+#endregion player vendors table
+				
+//				op.WriteLine( "<b><font color =\"gold\">END OF LINE</font></b><br>" );
+				op.WriteLine( "   </body>" );
+				op.WriteLine( "</html>" );
+//				Console.WriteLine( "WEBSTATUS UPDATE COMPLETE");
+			}
+		}
+	}
+}

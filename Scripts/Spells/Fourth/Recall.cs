@@ -133,7 +133,13 @@ namespace Server.Spells.Fourth
 			{
 				Caster.SendLocalizedMessage( 502412 ); // There are no charges left on that item.
 			}
-			else if ( CheckSequence() )
+//added to stop player from teleporting if draging something.
+			else if (this.Caster.Holding != null)
+			{
+				this.Caster.SendLocalizedMessage(1071955); // You cannot teleport while dragging an object.
+			}
+//added fin 
+else if ( CheckSequence() )
 			{
 				BaseCreature.TeleportPets( Caster, loc, map, true );
 

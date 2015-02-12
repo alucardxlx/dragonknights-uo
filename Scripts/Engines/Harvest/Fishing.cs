@@ -2,6 +2,7 @@ using System;
 using Server;
 using Server.Items;
 using Server.Mobiles;
+using Server.Network;//fix for fish
 using Server.Engines.Quests;
 using Server.Engines.Quests.Collector;
 using System.Collections.Generic;
@@ -356,6 +357,9 @@ namespace Server.Engines.Harvest
 						chest.TrapType = TrapType.None;
 						chest.TrapPower = 0;
 						chest.TrapLevel = 0;
+//IMODDEDSTART
+						chest.IsShipwreckedItem = true;
+//IMODDEDFIN
 
 						sos.Delete();
 
@@ -440,7 +444,11 @@ namespace Server.Engines.Harvest
 				else if ( item is Fish )
 				{
 					number = 1008124;
-					name = "a fish";
+//MODED
+					//name = "a fish";
+
+					name = item.ItemData.Name;
+//MODED FIN
 				}
 				else if ( item is BaseShoes )
 				{
@@ -473,11 +481,20 @@ namespace Server.Engines.Harvest
 					else
 						name = item.ItemData.Name;
 				}
-
-				if ( number == 1043297 )
-					from.SendLocalizedMessage( number, name );
-				else
-					from.SendLocalizedMessage( number, true, name );
+//Mod Original here
+//				if ( number == 1043297 )
+//					from.SendLocalizedMessage( number, name );
+//				else
+//					from.SendLocalizedMessage( number, true, name );
+//Mod changed to this
+				NetState ns = from.NetState;
+				if ( ns == null )
+					return;
+				if ( number == 1043297 || ns.HighSeas )
+ 					from.SendLocalizedMessage( number, name );
+ 				else
+ 					from.SendLocalizedMessage( number, true, name );
+//Mod change fin
 			}
 		}
 
@@ -541,12 +558,12 @@ namespace Server.Engines.Harvest
 		{
 			if ( !base.CheckHarvest( from, tool, def, toHarvest ) )
 				return false;
-
-			if ( from.Mounted )
-			{
-				from.SendLocalizedMessage( 500971 ); // You can't fish while riding!
-				return false;
-			}
+//
+//			if ( from.Mounted )
+//			{
+//				from.SendLocalizedMessage( 500971 ); // You can't fish while riding!
+//				return false;
+//			}
 
 			return true;
 		}

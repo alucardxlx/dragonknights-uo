@@ -339,6 +339,14 @@ namespace Server.Engines.Plants
 			Item root = RootParent as Item;
 			return IsChildOf( from.Backpack ) || IsChildOf( from.FindBankNoCreate() ) || IsLockedDown && IsAccessibleTo( from ) || root != null && root.IsSecure && root.IsAccessibleTo( from );
 		}
+//I ADDED
+		public override bool HandlesOnMovement { get { return true; } }
+		
+		public override void OnMovement(Mobile from, Point3D oldLocation)
+        {
+			from.CloseGump(typeof(MainPlantGump));
+        }
+//I ADDED FIN
 
 		public override void OnDoubleClick( Mobile from )
 		{
@@ -358,7 +366,9 @@ namespace Server.Engines.Plants
 				LabelTo( from, 1061856 ); // You must have the item in your backpack or locked down in order to use it.
 				return;
 			}
-
+//I ADDED
+			from.CloseGump(typeof(MainPlantGump));
+//I ADDED FIN
 			from.SendGump( new MainPlantGump( this ) );
 		}
 

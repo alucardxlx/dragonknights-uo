@@ -60,6 +60,7 @@ namespace Server.Engines.Craft
 				return m_CraftSystem;
 			}
 		}
+
 		public override double GetChanceAtMin(CraftItem item)
 		{
 			return 0.5; // 50%
@@ -174,9 +175,9 @@ namespace Server.Engines.Craft
 			AddCraft( typeof( WoodenThrone ),				1044291, 1044304,	52.6,  77.6,	typeof( Log ), 1044041, 17, 1044351 );
 			AddCraft( typeof( Throne ),						1044291, 1044305,	73.6,  98.6,	typeof( Log ), 1044041, 19, 1044351 );
 			AddCraft( typeof( Nightstand ),					1044291, 1044306,	42.1,  67.1,	typeof( Log ), 1044041, 17, 1044351 );
-//I added
+//I ADDED
 			AddCraft( typeof( WoodCounter ),					1044291, "Wood Counter (Turnable)",	42.1,  67.1,	typeof( Log ), 1044041, 17, 1044351 );
-//fin
+//I ADDED FIN
 			AddCraft( typeof( WritingTable ),				1044291, 1022890,	63.1,  88.1,	typeof( Log ), 1044041, 17, 1044351 );
 			AddCraft( typeof( YewWoodTable ),				1044291, 1044307,	63.1,  88.1,	typeof( Log ), 1044041, 23, 1044351 );
 			AddCraft( typeof( LargeTable ),					1044291, 1044308,	84.2, 109.2,	typeof( Log ), 1044041, 27, 1044351 );
@@ -295,8 +296,7 @@ namespace Server.Engines.Craft
 
 //I ADDED
 			AddCraft( typeof( BlankScroll ), 1044290, "BlankScroll", 0.00, 140.00, typeof( Log ), "Log", 2, "You do not have sufficent wood to make that." );
-//
-
+//I ADDED FIN
 			// Containers
 			AddCraft(typeof(WoodenBox), 1044292, 1023709, 21.0, 46.0, typeof(Log), 1044041, 10, 1044351);
 			AddCraft(typeof(SmallCrate), 1044292, 1044309, 10.0, 35.0, typeof(Log), 1044041, 8, 1044351);
@@ -679,6 +679,15 @@ namespace Server.Engines.Craft
 				AddCraft(typeof(PlayerBBSouth), 1044290, 1062421, 85.0, 110.0, typeof(Log), 1044041, 50, 1044351);
 			}
 
+//I ADDED
+			AddCraft(typeof(LogPileX3), 1044290, "A Small Pile Of Logs", 0.0, 140.0, typeof(Log), 1044041, 3, 1044351);
+			AddCraft(typeof(LogPileX20), 1044290, "A Large Pile Of Logs", 50.0, 140.0, typeof(Log), 1044041, 20, 1044351);
+			AddCraft(typeof(BoardPileX3), 1044290, "A Small Pile Of Boards", 0.0, 140.0, typeof(Log), 1044041, 3, 1044351);
+			AddCraft(typeof(BoardPileX7), 1044290, "A Large Pile Of Boards", 50.0, 140.0, typeof(Log), 1044041, 7, 1044351);
+			index = AddCraft(typeof(SaddleHolder), 1044290, "A Saddle Holder", 100.0, 140.0, typeof(Log), 1044041, 3, 1044351);
+			AddRes(index, typeof(Leather), 1044462, 4, 1044463);
+			AddCraft(typeof(OakBarrel), 1044290, "A Oak Barrel", 90.0, 140.0, typeof(Log), 1044041, 20, 1044351);
+//I ADDED FIN
 			// Tailoring and Cooking
 			index = AddCraft(typeof(Dressform), 1044298, 1044339, 63.1, 88.1, typeof(Log), 1044041, 25, 1044351);
 			AddSkill(index, SkillName.Tailoring, 65.0, 70.0);

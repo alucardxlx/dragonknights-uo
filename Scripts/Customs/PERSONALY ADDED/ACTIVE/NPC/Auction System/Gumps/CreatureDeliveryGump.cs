@@ -44,26 +44,33 @@ namespace Arya.Auction
 			AddImage(45, 60, 2091);
 			AddImage(45, 100, 2091);
 
-			AddLabelCropped( 45, 75, 210, 20, Misc.kLabelHue, m_Check.ItemName );
+			AddLabelCropped( 45, 75, 210, 20, 88, m_Check.ItemName );
 
 			AddHtml( 45, 115, 215, 100, m_Check.HtmlDetails, (bool)false, (bool)false);
 
 			// Button 1 : Stable
 			AddButton(50, 300, 5601, 5605, 1, GumpButtonType.Reply, 0);
-			AddLabel(70, 298, Misc.kLabelHue, AuctionSystem.ST[ 91 ] );
+			AddLabel(70, 298, 88, AuctionSystem.ST[ 91 ] );
 
 			// Button 0: Close
 			AddButton(50, 325, 5601, 5605, 0, GumpButtonType.Reply, 0);
 			AddImage(230, 315, 9004);
-			AddLabel(70, 323, Misc.kLabelHue, AuctionSystem.ST[ 7 ] );
-			AddLabel(45, 220, Misc.kLabelHue, AuctionSystem.ST[ 92 ] );
-			AddLabel(45, 240, Misc.kLabelHue, AuctionSystem.ST[ 93 ] );
-			AddLabel(45, 255, Misc.kLabelHue, AuctionSystem.ST[ 94 ] );
-			AddLabel(45, 275, Misc.kLabelHue, AuctionSystem.ST[ 95 ] );
+			AddLabel(70, 323, 88, AuctionSystem.ST[ 7 ] );
+			AddLabel(45, 220, 88, AuctionSystem.ST[ 92 ] );
+			AddLabel(45, 240, 88, AuctionSystem.ST[ 93 ] );
+			AddLabel(45, 255, 88, AuctionSystem.ST[ 94 ] );
+			AddLabel(45, 275, 88, AuctionSystem.ST[ 95 ] );
 		}
 
 		public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
-		{
+        {
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 1)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
+            
 			if ( info.ButtonID == 1 )
 			{
 				MobileStatuette ms = m_Check.AuctionedItem as MobileStatuette;

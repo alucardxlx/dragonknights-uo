@@ -67,7 +67,7 @@ namespace Xanthos.ShrinkSystem
 				else if ( m_IsStatuette = value )
 				{
 					ItemID = ShrinkTable.Lookup( m_Pet );
-					Name = m_Name + "a shrunken pet";
+					Name = m_Pet.Name + ": a shrunken pet";
 				}
 				else
 				{

@@ -42,16 +42,19 @@ namespace Server.Items
 			defender.PlaySound( GetHitDefendSound( attacker, defender ) );
 
 			switch ( Utility.Random( 5 ) )
-                        { 
-                          case 0:
-				  defender.FixedParticles( 0x374A, 10, 15, 5013, 0x496, 0, EffectLayer.Waist ); 
-				  attacker.Say( "Sacrafice your life to me!!!" ); break;
-                  SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 0, 0, 0, 30);
-          }
-		
+			{
+					case 0:
+					{
+						defender.FixedParticles( 0x374A, 10, 15, 5013, 0x496, 0, EffectLayer.Waist );
+						attacker.Say( "Sacrafice your life to me!!!" );
+						SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 0, 0, 0, 30);
+						break;
+					}
+			}
+			
 			base.OnHit( attacker, defender, damageBonus );
 		}
-	
+		
 		public VampiresFang( Serial serial ) : base( serial )
 		{
 		}

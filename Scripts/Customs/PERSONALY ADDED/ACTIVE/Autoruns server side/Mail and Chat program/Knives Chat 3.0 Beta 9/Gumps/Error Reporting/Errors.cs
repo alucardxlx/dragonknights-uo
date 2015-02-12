@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using System.Web.Mail;
+//using System.Web.Mail;//changed this to next line
+using System.Net.Mail;
 using System.Diagnostics;
 using System.Threading;
 using Server;
@@ -81,36 +82,60 @@ namespace Knives.Chat3
         private static string s_Error = "";
         private static Exception s_Exception;
 
+//        private static void SendEmail()
+//        {
+//            string txt = s_Error;
+//            Exception e = s_Exception;
+//
+//            try
+//            {
+//                MailMessage mail = new MailMessage();
+//                mail.To = "kmwill23@hotmail.com";
+//                mail.From = Server.Misc.ServerList.ServerName;
+//                mail.Subject = "Automated Chat Error Report";
+//                mail.Body = Server.Misc.ServerList.ServerName + " \r \r " + txt + " \r \r " + e.Message + " \r \r " + e.Source + " \r \r " + e.StackTrace;
+//                string schema = "http://schemas.microsoft.com/cdo/configuration/";
+//                mail.Fields.Add(schema + "smtpserverport", "465");
+//                mail.Fields.Add(schema + "smtpusessl", "true");
+//                mail.Fields[schema + "smtpauthenticate"] = "1";
+//                mail.Fields[schema + "sendusername"] = "kniveschat@gmail.com";
+//                mail.Fields[schema + "sendpassword"] = "openmail";
+//                SmtpMail.SmtpServer = "smtp.gmail.com";
+//                SmtpMail.Send(mail);
+//            }
+//            catch(Exception ex)
+//            {
+//                Console.WriteLine("Email failed to send.");
+//                Console.WriteLine(ex.Message);
+//                Console.WriteLine(ex.Source);
+//                Console.WriteLine(ex.StackTrace);
+//            }
+//        }
         private static void SendEmail()
-        {
-            string txt = s_Error;
-            Exception e = s_Exception;
-
-            try
-            {
-                MailMessage mail = new MailMessage();
-                mail.To = "kmwill23@hotmail.com";
-                mail.From = Server.Misc.ServerList.ServerName;
-                mail.Subject = "Automated Chat Error Report";
-                mail.Body = Server.Misc.ServerList.ServerName + " \r \r " + txt + " \r \r " + e.Message + " \r \r " + e.Source + " \r \r " + e.StackTrace;
-                string schema = "http://schemas.microsoft.com/cdo/configuration/";
-                mail.Fields.Add(schema + "smtpserverport", "465");
-                mail.Fields.Add(schema + "smtpusessl", "true");
-                mail.Fields[schema + "smtpauthenticate"] = "1";
-                mail.Fields[schema + "sendusername"] = "kniveschat@gmail.com";
-                mail.Fields[schema + "sendpassword"] = "openmail";
-                SmtpMail.SmtpServer = "smtp.gmail.com";
-                SmtpMail.Send(mail);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Email failed to send.");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Source);
-                Console.WriteLine(ex.StackTrace);
-            }
-        }
-
+         {
+             string txt = s_Error;
+             Exception e = s_Exception;
+  
+             try
+             {
+                 MailAddress from = new MailAddress("----Necesity----", "Exception");
+                 MailAddress to = new MailAddress("----Necesity----", "Bug Reporter");
+                 MailMessage mail = new MailMessage(from, to);
+                 mail.Subject = "Automated Chat Error Report";
+                 mail.Body = Server.Misc.ServerList.ServerName + " \r \r " + txt + " \r \r " + e.Message + " \r \r " + e.Source + " \r \r " + e.StackTrace;
+                 SmtpClient client = new SmtpClient("----Necesity----");
+                 Console.WriteLine("Sending an e-mail message to {0} by using SMTP host {1} port {2}.", to.ToString(), client.Host, client.Port);
+                 client.Send(mail);
+             }
+             catch(Exception ex)
+             {
+                 Console.WriteLine("Email failed to send.");
+                 Console.WriteLine(ex.Message);
+                 Console.WriteLine(ex.Source);
+                 Console.WriteLine(ex.StackTrace);
+             }
+         }
+        
 		public static void Notify( Mobile m )
 		{
 			if ( m.HasGump( typeof( ErrorsGump ) ) )

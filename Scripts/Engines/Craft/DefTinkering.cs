@@ -105,8 +105,7 @@ namespace Server.Engines.Craft
         public override void PlayCraftEffect(Mobile from)
         {
             // no sound
-            //from.PlaySound( 0x241 );
-            from.PlaySound( 0x956 );
+            from.PlaySound( 0x241 );
         }
 
         public override int PlayEndingEffect(Mobile from, bool failed, bool lostMaterial, bool toolBroken, int quality, bool makersMark, CraftItem item)
@@ -212,7 +211,7 @@ namespace Server.Engines.Craft
                 AddSkill( index, SkillName.Tailoring, 100.0, 140.0 );
                 AddRes( index, typeof( Cloth ), "Cloth", 50, "You do not have sufficent cloth." );
                 AddRes( index, typeof( SmokeBomb ), "Smoke Bomb", 10, "You do not have sufficient Smoke Bombs, how else are you gona resist the flames?" );
-//I ADDED
+//I ADDED FIN
             AddCraft(typeof(MortarPestle), 1044046, 1023739, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
             AddCraft(typeof(Scorp), 1044046, 1024327, 30.0, 80.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(TinkerTools), 1044046, 1044164, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
@@ -291,8 +290,7 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(MetalBox), 1044050, "metal box", 73.6, 98.6, typeof(IronIngot), "Ingots", 50, "You do not have sufficient ingots to make that.");
             AddRes( index, typeof( AxleGears ), "Axle With Gears", 3, "You do not have sufficent Axles With Gears." );
-
-//I ADDED            
+//I ADDED FIN            
             AddCraft(typeof(KeyRing), 1044050, 1024113, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(Candelabra), 1044050, 1022599, 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
             AddCraft(typeof(Scales), 1044050, 1026225, 60.0, 110.0, typeof(IronIngot), 1044036, 4, 1044037);
@@ -340,12 +338,13 @@ namespace Server.Engines.Craft
             #region Multi-Component Items
             index = AddCraft(typeof(AxleGears), 1044051, 1024177, 0.0, 0.0, typeof(Axle), 1044169, 1, 1044253);
             AddRes(index, typeof(Gears), 1044254, 1, 1044253);
+
 //I ADDED            
             index = AddCraft(typeof(BankersPodiumAddonDeed), 1044051, "banker's podium" , 100.0, 140.0, typeof(IronIngot), "ingots", 100, "You do not have sufficient ingots to make that.");
             AddRes(index, typeof(ResourceBox), "resource box", 1, "You do not have a resource box to make that.");
             AddRes(index, typeof(Board), "board", 100, "You do not have sufficent boards to make that.");
             AddRes(index, typeof(ResourceStorageKeyMaster), "master worker's keys", 1, "You do not have a master worker's keys to make that.");
-//I ADDED            
+//I ADDED FIN
             index = AddCraft(typeof(ClockParts), 1044051, 1024175, 0.0, 0.0, typeof(AxleGears), 1044170, 1, 1044253);
             AddRes(index, typeof(Springs), 1044171, 1, 1044253);
 
@@ -358,6 +357,10 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(ClockLeft), 1044051, 1044256, 0.0, 0.0, typeof(ClockFrame), 1044174, 1, 1044253);
             AddRes(index, typeof(ClockParts), 1044173, 1, 1044253);
 
+//I ADDED
+            index = AddCraft(typeof(GrandFatherClock), 1044051, "Grandfather Clock", 100.0, 140.0, typeof(ClockFrame), 1044174, 4, 1044253);
+            AddRes(index, typeof(ClockParts), 1044173, 20, 1044253);
+//I ADDED FIN
             AddCraft(typeof(Sextant), 1044051, 1024183, 0.0, 0.0, typeof(SextantParts), 1044175, 1, 1044253);
 
             index = AddCraft(typeof(Bola), 1044051, 1046441, 60.0, 80.0, typeof(BolaBall), 1046440, 4, 1042613);

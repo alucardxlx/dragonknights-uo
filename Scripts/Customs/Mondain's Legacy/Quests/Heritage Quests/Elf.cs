@@ -220,7 +220,7 @@ namespace Server.Engines.Quests
 				
 		public TheBalanceOfNatureQuest() : base()
 		{								
-			AddObjective( new SlayObjective( typeof( TimberWolf ), "timber wolves", 15, "Huntsman's forrest" ) );
+			AddObjective( new SlayObjective( typeof( TimberWolf ), "timber wolves", 15, "Huntsman's forest" ) );
 						
 			AddReward( new BaseReward( 1072807 ) ); // The boon of the Huntsman.
 		}		

@@ -45,6 +45,11 @@ namespace Server.Gumps
             AddLabel(137, 220, 0, "Accept");
 
             AddLabel(341, 220, 0, "Decline");
+            m_Target.PlaySound( 0x1E9 );
+            m_Target.FixedParticles( 0x375A, 10, 15, 5037, EffectLayer.Waist );
+            m_Target.Animate( 20, 5, 1, true, false, 0 );
+
+
 
 
         }

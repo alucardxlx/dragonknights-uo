@@ -60,7 +60,7 @@ namespace Server.Items
 		{
 			Weight = 0.0;
 			m_Redyable = true;
-			Name = "Potion Keg, Basic Metal Armor and Weapon, Monster Statuette, Ethereal Mount, Spellbook, Runebook, Recall Rune, Dye Tub.";
+			Name = "Potion Keg, Base Armor-Weapon, Monster Statuette, Ethereal Mount, Spellbook, Runebook, Recall Rune, Dye Tub.";
 		}
 
 		[Constructable] 

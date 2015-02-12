@@ -42,6 +42,8 @@ namespace Server.Commands
 
                     if ((bc.Controlled && bc.ControlMaster == from) || (bc.Summoned && bc.SummonMaster == from))
                         pet.Add(bc);
+                    if(bc is PersonalAttendant)
+                    	pet.Remove(bc);
                 }
             }
             from.SendGump(new GetPetGump(pet.Count));
@@ -136,6 +138,9 @@ namespace Server.Gumps
 
                                 if ((bc.Controlled && bc.ControlMaster == from) || (bc.Summoned && bc.SummonMaster == from))
                                     pets.Add(bc);
+                                if(bc is PersonalAttendant)
+                                	pets.Remove(bc);
+
                             }
                         }
 
@@ -188,6 +193,7 @@ To use Gold Ledger remove this line   */
 
                                             Effects.SendLocationParticles(EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration), 0x3728, 10, 30, 5052);
                                             Effects.PlaySound(from.Location, from.Map, 0x201);
+                                            from.Animate( 20, 5, 1, true, false, 0 );
 
 
                                         }

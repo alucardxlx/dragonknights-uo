@@ -33,7 +33,7 @@ namespace Server.Items
 		}
 		public override void OnHit( Mobile attacker, Mobile defender, double damageBonus )
 		{
-			double damage = 0.0;
+//			double damage = 0.0; // trying to clear up yellow errors since was 0.0 no need for it.
 
 			PlaySwingAnimation( attacker );
 			PlayHurtAnimation( defender );
@@ -43,10 +43,13 @@ namespace Server.Items
 
             switch (Utility.Random(5))
             {
-                case 0:
-                    defender.FixedParticles(0x373A, 10, 15, 5012, EffectLayer.Waist);
-                    attacker.Say("Why must I endure this!!!"); break;
-                    SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 0, 0, 0, 0);
+            		case 0:
+            		{
+            			defender.FixedParticles(0x373A, 10, 15, 5012, EffectLayer.Waist);
+            			attacker.Say("Why must I endure this!!!");
+            			SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 0, 0, 0, 0);
+            			break;
+            		}
             }
 
 		

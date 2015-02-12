@@ -73,7 +73,7 @@ namespace Arya.Auction
 				return;
 
 			int itemHue = GetItemHue( item.Item );
-
+            bool highest = false; 
 			Closable = true;
 			Disposable = true;
 			Dragable = true;
@@ -104,7 +104,7 @@ namespace Arya.Auction
 				AddImageTiled( 30, 140, 107, 24, 3004 );
 				AddImageTiled( 31, 141, 105, 22, kBeigeBorderInner );
 				AddAlphaRegion( 31, 141, 105, 22 );
-				AddLabel( 37, 142, Misc.kLabelHue, AuctionSystem.ST[ 82 ]  );
+				AddLabel( 37, 142, 88, AuctionSystem.ST[ 82 ]  );
 				AddItem( 90, 141, kHueExampleID, itemHue );
 			}
 
@@ -115,24 +115,38 @@ namespace Arya.Auction
 			AddImageTiled( 5, 170, 154, 195, kBeigeBorderInner );
 			AddAlphaRegion( 5, 170, 154, 195);
 
-			// Reserve and bids
-			AddLabel( 10, 175, Misc.kLabelHue, AuctionSystem.ST[ 68 ] );
-			AddLabel( 45, 190, Misc.kGreenHue, m_Auction.MinBid.ToString( "#,0" ) );
+            // Reserve and bids
+            if (!m_Auction.HasBids)
+            {
+                AddLabel(10, 175, 88, AuctionSystem.ST[68]);//starting bid
+                AddLabel(45, 190, 273, m_Auction.MinBid.ToString("#,0"));
+            }
 
-			AddLabel( 10, 280, Misc.kLabelHue, AuctionSystem.ST[ 69 ] );
-			AddLabel( 45, 295, m_Auction.ReserveMet ? Misc.kGreenHue : Misc.kRedHue, m_Auction.ReserveMet ? "Met" : "Not Met" );
+            // Minimum bid amount for quick bids
+            int quickbid = m_Auction.MinBid;
+            if (m_Auction.HasBids)
+            {
+                quickbid = m_Auction.HighestBid.Amount + m_Auction.BidIncrement;
+            }
 
-			AddLabel( 10, 210, Misc.kLabelHue, AuctionSystem.ST[ 70 ] );
+            AddLabel(10, 280, 88, AuctionSystem.ST[69]);//reserve
+            if (m_Auction.IsOwner(m_User))
+            {
+                AddLabel(60, 280, 273, m_Auction.Reserve.ToString("#,0"));
+            }
+
+                AddLabel(45, 295, m_Auction.ReserveMet ? 273 : 33, m_Auction.ReserveMet ? "Met" : "Not Met");
+			AddLabel( 10, 210, 88, AuctionSystem.ST[ 70 ] );
 
 			if ( m_Auction.HasBids )
-				AddLabel( 45, 225, m_Auction.ReserveMet ? Misc.kGreenHue : Misc.kRedHue, m_Auction.HighestBid.Amount.ToString("#,0" ));
+				AddLabel( 45, 225, m_Auction.ReserveMet ? 273 : 33, m_Auction.HighestBid.Amount.ToString("#,0" ));
 			else
-				AddLabel( 45, 225, Misc.kRedHue, AuctionSystem.ST[ 71 ]  );
+				AddLabel( 45, 225, 33, AuctionSystem.ST[ 71 ]  );
 
-			// Time remaining
+            // Time remaining m_Reserve
 			string timeleft = null;
 
-			AddLabel( 10, 245, Misc.kLabelHue, AuctionSystem.ST[ 56 ] );
+			AddLabel( 10, 245, 88, AuctionSystem.ST[ 56 ] );
 
 			if ( ! m_Auction.Expired )
 			{
@@ -153,29 +167,60 @@ namespace Arya.Auction
 			{
 				timeleft = AuctionSystem.ST[ 78 ] ;
 			}
-			AddLabel( 45, 260, Misc.kGreenHue, timeleft );
-			
-			// Bidding
-			if ( m_Auction.CanBid( m_User ) && ! m_Auction.Expired )
-			{
-				AddLabel( 10, 318, Misc.kLabelHue, AuctionSystem.ST[ 79 ] );
-				AddImageTiled( 9, 338, 112, 22, kBeigeBorderOuter );
-				AddImageTiled( 10, 339, 110, 20, kBeigeBorderInner );
-				AddAlphaRegion( 10, 339, 110, 20 );
-				
-				// Bid text: 0
-				AddTextEntry( 10, 339, 110, 20, Misc.kGreenHue, 0, @"" );
-   
-				// Bid button: 4
-				AddButton( 125, 338, 4011, 4012, 4, GumpButtonType.Reply, 0 );
-			}
-			else if ( m_Auction.IsOwner( m_User ) )
-			{
-				// View bids: button 5
-				AddLabel( 10, 338, Misc.kLabelHue, AuctionSystem.ST[ 80 ]  );
-				AddButton( 125, 338, 4011, 4012, 5, GumpButtonType.Reply, 0 );
-			}
+			AddLabel( 45, 260, 273, timeleft );
+            //m_Auction.HighestBid.Amount
+            
+            //AddLabelCropped(55, 50 + i * 20, 100, 19, 88, bid.Mobile != null ? bid.Mobile.Name : AuctionSystem.ST[78]);
 
+            try
+            {
+                if (m_Auction.HighestBid.Mobile != null)
+                {
+                    if (m_User == m_Auction.HighestBid.Mobile)
+                    {
+                        AddLabel(10, 338, 273, "You're highest bidder");
+                        highest = true;
+                    }
+                }
+            }
+            catch { }
+            // Bidding
+
+            if (m_Auction.HasBids)
+            {
+                AddLabel(10, 175, 88, AuctionSystem.ST[235]);//Minimum bid
+                AddLabel(45, 190, 273, quickbid.ToString("#,0"));
+            }
+
+                if (m_Auction.CanBid(m_User) && !m_Auction.Expired && !highest)
+                {
+                    AddLabel(10, 318, 88, AuctionSystem.ST[79]);
+                    AddImageTiled(9, 338, 112, 22, kBeigeBorderOuter);
+                    AddImageTiled(10, 339, 110, 20, kBeigeBorderInner);
+                    AddAlphaRegion(10, 339, 110, 20);
+
+                    // Bid text: 0
+                    AddTextEntry(10, 339, 110, 20, 273, 0, @"");
+
+                    // Bid button: 4
+                    AddButton(125, 338, 4011, 4012, 4, GumpButtonType.Reply, 0);
+                    
+                    // Quick Bid button: 9
+                    AddButton(125, 175, 4011, 4012, 9, GumpButtonType.Reply, 0);
+                }
+                if ((m_Auction.IsOwner(m_User)) && !(m_Auction.ReserveMet))
+                {
+                    //Owner Cancel Auction: button 7 
+                    AddLabel(10, 310, 33, AuctionSystem.ST[233]);
+                    AddButton(125, 310, 4011, 4012, 7, GumpButtonType.Reply, 0);
+                }           
+             if (m_Auction.IsOwner(m_User))
+            {
+                // View bids: button 5
+                AddLabel(10, 338, 143, AuctionSystem.ST[80]);
+                AddButton(125, 338, 4011, 4012, 5, GumpButtonType.Reply, 0);
+            }
+        
 			//
 			// Item properties area
 			//
@@ -186,12 +231,12 @@ namespace Arya.Auction
 			// If it is a container make room for the arrows to navigate to each of the items
 			if ( m_Auction.ItemCount > 1 )
 			{
-				AddLabel( 170, 10, Misc.kGreenHue, string.Format( AuctionSystem.ST[ 231 ] , m_Auction.ItemName ));
+				AddLabel( 170, 10, 273, string.Format( AuctionSystem.ST[ 231 ] , m_Auction.ItemName ));
 
 				AddImageTiled( 169, 29, 317, 27, kBeigeBorderOuter );
 				AddImageTiled( 170, 30, 315, 25, kBeigeBorderInner );
 				AddAlphaRegion( 170, 30, 315, 25 );
-				AddLabel( 185, 35, Misc.kGreenHue, string.Format( AuctionSystem.ST[ 67 ] , m_Page + 1, m_Auction.ItemCount ) );
+				AddLabel( 185, 35, 273, string.Format( AuctionSystem.ST[ 67 ] , m_Page + 1, m_Auction.ItemCount ) );
 
 				// Prev Item button: 1
 				if ( m_Page > 0 )
@@ -209,7 +254,7 @@ namespace Arya.Auction
 			}
 			else
 			{
-				AddLabel( 170, 10, Misc.kGreenHue, m_Auction.ItemName );
+				AddLabel( 170, 10, 273, m_Auction.ItemName );
 				AddHtml( 173, 30, 312, 140, m_Auction[ m_Page ].Properties, (bool)false, (bool)true );
 			}
 			
@@ -217,7 +262,7 @@ namespace Arya.Auction
 			// Owner description area
 			//
 			AddImageTiled( 169, 194, 317, 112, kBeigeBorderOuter );
-			AddLabel( 170, 175, Misc.kLabelHue, AuctionSystem.ST[ 81 ] );
+			AddLabel( 170, 175, 88, AuctionSystem.ST[ 81 ] );
 			AddImageTiled( 170, 195, 315, 110, kBeigeBorderInner );
 			AddAlphaRegion( 170, 195, 315, 110 );
 			AddHtml( 173, 195, 312, 110, string.Format( "<basefont color=#FFFFFF>{0}", m_Auction.Description ), (bool)false, (bool)true);
@@ -225,7 +270,7 @@ namespace Arya.Auction
 			// Web link button: 3
 			if ( m_Auction.WebLink != null && m_Auction.WebLink.Length > 0 )
 			{
-				AddLabel( 350, 175, Misc.kLabelHue, AuctionSystem.ST[ 72 ] );
+				AddLabel( 350, 175, 88, AuctionSystem.ST[ 72 ] );
 				AddButton( 415, 177, 5601, 5605, 3, GumpButtonType.Reply, 0 );
 			}
 
@@ -237,19 +282,29 @@ namespace Arya.Auction
 			if ( m_Auction.AllowBuyNow && m_Auction.CanBid( m_User ) && !m_Auction.Expired )
 			{
 				AddButton( 170, 310, 4029, 4030, 8, GumpButtonType.Reply, 0 );
-				AddLabel( 205, 312, Misc.kGreenHue, string.Format( AuctionSystem.ST[ 210 ], m_Auction.BuyNow.ToString( "#,0" )));
-			}
+				AddLabel( 205, 312, 273, string.Format( AuctionSystem.ST[ 210 ], m_Auction.BuyNow.ToString( "#,0" )));
+            }
+
+            // Buy now : Owner views without button to bid
+            if (m_Auction.AllowBuyNow && m_Auction.IsOwner(m_User) && !m_Auction.Expired)
+            {
+                AddLabel(205, 312, 273, string.Format(AuctionSystem.ST[210], m_Auction.BuyNow.ToString("#,0")));
+            }
+            else if (!m_Auction.AllowBuyNow && m_Auction.IsOwner(m_User) && !m_Auction.Expired)
+            {
+                AddLabel(205, 312, 33, AuctionSystem.ST[234]);
+            }
 
 			// Button 6 : Admin Auction Panel
 			if ( m_User.AccessLevel >= AuctionConfig.AuctionAdminAcessLevel )
 			{
 				AddButton( 170, 338, 4011, 4012, 6, GumpButtonType.Reply, 0 );
-				AddLabel( 205, 340, Misc.kLabelHue, AuctionSystem.ST[ 227 ] );
+				AddLabel( 205, 340, 88, AuctionSystem.ST[ 227 ] );
 			}
 
 			// Close button: 0
 			AddButton( 455, 338, 4017, 4018, 0, GumpButtonType.Reply, 0 );
-			AddLabel( 415, 340, Misc.kLabelHue, AuctionSystem.ST[ 7 ] );
+			AddLabel( 415, 340, 88, AuctionSystem.ST[ 7 ] );
 		}
 
 		public override void OnResponse( Server.Network.NetState sender, RelayInfo info )
@@ -260,18 +315,24 @@ namespace Arya.Auction
 				return;
 			}
 
-			if ( !AuctionSystem.Auctions.Contains( m_Auction ) )
-			{
-				sender.Mobile.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 207 ] );
-				
-				if ( m_Callback != null )
-				{
-					try { m_Callback.DynamicInvoke( new object[] { m_User } ) ; }
-					catch {}
-				}
+            if (!AuctionSystem.Auctions.Contains(m_Auction))
+            {
+                sender.Mobile.SendMessage(AuctionConfig.MessageHue, AuctionSystem.ST[207]);
 
-				return;
-			}
+                if (m_Callback != null)
+                {
+                    try { m_Callback.DynamicInvoke(new object[] { m_User }); }
+                    catch { }
+                }
+
+                return;
+            }
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 9)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 
 			switch ( info.ButtonID )
 			{
@@ -327,7 +388,6 @@ namespace Arya.Auction
 							m_Auction.PlaceBid( m_User, (int) bid );
 						}
 					}
-
 					m_User.SendGump( new AuctionViewGump( m_User, m_Auction, m_Callback, m_Page ) );
 					break;
 
@@ -341,6 +401,11 @@ namespace Arya.Auction
 					m_User.SendGump( new AuctionControlGump( m_User, m_Auction, this ) );
 					break;
 
+                case 7: // Owner Cancel Auction
+                    m_Auction.End(m_User);
+                   // m_Auction.StaffDelete(m_User, ItemFate.ReturnToOwner);
+                    break;
+                   
 				case 8: // Buy Now
 
 					if ( m_Auction.DoBuyNow( sender.Mobile ) )
@@ -351,7 +416,37 @@ namespace Arya.Auction
 					{
 						sender.Mobile.SendGump( new AuctionViewGump( sender.Mobile, m_Auction, m_Callback, m_Page ) );
 					}
-					break;
+                    break;
+                case 9: // Quick Bid
+
+                    // Minimum bid amount for quick bids
+                    int quickbid = m_Auction.MinBid;
+                    if (m_Auction.HasBids)
+                    {
+                        quickbid = m_Auction.HighestBid.Amount + m_Auction.BidIncrement;
+                    }
+                    if (m_Auction.Expired)
+                    {
+                        m_User.SendMessage(AuctionConfig.MessageHue, AuctionSystem.ST[84]);
+                    }
+                    else if (quickbid == 0)
+                    {
+                        m_User.SendMessage(AuctionConfig.MessageHue, AuctionSystem.ST[85]);
+                    }
+                    else
+                    {
+                        if (m_Auction.AllowBuyNow && quickbid >= m_Auction.BuyNow)
+                        {
+                            // Do buy now instead
+                            goto case 8;
+                        }
+                        else
+                        {
+                            m_Auction.PlaceBid(m_User, (int)quickbid);
+                        }
+                    }
+                    m_User.SendGump(new AuctionViewGump(m_User, m_Auction, m_Callback, m_Page));
+                    break;
 			}
 		}
 

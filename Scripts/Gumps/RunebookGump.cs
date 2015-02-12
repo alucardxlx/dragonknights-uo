@@ -234,6 +234,10 @@ namespace Server.Gumps
 					from.CloseGump( typeof( RunebookGump ) );
 					from.SendGump( new RunebookGump( from, m_Book ) );
 
+//I ADDED
+					Effects.PlaySound( from.Location, from.Map, 85);
+//					from.SendMessage("When Use Title of book IS changed.");
+//I ADDED FIN					
 					from.SendMessage( "The book's title has been changed." );
 				}
 				else
@@ -252,6 +256,10 @@ namespace Server.Gumps
 				{
 					from.CloseGump( typeof( RunebookGump ) );
 					from.SendGump( new RunebookGump( from, m_Book ) );
+//I ADDED					
+					Effects.PlaySound( from.Location, from.Map, 85);
+//					from.SendMessage("When Use Cancel changeing title of book");
+//I ADDED END
 				}
 			}
 		}
@@ -267,6 +275,10 @@ namespace Server.Gumps
 			}
 
 			int buttonID = info.ButtonID;
+//I ADDED
+				Effects.PlaySound( from.Location, from.Map, 85);
+//				from.SendMessage("netstate resonce - Cover all if buttons");
+//I ADDED FIN							
 
 			if ( buttonID == 1 ) // Rename book
 			{

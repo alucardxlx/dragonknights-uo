@@ -1,6 +1,8 @@
 using System;
 using Server;
 using Server.Items;
+using Server.Mobiles;// for fairy
+
 
 namespace Server.Engines.Harvest
 {
@@ -144,11 +146,11 @@ namespace Server.Engines.Harvest
 			if ( !base.CheckHarvest( from, tool, def, toHarvest ) )
 				return false;
 
-			if ( tool.Parent != from )
-			{
-				from.SendLocalizedMessage( 500487 ); // The axe must be equipped for any serious wood chopping.
-				return false;
-			}
+//			if ( tool.Parent != from )
+//			{
+//				from.SendLocalizedMessage( 500487 ); // The axe must be equipped for any serious wood chopping.
+//				return false;
+//			}
 
 			return true;
 		}
@@ -175,8 +177,31 @@ namespace Server.Engines.Harvest
 		{
 			base.OnHarvestStarted( from, tool, def, toHarvest );
 			
+//			originaly here
+//			if( Core.ML )
+//				from.RevealingAction();
+//			originaly here end
+
+#region spawn healing fairy
 			if( Core.ML )
+			{
 				from.RevealingAction();
+				
+				
+				double chance = 0.01;//what % chance have to spawn 0.50 = 50% - avrage waks per hour 228 (1.0 / 228 = .004 to equal 1 time per hour) (.004*2times an hour = .008  I rounded to .01)
+				if(Utility.RandomDouble() < chance)
+				{
+					BaseCreature fary;
+					int x = from.X, y = from.Y, z = from.Z;
+					Map map = from.Map;
+					fary = new HealingFairy();
+					fary.MoveToWorld( new Point3D( x, y, z ), map);
+					from.SendMessage( 96,"You see a \"Healing Fairy\" fly out from the tree." );
+				}
+//					from.SendMessage( "chance: {0} %", chance*100 ); //used for debug mode
+				
+			}
+#endregion
 		}
 
 		public static void Initialize()

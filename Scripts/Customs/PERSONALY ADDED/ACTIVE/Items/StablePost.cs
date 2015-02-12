@@ -28,6 +28,12 @@ namespace Server.Items
 		private Server.Mobiles.OrderType m_Order;
 		private int m_Loyal;
 		private bool m_IsBonded;
+		private bool m_IsStabled;
+		private bool m_Blessed;
+		private bool m_Tamable;
+		private string m_PetName;
+		private string m_NameMod;
+		
 		private DateTime m_OwnerAbandonTime;
 		private bool m_Command;
 		private double m_MinTameSkill;
@@ -54,6 +60,11 @@ namespace Server.Items
 		public Server.Mobiles.OrderType Order { get { return m_Order; } set { m_Order = value; } }
 		public DateTime OwnerAbandonTime { get { return m_OwnerAbandonTime; } set { m_OwnerAbandonTime = value; } }
 		public bool IsBonded { get { return m_IsBonded; } set { m_IsBonded = value; } }
+		public bool IsStabled { get { return m_IsStabled; } set { m_IsStabled = value; } }
+		public bool Blessed { get { return m_Blessed; } set { m_Blessed = value; } }
+		public bool Tamable { get { return m_Tamable; } set { m_Tamable = value; } }
+		public string NameMod  { get { return m_NameMod; } set { m_NameMod = value; } }
+		public string PetName  { get { return m_PetName; } set { m_PetName = value; } }
 		public double MinTameSkill { get { return m_MinTameSkill; } set { m_MinTameSkill = value; } }
 		public bool Command { get { return m_Command; } set { m_Command = value; } }
 		public DateTime BondingBegin { get { return m_BondingBegin; } set { m_BondingBegin = value; } }
@@ -92,15 +103,10 @@ namespace Server.Items
 		[Constructable]
 		public StablePost(bool east) : base(east ? 0x14E7 : 0x14E8)
 		{
-			Name = "Hitching Post";
+			Name = "Hitching Post: Unused.";
 			m_Level = SecureLevel.Owner;
 		}
-
-		public StablePost(Serial serial) : base(serial)
-		{
-		}
-		#endregion
-
+		
 		public override void OnDoubleClick(Mobile from)
 		{
 			BaseHouse house = BaseHouse.FindHouseAt(from);
@@ -112,16 +118,16 @@ namespace Server.Items
 					if (Owner == null)
 					{
 						from.Target = new StablePostTarget(this);
-						from.SendMessage("What do you wish to use this on?");
+						from.SendMessage(68,"What do you wish to use this on?");
 					}
 					if (Owner != null && from == Owner)
 					{
 						from.Target = new StablePostTarget(this);
-						from.SendMessage("Target the animal you wish to release from the stable.");
+						from.SendMessage(68,"Target the animal you wish to release from the stable.");
 					}
 					else if (Owner != null && Owner != from)
 					{
-						from.SendMessage("This is under the control of another owner.");
+						from.SendMessage(38,"This is under the control of another owner.");
 					}
 				}
 				else
@@ -162,7 +168,7 @@ namespace Server.Items
 				if (Controlled.Deleted)
 					Controlled = null;
 				else
-					from.SendMessage("You can't redeed this until you remove the pet.");
+					from.SendMessage(38,"You can't redeed this until you remove the pet.");
 			}
 			else
 			{
@@ -206,7 +212,7 @@ namespace Server.Items
 			{
 				if (Owner != from)
 				{
-					from.SendMessage("This is not yours to use.");
+					from.SendMessage(38,"This is not yours to use.");
 					return;
 				}
 				else
@@ -237,6 +243,160 @@ namespace Server.Items
 			}
 		}
 		#endregion
+
+		public void Say(string args)
+		{
+			PublicOverheadMessage(MessageType.Regular, 0x3B2, false, args);
+		}
+
+		#region Code To Prevent it from being moved
+		public override bool OnDragLift(Mobile from)
+		{
+			BaseHouse house = BaseHouse.FindHouseAt(from);
+
+			if (!BaseHouse.CheckLockedDownOrSecured(this) && house != null)
+				house.AddSecure(from, (Item)this);
+			return false;
+		}
+		public override bool Decays { get { return !IsLockedDown || !IsSecure; } }
+		#endregion
+		
+		#endregion		
+
+		private class StablePostTarget : Target
+		{
+			private StablePost m_Post;
+
+			public StablePostTarget(StablePost p)
+				: base(10, false, TargetFlags.None)
+			{
+				m_Post = p;
+			}
+
+			protected override void OnTarget(Mobile from, object target)
+			{
+				if (target == from)
+					m_Post.Say("You can't place yourself in a stable!");
+				else if (target is PlayerMobile)
+					m_Post.Say("You can't place other players in a stable!");
+				else if (target is Item)
+					m_Post.Say("Why would you want to stable an item?");
+				else if (Server.Spells.SpellHelper.CheckCombat(from))
+					m_Post.Say("You cannot stable your pet while you're fighting.");
+				else if ((target is BaseCreature) && m_Post.Controlled == null)
+				{
+					BaseCreature c = (BaseCreature)target;
+
+					if (c.ControlMaster == null || !c.Controlled)
+						m_Post.Say("You can only stable a pet that has been tamed.");
+					if (c.ControlMaster != from && c.Controlled)
+						m_Post.Say("You can only stable a pet you control.");
+					else if (c.Summoned)
+						m_Post.Say("You cannot stable a summoned creature.");
+					else if (c.Combatant != null && c.InRange(c.Combatant, 12) && c.Map == c.Combatant.Map)
+						m_Post.Say("Your pet is fighting, You cannot stable it yet.");
+					else if (c.Controlled && c.ControlMaster == from)
+					{
+						
+						m_Post.Owner = c.ControlMaster;//
+						c.ControlMaster = null;//
+//						m_Post.IsStabled = c.IsStabled;
+						c.IsStabled	= true;//
+					//	m_Post.IsStabled = true;//
+					//	m_Post.Blessed = c.Blessed;
+						c.Blessed = true;//
+//						m_Post.Blessed = true; //Note causes the player to become blessed when put pet
+//						m_Post.Tamable = c.Tamable;
+						c.Tamable = false;//
+//						m_Post.Tamable = false;//Note I think this will also
+						m_Post.Controlled = c;//
+						c.Home = m_Post.Location;//
+						c.RangeHome = m_Post.HomeRange;//
+						m_Post.Loyal = c.Loyalty;//
+						c.Loyalty = 100;//
+						m_Post.IsBonded = c.IsBonded;//
+						m_Post.Mode = c.FightMode;//
+						c.FightMode = FightMode.Aggressor;//
+						m_Post.Order = c.ControlOrder;//
+						c.ControlOrder = OrderType.None;//
+						c.CurrentSpeed = 0.5;//
+						m_Post.Command = c.Controlled;//
+						m_Post.BondingBegin = c.BondingBegin;//
+						c.BondingBegin = DateTime.MaxValue;//
+						m_Post.OwnerAbandonTime = c.OwnerAbandonTime;//
+						c.OwnerAbandonTime = DateTime.MaxValue;//
+						m_Post.MinTameSkill = c.MinTameSkill;//
+						m_Post.PetName = c.Name;//
+						c.Name = m_Post.Owner.Name + "'s: " + m_Post.PetName;//
+						m_Post.Name = "In use by: " + m_Post.Owner.Name + " Attached to: " + m_Post.PetName;
+					}
+				}
+				else if ((target is BaseCreature) && m_Post.Controlled != null)
+				{
+					BaseCreature c = null;
+					if (m_Post.Controlled == (BaseCreature)target && m_Post.Owner == from)
+					{
+						c = (BaseCreature)target;
+						if ( (from.Followers + c.ControlSlots) > from.FollowersMax)
+						{
+							from.SendMessage( 38,"You can not release that creature at this time because you are unable to control it. You would have TO MANY FOLLOWERS." );
+							return;
+						}
+						if ( !c.CanBeControlledBy( from ))
+						{
+							from.SendMessage( 38,"You do not have the required skills to control this pet." );
+							return;
+						}
+						
+						c.ControlMaster = m_Post.Owner;//
+						c.Home = m_Post.Owner.Location;//
+						c.RangeHome = 0;//
+						c.Loyalty = m_Post.Loyal;//
+						m_Post.Loyal = 100;//
+						c.IsBonded = m_Post.IsBonded;//
+					//	m_Post.IsBonded = false;
+						c.FightMode = m_Post.Mode;//
+						m_Post.Mode = FightMode.None;
+						c.ControlOrder = m_Post.Order;//
+						m_Post.Order = OrderType.None;
+						c.CurrentSpeed = 0.1;//
+						c.Controlled = m_Post.Command;//
+						m_Post.Command = false;//
+					//	c.Blessed = m_Post.Blessed;
+						c.Blessed = false;//
+//						m_Post.Blessed = false;// Note since the put causes problem no need for it here
+						c.BondingBegin = m_Post.BondingBegin;//
+						m_Post.BondingBegin = DateTime.MaxValue;//
+						c.OwnerAbandonTime = m_Post.OwnerAbandonTime;//
+						m_Post.OwnerAbandonTime = DateTime.MaxValue;//
+						c.MinTameSkill = m_Post.MinTameSkill;//
+						m_Post.MinTameSkill = 0.0;//
+					//	c.Tamable = m_Post.Tamable;
+						c.Tamable = true;//
+//						m_Post.Tamable = true;// Note since the put causes problem no need for it here
+					//	c.IsStabled = m_Post.IsStabled;
+						c.IsStabled = false;
+//						m_Post.IsStabled = false;
+						c.Name = m_Post.PetName;
+						c.NameMod = null;
+						m_Post.NameMod = null;
+						m_Post.Controlled = null;
+						m_Post.Owner = null;
+						m_Post.Name = "Hitching Post: Unused.";
+
+
+					}
+					else
+						from.SendMessage(38,"This post already has a creature stabled. (Unstable the other first)");
+				}
+			}
+		}
+
+		public StablePost(Serial serial) : base(serial)
+			{
+			}
+		
+
 		#region Serialization
 		public override void Serialize(GenericWriter writer)
 		{
@@ -267,6 +427,11 @@ namespace Server.Items
 			writer.Write((Mobile)m_Owner);
 			writer.Write((Mobile)m_Controlled);
 			writer.Write((bool)m_IsBonded);
+			writer.Write((bool)m_IsStabled);
+			writer.Write((bool)m_Blessed);
+			writer.Write((bool)m_Tamable);
+			writer.Write((string)m_NameMod);
+			writer.Write((string)m_PetName);
 			writer.Write((DateTime)m_OwnerAbandonTime);
 			writer.Write((int)m_MinTameSkill);
 		}
@@ -316,6 +481,11 @@ namespace Server.Items
 						m_Owner = reader.ReadMobile();
 						m_Controlled = (BaseCreature)reader.ReadMobile();
 						m_IsBonded = reader.ReadBool();
+						m_IsStabled = reader.ReadBool();
+						m_Blessed = reader.ReadBool();
+						m_Tamable = reader.ReadBool();
+						m_NameMod = reader.ReadString();
+						m_PetName = reader.ReadString();
 						m_OwnerAbandonTime = reader.ReadDateTime();
 						m_MinTameSkill = reader.ReadInt();
 						break;
@@ -324,124 +494,6 @@ namespace Server.Items
 		}
 		#endregion
 
-		public void Say(string args)
-		{
-			PublicOverheadMessage(MessageType.Regular, 0x3B2, false, args);
-		}
-
-		#region Code To Prevent it from being moved
-		public override bool OnDragLift(Mobile from)
-		{
-			BaseHouse house = BaseHouse.FindHouseAt(from);
-
-			if (!BaseHouse.CheckLockedDownOrSecured(this) && house != null)
-				house.AddSecure(from, (Item)this);
-			return false;
-		}
-		public override bool Decays { get { return !IsLockedDown || !IsSecure; } }
-		#endregion
-
-		private class StablePostTarget : Target
-		{
-			private StablePost m_Post;
-
-			public StablePostTarget(StablePost p)
-				: base(10, false, TargetFlags.None)
-			{
-				m_Post = p;
-			}
-
-			protected override void OnTarget(Mobile from, object target)
-			{
-				if (target == from)
-					m_Post.Say("You can't place yourself in a stable!");
-				else if (target is PlayerMobile)
-					m_Post.Say("You can't place other players in a stable!");
-				else if (target is Item)
-					m_Post.Say("Why would you want to stable an item?");
-				else if (Server.Spells.SpellHelper.CheckCombat(from))
-					m_Post.Say("You cannot stable your pet while you're fighting.");
-				else if ((target is BaseCreature) && m_Post.Controlled == null)
-				{
-					BaseCreature c = (BaseCreature)target;
-
-					if (c.ControlMaster == null || !c.Controlled)
-						m_Post.Say("You can only stable a pet that has been tamed.");
-					if (c.ControlMaster != from && c.Controlled)
-						m_Post.Say("You can only stable a pet you control.");
-					else if (c.Summoned)
-						m_Post.Say("You cannot stable a summoned creature.");
-					else if (c.Combatant != null && c.InRange(c.Combatant, 12) && c.Map == c.Combatant.Map)
-						m_Post.Say("Your pet is fighting, You cannot stable it yet.");
-					else if (c.Controlled && c.ControlMaster == from)
-					{
-						m_Post.Owner = c.ControlMaster;
-						m_Post.Controlled = c;
-						c.Home = m_Post.Location;
-						c.RangeHome = m_Post.HomeRange;
-						m_Post.Loyal = c.Loyalty;
-						c.Loyalty = 100;
-						m_Post.IsBonded = c.IsBonded;
-						m_Post.Mode = c.FightMode;
-						c.FightMode = FightMode.None;
-						m_Post.Order = c.ControlOrder;
-						c.ControlOrder = OrderType.None;
-						m_Post.Command = c.Controlled;
-						c.Blessed = false;
-						m_Post.BondingBegin = c.BondingBegin;
-						c.BondingBegin = DateTime.MaxValue;
-						m_Post.OwnerAbandonTime = c.OwnerAbandonTime;
-						c.OwnerAbandonTime = DateTime.MaxValue;
-						m_Post.MinTameSkill = c.MinTameSkill;
-//						c.MinTameSkill = 0.0;//changed from 240
-						c.ControlMaster = null; //c.ControlMaster;//was null - moded to see if will dissapear
-					}
-				}
-				else if ((target is BaseCreature) && m_Post.Controlled != null)
-				{
-					BaseCreature c = null;
-					if (m_Post.Controlled == (BaseCreature)target && m_Post.Owner == from)
-					{
-						c = (BaseCreature)target;
-						if ( (from.Followers + c.ControlSlots) > from.FollowersMax)
-						{
-							from.SendMessage( "You can not release that creature at this time because you are unable to control it. You would have TO MANY FOLLOWERS." );
-							return;
-						}
-						if ( !c.CanBeControlledBy( from ))
-						{
-							from.SendMessage( "You do not have the required skills to control this pet." );
-							return;
-						}
-						
-						c.ControlMaster = m_Post.Owner;
-						c.Home = m_Post.Owner.Location;
-						c.RangeHome = 0;
-						c.Loyalty = m_Post.Loyal;
-						m_Post.Loyal = 100;
-						c.IsBonded = m_Post.IsBonded;
-						m_Post.IsBonded = false;
-						c.FightMode = m_Post.Mode;
-						m_Post.Mode = FightMode.None;
-						c.ControlOrder = m_Post.Order;
-						m_Post.Order = OrderType.None;
-						c.Controlled = m_Post.Command;
-						m_Post.Command = false;
-						c.Blessed = false;
-						c.BondingBegin = m_Post.BondingBegin;
-						m_Post.BondingBegin = DateTime.MaxValue;
-						c.OwnerAbandonTime = m_Post.OwnerAbandonTime;
-						m_Post.OwnerAbandonTime = DateTime.MaxValue;
-						c.MinTameSkill = m_Post.MinTameSkill;
-						m_Post.MinTameSkill = 0.0;
-						m_Post.Controlled = null;
-						m_Post.Owner = null;
-					}
-					else
-						from.SendMessage("This post already has a creature stabled. (Unstable the other first)");
-				}
-			}
-		}
 	}
 
 	[Flipable( 0x14F0, 0x14EF )]
@@ -550,6 +602,7 @@ namespace Server.Items
 				}
 			}
 		}
+
 	}
 }
 
@@ -572,7 +625,7 @@ namespace Server.Gumps
 				AddLabel(20, 20, 1071, @"Owner:");
 				AddLabel(75, 20, 1071, m_Post.Owner.Name);
 				AddLabel(20, 45, 1071, @"Pet:");
-				AddLabel(75, 45, 1071, m_Post.Controlled.Name);
+				AddLabel(75, 45, 1071, m_Post.PetName);
 				AddLabel(20, 75, 1071, @"HomeRange:");
 				AddButton(150, 80, 2223, 2223, 1, GumpButtonType.Reply, 0);
 				AddButton(170, 80, 2224, 2224, 2, GumpButtonType.Reply, 0);

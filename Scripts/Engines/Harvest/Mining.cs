@@ -21,7 +21,7 @@ namespace Server.Engines.Harvest
 			}
 		}
 
-		private HarvestDefinition m_OreAndStone, m_Sand;
+		private HarvestDefinition m_OreAndStone, m_Sand, m_Crystal, m_Clay; //Added Crystal and Clay
 
 		public HarvestDefinition OreAndStone
 		{
@@ -32,6 +32,16 @@ namespace Server.Engines.Harvest
 		{
 			get{ return m_Sand; }
 		}
+//ADDED crystal clay
+		public HarvestDefinition Crystal
+		{
+			get{ return m_Crystal; }
+		}
+		public HarvestDefinition Clay
+		{
+			get{ return m_Clay; }
+		}
+//ADDED END crystal clay
 
 		private Mining()
 		{
@@ -115,7 +125,7 @@ namespace Server.Engines.Harvest
 			{
 				oreAndStone.BonusResources = new BonusHarvestResource[]
 				{
-					new BonusHarvestResource( 0, 98.17, null, null ),	//Nothing
+					new BonusHarvestResource( 0, 98.15, null, null ),	//Nothing
 					new BonusHarvestResource( 100, .10, 1072562, typeof( BlueDiamond ) ),
 					new BonusHarvestResource( 100, .10, 1072567, typeof( DarkSapphire ) ),
 					new BonusHarvestResource( 100, .10, 1072570, typeof( EcruCitrine ) ),
@@ -137,6 +147,7 @@ namespace Server.Engines.Harvest
 					new BonusHarvestResource( 100, .01, "You dig up a Brilliant Amber and put it in your pack", typeof( BrilliantAmber ) ),
 
 //57
+					new BonusHarvestResource( 60, .01, "You dig up a DragonKnight Token and put it in your pack", typeof( DragonKnightToken) ),
 					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1alchemygem ) ),
 					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1anatomygem ) ),
 					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( plus1animalloregem ) ),
@@ -195,6 +206,7 @@ namespace Server.Engines.Harvest
 					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( nightsightgem ) ),
 					new BonusHarvestResource( 60, .01, "You dig up a skill gem and put it in your pack", typeof( SpellChannelingGem ) ),
 //56
+					new BonusHarvestResource( 70, .01, "You dig up a \"Fairy Jar\" and put it in your pack", typeof( HealingFairyJar ) ),
 
 
 					new BonusHarvestResource( 90, .01, "You dig up a skill gem and put it in your pack", typeof( plus2alchemygem ) ),
@@ -330,6 +342,164 @@ namespace Server.Engines.Harvest
 
 			Definitions.Add( sand );
 			#endregion
+			
+            #region Mining for crystal
+			HarvestDefinition crystal = m_Crystal = new HarvestDefinition();
+
+			// Resource banks are every 8x8 tiles
+			crystal.BankWidth = 4;
+			crystal.BankHeight = 4;
+
+			// Every bank holds from 10 to 34 Clay
+			crystal.MinTotal = 0;
+			crystal.MaxTotal = 5;
+
+			// A resource bank will respawn its content every 10 to 20 minutes
+			crystal.MinRespawn = TimeSpan.FromMinutes( 10.0 );
+			crystal.MaxRespawn = TimeSpan.FromMinutes( 20.0 );
+
+			// Skill checking is done on the Mining skill
+			crystal.Skill = SkillName.Mining;
+
+			// Set the list of harvestable tiles
+			crystal.Tiles = m_CrystalTiles;
+
+			// Players must be within 2 tiles to harvest
+			crystal.MaxRange = 3;
+
+			// One sand per harvest action
+			crystal.ConsumedPerHarvest = 1;
+			crystal.ConsumedPerFeluccaHarvest = 2;
+
+			// The digging effect
+			crystal.EffectActions = new int[]{ 11 };
+			crystal.EffectSounds = new int[]{ 0x03f, 0x040, 0x041  };
+			crystal.EffectCounts = new int[]{ 6 };
+			crystal.EffectDelay = TimeSpan.FromSeconds( 1.6 );
+			crystal.EffectSoundDelay = TimeSpan.FromSeconds( 0.9 );
+
+			crystal.NoResourcesMessage = "There is no crystal here to mine."; // There is no clay here to mine.
+			crystal.DoubleHarvestMessage = "Someone has gotten to the crystal before you."; // There is no Clay here to mine.
+			crystal.TimedOutOfRangeMessage = 503041; // You have moved too far away to continue mining.
+			crystal.OutOfRangeMessage = 500446; // That is too far away.
+			crystal.FailMessage = "You dig for a while but fail to find any usable crystal."; // You dig for a while but fail to find any of sufficient quality for pottery
+			crystal.PackFullMessage = "Your backpack is full, so the crystal you mined is lost." ; // Your backpack can't hold the clay, and it is lost!
+			crystal.ToolBrokeMessage = 1044038; // You have worn out your tool!
+
+			res = new HarvestResource[]
+				{
+				new HarvestResource( 00.0, 00.0, 140.0, "You shattered a crystal and gathered a decent piece.", typeof( GammaCrystalFragment ) )
+				};
+
+			veins = new HarvestVein[]
+				{
+					new HarvestVein( 100.0, 0.0, res[0], null )
+				};
+
+			crystal.Resources = res;
+			crystal.Veins = veins;
+			crystal.BonusResources = new BonusHarvestResource[]
+			{
+				new BonusHarvestResource( 0, 09.00, null, null ),//Nothing
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystalFragment ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystalFragment ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystalFragment ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystalFragment ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystalFragment ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystal ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystal ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystal ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( GammaCrystal ) ),
+				new BonusHarvestResource( 0, 01.00, "You dig up a DragonKnight Token and put it in your pack.", typeof( DragonKnightToken) ),
+
+
+			};
+			
+
+
+
+			Definitions.Add( crystal );
+			#endregion Mining for crystal
+			
+            #region Mining for clay
+			HarvestDefinition clay = m_Clay = new HarvestDefinition();
+
+			// Resource banks are every 8x8 tiles
+			clay.BankWidth = 4;
+			clay.BankHeight = 4;
+
+			// Every bank holds from 10 to 34 Clay
+			clay.MinTotal = 0;
+			clay.MaxTotal = 5;
+
+			// A resource bank will respawn its content every 10 to 20 minutes
+			clay.MinRespawn = TimeSpan.FromMinutes( 10.0 );
+			clay.MaxRespawn = TimeSpan.FromMinutes( 20.0 );
+
+			// Skill checking is done on the Mining skill
+			clay.Skill = SkillName.Mining;
+
+			// Set the list of harvestable tiles
+			clay.Tiles = m_ClayTiles;
+
+			// Players must be within 2 tiles to harvest
+			clay.MaxRange = 3;
+
+			// One sand per harvest action
+			clay.ConsumedPerHarvest = 1;
+			clay.ConsumedPerFeluccaHarvest = 2;
+
+			// The digging effect
+			clay.EffectActions = new int[]{ 11 };
+			clay.EffectSounds = new int[]{ 0x1CA, 0x33B, 0x3E6 };
+			clay.EffectCounts = new int[]{ 6 };
+			clay.EffectDelay = TimeSpan.FromSeconds( 1.6 );
+			clay.EffectSoundDelay = TimeSpan.FromSeconds( 0.9 );
+
+			clay.NoResourcesMessage = "There is no clay here to mine."; // There is no clay here to mine.
+			clay.DoubleHarvestMessage = "Someone has gotten to the clay before you."; // There is no Clay here to mine.
+			clay.TimedOutOfRangeMessage = 503041; // You have moved too far away to continue mining.
+			clay.OutOfRangeMessage = 500446; // That is too far away.
+			clay.FailMessage = "You dig for a while but fail to find any usable clay."; // You dig for a while but fail to find any of sufficient quality for pottery
+			clay.PackFullMessage = "Your backpack is full, so the clay you mined is lost." ; // Your backpack can't hold the clay, and it is lost!
+			clay.ToolBrokeMessage = 1044038; // You have worn out your tool!
+
+			res = new HarvestResource[]
+				{
+				new HarvestResource( 00.0, 00.0, 140.0, "You carefully dig up clay of sufficent quality to use.", typeof( ClayMud ) )
+				};
+
+			veins = new HarvestVein[]
+				{
+					new HarvestVein( 100.0, 0.0, res[0], null )
+				};
+
+			clay.Resources = res;
+			clay.Veins = veins;
+			clay.BonusResources = new BonusHarvestResource[]
+			{
+				new BonusHarvestResource( 0, 09.00, null, null ),//Nothing
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 10.00, "", typeof( ClayMud ) ),
+				new BonusHarvestResource( 0, 01.00, "You dig up a DragonKnight Token and put it in your pack.", typeof( DragonKnightToken) ),
+
+
+			};
+			
+
+
+
+			Definitions.Add( clay );
+			#endregion Mining for clay
+		
+			
 		}
 
 		public override Type GetResourceType( Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource )
@@ -570,6 +740,47 @@ namespace Server.Engines.Harvest
 				1617, 1618, 1623, 1624, 1625, 1626, 1635, 1636, 1637,
 				1638, 1639, 1640, 1641, 1642, 1647, 1648, 1649, 1650
 			};
+		
+		
+		#region Crystal Tile lists
+		private static int[] m_CrystalTiles = new int[]
+		{
+			0x6206, 0x6207, 0x6208, 0x6209, 0x620A, 0x620B, 0x620C, 0x620D,
+			0x620E, 0x6210, 0x6211, 0x6212, 0x6213, 0x6214, 0x6215, 0x6216,
+			0x6217, 0x6218, 0x621A, 0x621B, 0x621C, 0x621D, 0x621E, 0x621F,
+			0x6220, 0x6221, 0x6222, 0x6224, 0x6225, 0x6226, 0x6227, 0x6228,
+			0x6229, 0x622A, 0x622B, 0x622C,
+
+			0x623A, 0x623B, 0x623C, 0x623D, 0x623E, 0x623F,
+			0x6240, 0x6241, 0x6242, 0x6243, 0x6244, 0x6245, 0x6246, 0x6247, 0x6248, 0x6249,
+
+			0x2206, 0x2207,0x2208,0x2209,0x220A,0x220B,0x220C,0x220D,
+			0x220E, 0x2210, 0x2211, 0x2212, 0x2213, 0x2214, 0x2215, 0x2216,
+			0x2217, 0x2218, 0x221A, 0x221B, 0x221C, 0x221D, 0x221E, 0x221F,
+			0x2220, 0x2221, 0x2222, 0x2224, 0x2225, 0x2226, 0x2227, 0x2228,
+			0x2229, 0x222A, 0x222B, 0x222C,
+			0x223A, 0x223B, 0x223C, 0x223D, 0x223E, 0x223F,
+			0x2240, 0x2241, 0x2242, 0x2243, 0x2244, 0x2245, 0x2246, 0x2247, 0x2248, 0x2249
+		};
+		#endregion Crystal Tile lists
+
+		
+		#region Clay Tile lists
+		private static int[] m_ClayTiles = new int[]
+		{
+			15717, 15808, 15809, 15810, 15811, 15812,
+			15813, 15814, 15815, 15816, 15817, 15818,
+			15819, 15820, 15821, 15822, 15823, 15824,
+			15825, 15826, 15827, 15828, 15829, 15830,
+			15831, 15832, 15833, 15835, 15836, 15838,
+			15839, 15840, 15831, 15842, 15843, 15844,
+			15845, 15846, 15847, 15848, 15849, 15850,
+			15851, 15852, 15853, 15854, 15855, 15856,
+			15857, 16112
+		};
+        #endregion Clay Tile lists
+
+		
 		#endregion
 	}
 }

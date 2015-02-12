@@ -723,6 +723,17 @@ namespace Server.Items
 					bev.Quantity = 0;
 				}
 			}
+//I ADDED for fill pitcher from statics part 1 of 3
+			//NOTES:
+			//StaticTarget: Hardcoded usualy item looking and Ocean Edges..
+			//Items: created in game
+			//LandTiles: Hard coded - Floor and Deap ocean
+			else if	(targ is Item /*&& ((((Item)targ).ItemID != null))*/ && AbleToGetWater(((Item)targ).ItemID))//trying to clear up yellow. Item is never null
+				FillPitcherWithWater(from, this, targ);
+
+			else if	(targ is StaticTarget /*&& ((((StaticTarget)targ).ItemID != null))*/ && AbleToGetWater(((StaticTarget)targ).ItemID))//trying to clear up yellow. Item is never null
+				FillPitcherWithWater(from, this, targ);
+//I ADDED FIN for fill pitcher from statics part 1 of 3
 			else if ( targ is Item )
 			{
 				Item item = (Item)targ;
@@ -745,6 +756,9 @@ namespace Server.Items
 				this.Content = BeverageType.Water;
 				this.Poison = null;
 				this.Poisoner = null;
+//I ADDED FOR SOUND
+				from.PlaySound( 0x4E );
+//I ADDED FOR SOUND FIN
 
 				if ( src.Quantity > this.MaxQuantity )
 				{
@@ -803,7 +817,67 @@ namespace Server.Items
 				}
 			}
 		}
-
+//I ADDED for fill pitcher from statics part 2 of 3
+		private void FillPitcherWithWater( Mobile from, object pitcher, object targ )
+		{
+			string whatisit = null;
+//			object targeted = null;//Trying to clear up yellows. was assigned but never used.
+			StaticTarget statictarget = targ as StaticTarget;
+			Item itemtarget = targ as Item;
+			if(targ != null && targ is StaticTarget)
+				whatisit = "StaticTargeted";
+			if (targ != null && targ is Item)
+				whatisit = "ItemTargeted";
+			if (((whatisit != null) && whatisit == "StaticTargeted") && (!from.InRange(statictarget.Location, 3) || !from.InLOS(statictarget)))
+			{
+				from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+				return;//return = stop action and wont allow to fill
+			}
+			if (((whatisit != null) && whatisit == "ItemTargeted") && (!from.InRange(itemtarget.Location, 3) || !from.InLOS(itemtarget)))
+			{
+				from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+				return;//return = stop action and wont allow to fill
+			}
+			from.PlaySound( 0x4E );
+			this.Content = BeverageType.Water;
+			this.Poison = null;
+			this.Poisoner = null;
+			this.Quantity = this.MaxQuantity;
+			from.SendLocalizedMessage(1010089); // You fill the container with water.
+		}
+		private static bool AbleToGetWater( int id )
+		{
+			for ( int i = 0; i < m_WaterSources.Length; ++i )
+			{
+				if ( id == m_WaterSources[i] )
+					return true;
+			}
+			return false;
+		}
+		private static int[] m_WaterSources = new int[]
+		{
+			//Water Barrel deco
+			0x154D,
+			//water tub deco & Static
+			0xe7b,
+			//water troft
+			0xb41, 0xb42,0xb43,0xb44,
+			//vat
+			0x1550, 0x1551, 0x1552, 0x1553, 0x1554, 0x1555, 0x1556, 0x1558, 0x1559,
+			//White fountain
+			0x1731, 0x1732, 0x1733, 0x1734, 0x1735, 0x1736, 0x1737, 0x1738, 0x1739, 0x173A, 0x173B, 0x173C, 0x173D, 0x173E, 0x173F, 0x1740, 0x1741, 0x1742, 0x1743, 0x1744, 0x1745, 0x1746, 0x1747, 0x1748, 0x1749, 0x174A, 0x174B, 0x174C, 0x174D, 0x174E, 0x174F, 0x1750, 0x1751, 0x1752, 0x1753, 0x1754, 0x1755, 0x1756, 0x1757, 0x1758, 0x1759, 0x175A,
+			//Brown fountain
+			0x19C3, 0x19C4, 0x19C5, 0x19C6, 0x19C7, 0x19C8, 0x19C9, 0x19CA, 0x19CB, 0x19CC, 0x19CD, 0x19CE, 0x19CF, 0x19D0, 0x19D1, 0x19D2, 0x19D3, 0x19D4, 0x19D5, 0x19D6, 0x19D7, 0x19D8, 0x19D9, 0x19DA, 0x19DB, 0x19DC, 0x19DD, 0x19DE, 0x19DF, 0x19E0, 0x19E1, 0x19E2, 0x19E3, 0x19E4, 0x19E5, 0x19E6, 0x19E7, 0x19E8, 0x19E9, 0x19EA, 0x19EB, 0x19EC,
+			//pond
+			0x2453, 0x2454, 0x2455, 0x2456, 0x2457, 0x2458, 0x2459, 0x245A, 0x245B, 0x245C, 0x245D,
+			//white wall fountain with face
+			0x2AC0, 0x2AC1, 0x2AC2, 0x2AC3, 0x2AC4, 0x2AC5,
+			//Elvin wash bassin - sink
+			0x2D0B, 0x2D0C,
+			//elvin wash bassin - sink screwed but just in case
+			0x30DF, 0x30E0, 0x30E1, 0x30E2,
+			};
+//I ADDED FIN for fill pitcher from statics part 2 of 3
 		private static int[] m_SwampTiles = new int[]
 			{
 				0x9C4, 0x9EB,
@@ -919,6 +993,18 @@ namespace Server.Items
 
 		public virtual void Pour_OnTarget( Mobile from, object targ )
 		{
+//I ADDED for fill pitcher from statics part 3 of 3
+			if	(targ is Item /*&& ((((Item)targ).ItemID != null))*/ && AbleToGetWater(((Item)targ).ItemID))//trying to clear up yellows, item is never null.
+			{
+				FillPitcherWithWater(from, this, targ);
+				return;
+			}
+			if	(targ is StaticTarget /*&& ((((StaticTarget)targ).ItemID != null))*/ && AbleToGetWater(((StaticTarget)targ).ItemID))//trying to clear up yellows. item is never null
+			{
+				FillPitcherWithWater(from, this, targ);
+				return;
+			}
+//I ADDED for fill pitcher from statics part 3 of 3
 			if ( IsEmpty || !Pourable || !ValidateUse( from, false ) )
 				return;
 

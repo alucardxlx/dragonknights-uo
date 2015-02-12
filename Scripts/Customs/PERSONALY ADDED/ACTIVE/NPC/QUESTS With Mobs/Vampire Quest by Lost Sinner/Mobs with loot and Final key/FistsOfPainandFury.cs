@@ -31,15 +31,18 @@ namespace Server.Items
 		{
             switch (Utility.Random(5))
             {
-                case 0:
-                    defender.FixedParticles(0x37CC, 1, 40, 97, 3, 9917, 0);
-                    attacker.Say("Suffer my fury!!!"); break;
-                    SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 30, 0, 0, 0);
+            	case 0:
+            		{
+            			defender.FixedParticles(0x37CC, 1, 40, 97, 3, 9917, 0);
+            			attacker.Say("Suffer my fury!!!");
+            			SpellHelper.Damage(TimeSpan.Zero, defender, attacker, 15, 0, 30, 0, 0, 0);
+            			break;
+            		}
             }
-		
-			base.OnHit( attacker, defender, damageBonus );
+            
+            base.OnHit( attacker, defender, damageBonus );
 		}
-	
+		
 		public FistsOfPainandFury( Serial serial ) : base( serial )
 		{
 		}

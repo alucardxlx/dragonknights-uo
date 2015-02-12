@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ServerRegions>
+<!--Felucca-->	
 	<Facet name="Felucca">
+		<!--Custom-->
+			<region type="GreenAcres" priority="1" name="Controllers">
+			<rect x="5378" y="1083" width="0" height="0" />
+			<go x="5378" y="1083" z="0" />
+		</region>
+			<region type="GreenAcres" priority="1" name="Arena">
+			<rect x="5445" y="1158" width="0" height="0" />
+			<go x="5445" y="1158" z="0" />
+		</region>
+		<!--Custom End-->
 		<region type="GuardedRegion" priority="50" name="Moongates">
 			<!-- britain -->
 			<rect x="1330" y="1991" width="13" height="13" />
@@ -596,7 +607,7 @@
 			<rect x="4549" y="1482" width="29" height="27" />
 			<rect x="4405" y="1451" width="23" height="23" />
 			<rect x="4483" y="1468" width="21" height="13" />
-			<go x="4442" y="1172" z="0" />
+			<go x="4470" y="1145" z="0" />
 			<music name="Moonglow" />
 			<zrange min="0" />
 			<region>
@@ -921,7 +932,18 @@
 			</spawning>
 		</region>
 	</Facet>
+<!--Felucca End-->
+<!--Trammel-->
 	<Facet name="Trammel">
+		<!--Custom-->
+			<!--Hidden Village-->
+				<region type="TownRegion" priority="50" name="HV">
+			<rect x="5121" y="1090" width="81" height="124"/>
+			<logoutDelay active="false" />
+			<go x="5153" y="1139" z="0"/>
+		</region>
+			<!--Hidden Village End-->
+		<!--Custom End-->
 		<region type="GuardedRegion" priority="50" name="Moongates">
 			<!-- britain -->
 			<rect x="1330" y="1991" width="13" height="13" />
@@ -1163,7 +1185,7 @@
 		<region priority="50" name="Bravehorn's drinking pool">
 			<rect x="1302" y="2331" width="38" height="22" />
 		</region>
-		<region priority="50" name="Huntsman's forrest">
+		<region priority="50" name="Huntsman's forest">
 			<rect x="1595" y="550" width="120" height="120" />
 		</region>
 		<!--End-->
@@ -1592,7 +1614,7 @@
 			<rect x="4549" y="1482" width="29" height="27" />
 			<rect x="4405" y="1451" width="23" height="23" />
 			<rect x="4483" y="1468" width="21" height="13" />
-			<go x="4442" y="1172" z="0" />
+			<go x="4470" y="1145" z="0" />
 			<music name="Moonglow" />
 			<zrange min="0" />
 			<region name="The Scholar's Inn">
@@ -1905,6 +1927,8 @@
 			</spawning>
 		</region>
 	</Facet>
+<!--Felucca End-->
+<!--Ilshenar-->
 	<Facet name="Ilshenar">
 		<!--Mondain's Legacy-->
 		<region type="MondainRegion" priority="50" name="Twisted Weald">
@@ -2256,6 +2280,8 @@
 			</region>
 		</region>
 	</Facet>
+<!--Ilshenar End-->
+<!--Malas-->
 	<Facet name="Malas">
 		<region type="NoHousingRegion" priority="50" name="Ilse of the Divide">
 			<rect x="1532" y="857" width="300" height="200" />
@@ -2432,6 +2458,8 @@
 			<rect x="360" y="960" width="100" height="215" />
 		</region>
 	</Facet>
+<!--Malas End-->
+<!--Tokuno-->
 	<Facet name="Tokuno">
 		<region type="GuardedRegion" priority="50" name="Moongates">
 			<!-- Isamu-Jima -->
@@ -2466,4 +2494,5 @@
 			<smartNoHousing active="true" />
 		</region>
 	</Facet>
+<!--Tokuno End-->
 </ServerRegions>

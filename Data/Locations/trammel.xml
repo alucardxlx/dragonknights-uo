@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <places>
 	<parent name="Trammel">
+		<parent name = "Hidden Village">
+		<child name="Center" x="5153" y="1139" z="0"/>
+		</parent>
 		<parent name="Dungeons">
 			<parent name="Blighted Grove">
 				<child name="Entrance" x="586" y="1643" z="-5" />

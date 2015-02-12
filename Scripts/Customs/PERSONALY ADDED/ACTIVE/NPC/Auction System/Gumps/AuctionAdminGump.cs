@@ -35,35 +35,41 @@ namespace Arya.Auction
 			AddPage(0);
 			AddBackground(0, 0, 270, 270, 9300);
 			AddAlphaRegion(0, 0, 270, 270);
-			AddLabel(36, 5, Misc.kRedHue, @"Auction System Administration");
+			AddLabel(36, 5, 33, @"Auction System Administration");
 			AddImageTiled(16, 30, 238, 1, 9274);
 
-			AddLabel(15, 65, Misc.kLabelHue, string.Format( @"Deadline: {0} at {1}", AuctionScheduler.Deadline.ToShortDateString(), AuctionScheduler.Deadline.ToShortTimeString() ) );
-			AddLabel(15, 40, Misc.kGreenHue, string.Format( @"{0} Auctions, {1} Pending", AuctionSystem.Auctions.Count, AuctionSystem.Pending.Count ) );
+			AddLabel(15, 65, 88, string.Format( @"Deadline: {0} at {1}", AuctionScheduler.Deadline.ToShortDateString(), AuctionScheduler.Deadline.ToShortTimeString() ) );
+			AddLabel(15, 40, 273, string.Format( @"{0} Auctions, {1} Pending", AuctionSystem.Auctions.Count, AuctionSystem.Pending.Count ) );
 
 			// B 1 : Validate
 			AddButton(15, 100, 4005, 4006, 1, GumpButtonType.Reply, 0);
-			AddLabel(55, 100, Misc.kLabelHue, @"Force Verification");
+			AddLabel(55, 100, 88, @"Force Verification");
 
 			// B 2 : Profile
 			AddButton(15, 130, 4005, 4006, 2, GumpButtonType.Reply, 0);
-			AddLabel(55, 130, Misc.kLabelHue, @"Profile the System");
+			AddLabel(55, 130, 88, @"Profile the System");
 
 			// B 3 : Temporary Shutdown
 			AddButton(15, 160, 4005, 4006, 3, GumpButtonType.Reply, 0);
-			AddLabel(55, 160, Misc.kLabelHue, @"Temporarily Shut Down");
+			AddLabel(55, 160, 88, @"Temporarily Shut Down");
 
 			// B 4 : Delete
 			AddButton(15, 190, 4005, 4006, 4, GumpButtonType.Reply, 0);
-			AddLabel(55, 190, Misc.kLabelHue, @"Permanently Shut Down");
+			AddLabel(55, 190, 88, @"Permanently Shut Down");
 
 			// B 0 : Close
 			AddButton(15, 230, 4023, 4024, 0, GumpButtonType.Reply, 0);
-			AddLabel(55, 230, Misc.kLabelHue, @"Exit");
+			AddLabel(55, 230, 88, @"Exit");
 		}
 
 		public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
-		{
+        {
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 4)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 			switch ( info.ButtonID )
 			{
 				case 1: // Validate

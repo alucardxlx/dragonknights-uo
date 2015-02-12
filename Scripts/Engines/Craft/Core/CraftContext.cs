@@ -37,7 +37,6 @@ namespace Server.Engines.Craft
 		public int TotalCount { get { return m_TotalCount; } set { m_TotalCount = value; } }
 //I ADDED
 
-
 		public CraftContext()
 		{
 			m_Items = new List<CraftItem>();

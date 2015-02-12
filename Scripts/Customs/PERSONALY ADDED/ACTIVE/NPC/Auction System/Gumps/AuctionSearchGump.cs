@@ -53,73 +53,77 @@ namespace Arya.Auction
 			AddImage(421, 20, 10410);
 			AddImage(410, 20, 10430);
 			AddImageTiled(90, 32, 323, 16, 10254);
-			AddLabel(185, 45, Misc.kGreenHue, AuctionSystem.ST[ 32 ] );
+			AddLabel(185, 45, 273, AuctionSystem.ST[ 32 ] );
 			AddImage(420, 320, 10412);
 			AddImage(0, 170, 10401);
 			AddImage(420, 170, 10411);
 
 			// TEXT 0 : Search text
-			AddLabel(70, 115, Misc.kLabelHue, AuctionSystem.ST[ 33 ] );
+			AddLabel(70, 115, 88, AuctionSystem.ST[ 33 ] );
 			AddImageTiled(145, 135, 200, 20, 3004);
 			AddImageTiled(146, 136, 198, 18, 2624);
 			AddAlphaRegion(146, 136, 198, 18);
-			AddTextEntry(146, 135, 198, 20, Misc.kRedHue, 0, @"");
+			AddTextEntry(146, 135, 198, 20, 33, 0, @"");
 
-			AddLabel(70, 160, Misc.kLabelHue, AuctionSystem.ST[ 34 ] );
+			AddLabel(70, 160, 88, AuctionSystem.ST[ 34 ] );
 
 			AddCheck(260, 221, 2510, 2511, false, 1);
-			AddLabel(280, 220, Misc.kLabelHue, AuctionSystem.ST[ 35 ] );
+			AddLabel(280, 220, 88, AuctionSystem.ST[ 35 ] );
 
 			if ( Core.AOS )
 			{
 				AddCheck(260, 261, 2510, 2511, false, 9);
-				AddLabel(280, 260, Misc.kLabelHue, AuctionSystem.ST[ 36 ] );
+				AddLabel(280, 260, 88, AuctionSystem.ST[ 36 ] );
 
 				AddCheck(260, 241, 2510, 2511, false, 4);
-				AddLabel(280, 240, Misc.kLabelHue, AuctionSystem.ST[ 37 ] );
+				AddLabel(280, 240, 88, AuctionSystem.ST[ 37 ] );
 			}
 
 			AddCheck(260, 201, 2510, 2511, false, 3);
-			AddLabel(280, 200, Misc.kLabelHue, AuctionSystem.ST[ 38 ] );
+			AddLabel(280, 200, 88, AuctionSystem.ST[ 38 ] );
 
 			AddCheck(260, 181, 2510, 2511, false, 5);
-			AddLabel(280, 180, Misc.kLabelHue, AuctionSystem.ST[ 39 ] );
+			AddLabel(280, 180, 88, AuctionSystem.ST[ 39 ] );
 
 			AddCheck(90, 181, 2510, 2511, false, 6);
-			AddLabel(110, 180, Misc.kLabelHue, AuctionSystem.ST[ 40 ] );
+			AddLabel(110, 180, 88, AuctionSystem.ST[ 40 ] );
 
 			AddCheck(90, 201, 2510, 2511, false, 7);
-			AddLabel(110, 200, Misc.kLabelHue, AuctionSystem.ST[ 41 ] );
+			AddLabel(110, 200, 88, AuctionSystem.ST[ 41 ] );
 
 			AddCheck(90, 221, 2510, 2511, false, 8);
-			AddLabel(110, 220, Misc.kLabelHue, AuctionSystem.ST[ 42 ] );
+			AddLabel(110, 220, 88, AuctionSystem.ST[ 42 ] );
 
 			AddCheck(90, 241, 2510, 2511, false, 2);
-			AddLabel(110, 240, Misc.kLabelHue, AuctionSystem.ST[ 43 ] );
+			AddLabel(110, 240, 88, AuctionSystem.ST[ 43 ] );
 
 			AddCheck(90, 261, 2510, 2511, false, 12);
-			AddLabel(110, 260, Misc.kLabelHue, AuctionSystem.ST[ 44 ] );
+			AddLabel(110, 260, 88, AuctionSystem.ST[ 44 ] );
 
 			if ( Core.AOS )
 			{
 				AddCheck(90, 280, 2510, 2511, false, 11);
-				AddLabel(110, 279, Misc.kLabelHue, AuctionSystem.ST[ 45 ] );
+				AddLabel(110, 279, 88, AuctionSystem.ST[ 45 ] );
 
 				AddCheck(260, 280, 2510, 2511, false, 10);
-				AddLabel(280, 279, Misc.kLabelHue, AuctionSystem.ST[ 46 ] );
+				AddLabel(280, 279, 88, AuctionSystem.ST[ 46 ] );
 			}
+
+            AddCheck(90, 301, 2510, 2511, false, 13);
+            AddLabel(110, 300, 88, AuctionSystem.ST[232]);
+
+            // CHECK 0: Search within existing results
+            AddCheck(80, 320, 9721, 9724, false, 0);
+            AddLabel(115, 322, 88, AuctionSystem.ST[48]);
 
 			// BUTTON 1 : Search
 			AddButton(255, 350, 4005, 4006, 1, GumpButtonType.Reply, 0);
-			AddLabel(295, 350, Misc.kLabelHue, AuctionSystem.ST[ 16 ] );
+			AddLabel(295, 350, 88, AuctionSystem.ST[ 16 ] );
 
 			// BUTTON 0 : Cancel
 			AddButton(85, 350, 4017, 4018, 0, GumpButtonType.Reply, 0);
-			AddLabel(125, 350, Misc.kLabelHue, AuctionSystem.ST[ 47 ] );
+			AddLabel(125, 350, 88, AuctionSystem.ST[ 47 ] );			
 			
-			// CHECK 0: Search withing existing results
-			AddCheck(80, 310, 9721, 9724, false, 0);
-			AddLabel(115, 312, Misc.kLabelHue, AuctionSystem.ST[ 48 ] );
 		}
 
 		public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
@@ -148,6 +152,12 @@ namespace Arya.Auction
 				text = info.TextEntries[ 0 ].Text;
 			}
 
+            int buttonid = info.ButtonID;
+            if (buttonid < 0 || buttonid > 13)
+            {
+                sender.Mobile.SendMessage("Invalid option.  Please try again.");
+                return;
+            }
 			foreach( int check in info.Switches )
 			{
 				switch ( check )

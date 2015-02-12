@@ -3616,7 +3616,7 @@ namespace Server
 
 		private IAccount m_Account;
 
-		[CommandProperty( AccessLevel.Counselor, AccessLevel.Owner )]
+		[CommandProperty( AccessLevel.GameMaster, AccessLevel.Owner )]
 		public IAccount Account
 		{
 			get
@@ -5060,7 +5060,7 @@ namespace Server
 			return null;
 		}
 
-		public Mobile FindMostTotalDamger( bool allowSelf )
+		public Mobile FindMostTotalDamager( bool allowSelf )
 		{
 			return GetDamagerFrom( FindMostTotalDamageEntry( allowSelf ) );
 		}
@@ -5085,7 +5085,7 @@ namespace Server
 			return mostTotal;
 		}
 
-		public Mobile FindLeastTotalDamger( bool allowSelf )
+		public Mobile FindLeastTotalDamager( bool allowSelf )
 		{
 			return GetDamagerFrom( FindLeastTotalDamageEntry( allowSelf ) );
 		}

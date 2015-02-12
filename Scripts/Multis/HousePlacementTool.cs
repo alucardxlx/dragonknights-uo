@@ -456,7 +456,7 @@ namespace Server.Items
 //						from.SendLocalizedMessage( 501271 ); // You already own a house, you may not place another!
 //					}
 //					else
-					{
+//					{//edited 03042013
 						from.SendLocalizedMessage( 1011576 ); // This is a valid location.
 
 						PreviewHouse prev = new PreviewHouse( m_MultiID );
@@ -505,9 +505,9 @@ namespace Server.Items
 						from.SendGump( new WarningGump( 1060635, 30720, 1049583, 32512, 420, 280, new WarningGumpCallback( PlacementWarning_Callback ), prev ) );
 
 						return true;
-					}
+//					}//edited 03042013
 
-					break;
+//					break;//edited 03042013
 				}
 				case HousePlacementResult.BadItem:
 				case HousePlacementResult.BadLand:

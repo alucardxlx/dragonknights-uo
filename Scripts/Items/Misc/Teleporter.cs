@@ -141,14 +141,30 @@ namespace Server.Items
 				LabelTo( from, "(inactive)" );
 			}
 		}
-
-		public virtual void StartTeleport( Mobile m )
-		{
-			if ( m_Delay == TimeSpan.Zero )
-				DoTeleport( m );
-			else
-				Timer.DelayCall( m_Delay, new TimerStateCallback( DoTeleport_Callback ), m );
-		}
+		
+//Original
+//		public virtual void StartTeleport( Mobile m )
+//		{
+//			if ( m_Delay == TimeSpan.Zero )
+//				DoTeleport( m );
+//			else
+//				Timer.DelayCall( m_Delay, new TimerStateCallback( DoTeleport_Callback ), m );
+//		}
+//Original end
+//changed to stop player from teleporting if draging something.
+  		public virtual void StartTeleport(Mobile m)
+  			{
+  			if (m.Holding != null)
+  			{
+  				m.SendLocalizedMessage(1071955); // You cannot teleport while dragging an object.
+  				return;
+  			}
+  			else if (m_Delay == TimeSpan.Zero)
+  			{
+  				DoTeleport(m);
+  			}
+  		}
+//changed to end
 
 		private void DoTeleport_Callback( object state )
 		{

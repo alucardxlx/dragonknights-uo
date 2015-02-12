@@ -308,7 +308,7 @@ namespace Server.Engines.Craft
 //I ADDED
 				AddCraft( typeof( NecromancerSpellbook ), 1044294, "NecromancerSpellbook", 50.0, 150.0, typeof( BlankScroll ), 1044377, 10,  1044378 );
 				AddCraft( typeof( BlankScroll ), 1044294, "BlankScroll", 0.00, 75.00, typeof( Leather ), "Leather", 2, "You do not have sufficent leather to make that." );
-//I ADDED
+//I ADDED FIN
 				index = AddCraft(typeof(RunedPrism), 1044294, 1073465, 45.0, 95.0, typeof(BlankScroll), 1044377, 1, 1044378);
 				AddRes(index, typeof(SpidersSilk), 1044360, 1, 1044253);
 				AddRes(index, typeof(BlackPearl), 1044353, 1, 1044253);
@@ -350,7 +350,7 @@ namespace Server.Engines.Craft
 				AddRes( index, typeof( MalletAndChisel ), "Mallet And Chisel", 10, "You do not have sufficent mallets and chisels to make that." );
 				AddRes( index, typeof( TinkerTools ), "Tool Kit", 10, "You do not have sufficent tool kits to make that." );
 				AddRes( index, typeof( SilverEtchedMace ), "Silver-Etched Mace", 1, "You do not have a Silver-Etched Mace to make that." );
-//FinADD
+//I ADDED FIN
 			}
 			#endregion
 

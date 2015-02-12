@@ -277,6 +277,13 @@ namespace Server.Engines.Craft
 			}
 			/* End Enchanted */
 			#endregion
+//I ADDED
+				index = AddCraft( typeof( PumpkinScareCrow0x469B ), "Misc", "A Pumpkin Scarecrow", 55.0, 140.0, typeof( Pumpkin ), "Pumpkin", 1, "Your missing the pumpkin for its head." );
+				AddRes( index, typeof( Robe ), "Robe", 1, "You do not have a robe to stuff all the Wheat into." );
+				AddRes( index, typeof( Log ), "Logs or Boards", 3, "You do not have enough logs or boards to hold the scarecrow up." );
+				AddRes( index, typeof( Rope ), "Rope", 1, "You do not have enough rope to try it all together." );
+				AddRes( index, typeof( Wheat ), "Wheat Sheaf", 10, "You do not have enough wheat sheaf to stuff it." );
+//I ADDED FIN
 		}
 	}
 }

@@ -14,6 +14,7 @@ using Server;
 using Server.Items;
 using Server.Accounting;
 using Server.Mobiles;
+using Joeku;
 
 namespace Arya.Auction
 {
@@ -148,7 +149,7 @@ namespace Arya.Auction
 			// Put the item into the control stone
 			auction.Item.Internalize();
 			m_ControlStone.AddItem( auction.Item );
-			auction.Item.Parent = m_ControlStone;
+			//auction.Item.Parent = m_ControlStone;
 			auction.Item.Visible = true;
 
 			Auctions.Add( auction );
@@ -165,7 +166,24 @@ namespace Arya.Auction
 			if ( CanAuction( mobile ) )
 			{
 				mobile.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 191 ] );
-				mobile.CloseAllGumps();
+                mobile.CloseAllGumps();
+                if (mobile.AccessLevel >= AccessLevel.Counselor)
+                	Joeku.ToolbarHelper.SendToolbar(mobile);
+//                mobile.CloseGump(typeof(AuctionGump));
+//                mobile.CloseGump(typeof(AuctionNoticeGump));
+//                mobile.CloseGump(typeof(AuctionControlGump));
+//                mobile.CloseGump(typeof(AuctionMessageGump));
+//                mobile.CloseGump(typeof(AuctionSortGump));
+//                mobile.CloseGump(typeof(MyAuctionGump));
+//                mobile.CloseGump(typeof(AuctionDeliveryGump));
+//                mobile.CloseGump(typeof(AuctionAdminGump));
+//                mobile.CloseGump(typeof(CreatureDeliveryGump));
+//                mobile.CloseGump(typeof(DeleteAuctionGump));
+//                mobile.CloseGump(typeof(AuctionViewGump));
+//                mobile.CloseGump(typeof(NewAuctionGump));
+//                mobile.CloseGump(typeof(AuctionSearchGump));
+//                mobile.CloseGump(typeof(AuctionListing));
+
 				mobile.Target = new AuctionTarget( new AuctionTargetCallback( OnNewAuctionTarget ), -1, false );
 			}
 			else
@@ -228,7 +246,19 @@ namespace Arya.Auction
 				from.SendMessage( AuctionConfig.MessageHue, AuctionSystem.ST[ 195 ] );
 				from.Target = new AuctionTarget( new AuctionTargetCallback( OnNewAuctionTarget ), -1, false );
 				return;
-			}
+            }
+//Uncomment if you use the ItemId skill & want things attributes displayed
+//
+  //          if (item is BaseWeapon)
+  //              ((BaseWeapon)item).Identified = true;
+  //          else if (item is BaseArmor)
+  //              ((BaseArmor)item).Identified = true;
+  //          else if (item is BaseClothing)
+  //              ((BaseClothing)item).Identified = true;
+  //          else if (item is BaseJewel)
+  //              ((BaseJewel)item).Identified = true;
+
+           
 
 			if ( !item.Movable )
 			{
@@ -612,7 +642,13 @@ namespace Arya.Auction
 		/// Outputs all relevant auction data to a text file
 		/// </summary>
 		public static void ProfileAuctions()
-		{
+        {
+            World.Broadcast(0x35, true, "{0}", DateTime.Now.ToLongDateString());
+            World.Broadcast(0x35, true, "{0}", DateTime.Now.ToShortTimeString());
+            World.Broadcast(0x35, true, "{0} Running Auctions", Auctions.Count);
+            World.Broadcast(0x35, true, "{0} Pending Auctions", Pending.Count);
+            World.Broadcast(0x35, true, "Next Deadline : {0} at {1}", AuctionScheduler.Deadline.ToShortDateString(), AuctionScheduler.Deadline.ToShortTimeString());
+
 			string file = Path.Combine( Core.BaseDirectory, "AuctionProfile.txt" );
 
 			try
@@ -631,6 +667,17 @@ namespace Arya.Auction
 				sw.WriteLine();
 
 				ArrayList auctions = new ArrayList( Auctions );
+				
+				foreach( AuctionItem a in auctions )
+				{
+					if ( a.Item != null )
+					{
+						a.Item.Location = m_ControlStone.Location;
+						//a.Item.Map = m_ControlStone.Map;
+						a.Item.Internalize();
+						m_ControlStone.AddItem( a.Item );
+					}
+				}
 
 				foreach( AuctionItem a in auctions )
 				{

@@ -179,7 +179,6 @@ namespace Server.Engines.Craft
 			if ( Core.ML )
 			{
 //I added start
-
 				//Dirt tile deed
 				index = AddCraft( typeof( DirtTileHouseAddonDeed ), 1074832, "House Tile Dirt Deed", 90.0, 140.0, typeof( FertileDirt ), "Fertile Dirt", 200, "You do not have sufficent dirt to make that." );
 				AddRes( index, typeof ( GreaterCurePotion ), "Greater Cure Potion", 4, "You do not have sufficent greater cure potions to make that." );
@@ -196,8 +195,10 @@ namespace Server.Engines.Craft
 				
 				index = AddCraft( typeof( GreaterManaPotion ), 1074832, "Greater Mana Potion", 90.0, 120.0, typeof( MandrakeRoot ), "Mandrake Root", 30, "You do not have sufficent mandrake roots to make that." );
 				AddRes( index, typeof ( Bottle ), 1044529, 1, 500315 );
-				//mana potions				
+				//mana potions
 
+				index = AddCraft( typeof( TreeLog ), 1074832, "A Tree Log", 90.0, 120.0, typeof(Log), 1044041, 1, 1044351);
+				AddRes( index, typeof ( GammaCrystalDust ), "Gamma Crystal Dust", 100, "You do not have sufficent gamma crystal dust to make that." );
 //I added fin
 				index = AddCraft( typeof( InvisibilityPotion ), 1074832, 1074860, 65.0, 115.0, typeof( Bottle ), 1044529, 1, 500315 );
 				AddRes( index, typeof ( Bloodmoss ), 1044354, 4, 1044362 );

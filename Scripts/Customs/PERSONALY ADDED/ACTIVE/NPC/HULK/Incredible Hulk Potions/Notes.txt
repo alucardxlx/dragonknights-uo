@@ -1,0 +1,12 @@
+basepotion.cs add:
+potion,
+potion,
+Hulk,
+potionect,
+
+
+
+PotionKeg.cs add:
+
+case PotionEffect.Hulk:	return new HulkPotion();
+

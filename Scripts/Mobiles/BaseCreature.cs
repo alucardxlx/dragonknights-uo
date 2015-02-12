@@ -1922,10 +1922,10 @@ namespace Server.Mobiles
                 {
                     deleteTime = reader.ReadTimeSpan();
                 }
-                catch(System.ArgumentOutOfRangeException excep)
-                {
-                    Console.WriteLine("Exception occured Timer");
-                }
+//                catch(System.ArgumentOutOfRangeException excep)
+//                {
+//                    Console.WriteLine("Exception occured Timer");
+//                }
                 finally
                 {
                     deleteTime = TimeSpan.Zero;
@@ -3402,12 +3402,19 @@ namespace Server.Mobiles
 
 			m_IdleReleaseTime = DateTime.Now + TimeSpan.FromSeconds(Utility.RandomMinMax(15, 25));
 
-			if (Body.IsHuman)
+			if (Body.IsHuman)//Fixed Mob Mounting animation issue.
 			{
-				switch (Utility.Random(2))
+				if (!Mounted)
 				{
-					case 0: Animate(5, 5, 1, true, true, 1); break;
-					case 1: Animate(6, 5, 1, true, false, 1); break;
+					switch (Utility.Random(2))
+					{
+							case 0: Animate(5, 5, 1, true, true, 1); break;
+							case 1: Animate(6, 5, 1, true, false, 1); break;
+					}
+				}
+				else
+				{
+					Animate(56, 0, 1, true, false, 1);
 				}
 			}
 			else if (Body.IsAnimal)
@@ -4329,6 +4336,16 @@ namespace Server.Mobiles
 		public override bool OnBeforeDeath()
 		{
 			int treasureLevel = TreasureMapLevel;
+			
+			#region i added dragonknight tokens
+			if( Utility.RandomDouble() < .01 ) // .05 = 5% chance
+				{
+				switch ( Utility.Random(1) ) // total number of items in your list
+				{
+						case 0: PackItem( new DragonKnightToken( Utility.RandomMinMax( 1, 5 ) )); break;
+				}
+			}
+			#endregion i added dragonknight tokens
 
 			if (treasureLevel == 1 && this.Map == Map.Trammel && TreasureMap.IsInHavenIsland(this))
 			{

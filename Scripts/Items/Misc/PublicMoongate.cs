@@ -72,6 +72,13 @@ namespace Server.Items
 				m.SendLocalizedMessage( 1049616 ); // You are too busy to do that at the moment.
 				return false;
 			}
+//added to stop player from teleporting if draging something.
+			else if (m.Holding != null)
+			{
+				m.SendLocalizedMessage(1071955); // You cannot teleport while dragging an object.
+				return false;
+			}
+//added end			
 			else
 			{
 				m.CloseGump( typeof( MoongateGump ) );

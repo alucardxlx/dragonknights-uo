@@ -48,7 +48,7 @@ namespace Arya.Auction
 		/// accept or refuse the auction. Another case is when one or more items is deleted due to a wipe or serialization error.
 		/// The buyer will have to decide in this case.
 		/// </summary>
-		public static int DaysForConfirmation = 5;
+		public static int DaysForConfirmation = 7;
 
 		/// <summary>
 		/// This value specifies how higher the reserve can be with respect to the starting bid. This factor should limit
@@ -83,7 +83,7 @@ namespace Arya.Auction
 		/// 
 		/// public static string ClilocLocation = @"C:\RunUO\Misc\cliloc.enu";
 		/// </summary>
-		public static string ClilocLocation = null;
+        public static string ClilocLocation = null;
 
 		/// <summary>
 		/// Set this to false if you don't want to the system to produce a log file in \Logs\Auction.txt
@@ -94,7 +94,7 @@ namespace Arya.Auction
 		/// When a bid is placed within 5 minutes from the auction's ending, the auction duration will be
 		/// extended by this value.
 		/// </summary>
-		public static TimeSpan LateBidExtention = TimeSpan.FromMinutes( 0.0 );
+		public static TimeSpan LateBidExtention = TimeSpan.FromMinutes( 5.0 );
 
 		/// <summary>
 		/// This value specifies how much a player will have to pay to auction an item:
@@ -103,13 +103,13 @@ namespace Arya.Auction
 		/// the max value between the starting bid and the reserve.
 		/// - A value higher than 1.0 represents a fixed cost for the service (rounded).
 		/// </summary>
-		public static double CostOfAuction = 0.0;
+		public static double CostOfAuction = 0.01;
 
 		/// <summary>
 		/// Savings Account configuration for daily interest paid
 		/// </summary>
-		public static double GoldInterestRate = .04;		// Percentage paid each day for gold
-		public static double TokensInterestRate = .04;		// Percentage paid each day for tokens
+		public static double GoldInterestRate = .01;		// Percentage paid each day for gold
+		public static double TokensInterestRate = .01;		// Percentage paid each day for tokens
 
 		public static bool EnableTokens = false;			// Enable/disable them
 
@@ -168,7 +168,7 @@ namespace Arya.Auction
 				else if ( child.TagName == "AuctionAdminAcessLevel" && child.GetAccessLevelValue( out tempAccessLevel ))
 					AuctionAdminAcessLevel = tempAccessLevel;
 
-				else if ( child.TagName == "ClilocLocation" && null != child.Text )
+				else if ( child.TagName == "ClilocLocation" && ( null != child.Text && "" != child.Text ))
 					ClilocLocation = child.Text;
 
 				else if ( child.TagName == "EnableLogging" && child.GetBoolValue( out tempBool ))

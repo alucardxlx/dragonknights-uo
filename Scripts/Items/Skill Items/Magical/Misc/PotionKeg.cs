@@ -102,7 +102,76 @@ namespace Server.Items
 					return ( 1041620 + (int)m_Type ); 
 			} 
 		}
+		
+#region FS:ATS Edits
+		public override void AddNameProperty(ObjectPropertyList list)
+		{
+			if ( m_Held > 0 )
+			{
+				if ( m_Type == PotionEffect.Hulk )
+				{
+					list.Add( "a keg of gamma radiation potions" );
+				}
+				else if ( m_Type == PotionEffect.ManaLesser )
+				{
+					list.Add( "a keg of lesser mana potions" );
+				}
+				else if ( m_Type == PotionEffect.Mana )
+				{
+					list.Add( "a keg of mana potions" );
+				}
+				else if ( m_Type == PotionEffect.ManaGreater )
+				{
+					list.Add( "a keg of greater mana potions" );
+				}
+				else if ( m_Type == PotionEffect.Conflagration )
+				{
+					list.Add( "a keg of conflagration potions" );
+				}
+				else if ( m_Type == PotionEffect.ConflagrationGreater )
+				{
+					list.Add( "a keg of greater conflagration potions" );
+				}
+				else if ( m_Type == PotionEffect.ConfusionBlast )
+				{
+					list.Add( "a keg of confusion blast potions" );
+				}
+				else if ( m_Type == PotionEffect.ConfusionBlastGreater )
+				{
+					list.Add( "a keg of greater confusion blast potions" );
+				}
+				
+				else if ( m_Type == PotionEffect.Darkglow )
+				{
+					list.Add( "a keg of darkglow potions" );
+				}
+				else if ( m_Type == PotionEffect.Parasitic )
+				{
+					list.Add( "a keg of parasitic potions" );
+				}
+				else if ( m_Type == PotionEffect.Invisibility )
+				{
+					list.Add( "a keg of invisibility potions" );
+				}
+//				else if ( m_Type == PotionEffect.WHATEVER )
+//				{
+//					list.Add( "a keg of WHATEVER potions" );
+//				}
+				else
+				{
+					list.Add( 1041620 + (int)m_Type );
+				}
+			}
+			else
+			{
+				list.Add( "A specially lined keg for potions." );
+			}
+		}
+    
+		//public override int LabelNumber{ get{ return (m_Held > 0 ? 1041620 + (int)m_Type : 1041641); } }
+#endregion
 
+		
 		public override void GetProperties( ObjectPropertyList list )
 		{
 			base.GetProperties( list );
@@ -222,13 +291,20 @@ namespace Server.Items
 				BasePotion pot = (BasePotion)item;
                 int toHold = Math.Min( 100 - m_Held, pot.Amount );
 
-                
-				if ( pot.PotionEffect == PotionEffect.Darkglow || pot.PotionEffect == PotionEffect.Invisibility || pot.PotionEffect == PotionEffect.Parasitic )
-				{
-					from.SendLocalizedMessage( 502232 ); // The keg is not designed to hold that type of object.
-					return false;
-				}
-				else if ( toHold <= 0 )
+//original here                
+//				if ( pot.PotionEffect == PotionEffect.Darkglow || pot.PotionEffect == PotionEffect.Invisibility || pot.PotionEffect == PotionEffect.Parasitic )
+//				{
+//					from.SendLocalizedMessage( 502232 ); // The keg is not designed to hold that type of object.
+//					return false;
+//				}
+//				else if ( toHold <= 0 )
+//original here end
+//				if ( pot.PotionEffect == PotionEffect.Darkglow || pot.PotionEffect == PotionEffect.Invisibility || pot.PotionEffect == PotionEffect.Parasitic )
+//				{
+//					from.SendLocalizedMessage( 502232 ); // The keg is not designed to hold that type of object.
+//					return false;
+//				}
+				if ( toHold <= 0 )
 				{
 					from.SendLocalizedMessage( 502233 ); // The keg will not hold any more!
 					return false;
@@ -350,9 +426,16 @@ namespace Server.Items
 				case PotionEffect.ConfusionBlast:			return new ConfusionBlastPotion();
 				case PotionEffect.ConfusionBlastGreater:	return new GreaterConfusionBlastPotion();
 // I ADDED
-				case PotionEffect.ManaLesser:		return new LesserManaPotion();
-				case PotionEffect.Mana:				return new ManaPotion();
-				case PotionEffect.ManaGreater:		return new GreaterManaPotion();
+				case PotionEffect.ManaLesser:				return new LesserManaPotion();
+				case PotionEffect.Mana:						return new ManaPotion();
+				case PotionEffect.ManaGreater:				return new GreaterManaPotion();
+				
+				case PotionEffect.Hulk:						return new HulkPotion();
+				case PotionEffect.Darkglow:					return new DarkglowPotion();
+				case PotionEffect.Parasitic:				return new ParasiticPotion();
+				case PotionEffect.Invisibility:				return new InvisibilityPotion();
+
+				
 // I ADDED
 			}
 		}

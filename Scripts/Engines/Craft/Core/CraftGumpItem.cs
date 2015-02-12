@@ -50,6 +50,9 @@ namespace Server.Engines.Craft
 			AddAlphaRegion( 10, 10, 510, 399 );
 
 			AddHtmlLocalized( 170, 40, 150, 20, 1044053, LabelColor, false, false ); // ITEM
+//I ADDED TO HAVE AFTER THE ITEM
+			AddLabel(203, 40, LabelHue, ":");
+//I ADDED FIN
 			AddHtmlLocalized( 10, 192, 150, 22, 1044054, LabelColor, false, false ); // <CENTER>SKILLS</CENTER>
 			AddHtmlLocalized( 10, 277, 150, 22, 1044055, LabelColor, false, false ); // <CENTER>MATERIALS</CENTER>
 			AddHtmlLocalized( 10, 362, 150, 22, 1044056, LabelColor, false, false ); // <CENTER>OTHER</CENTER>
@@ -76,9 +79,9 @@ namespace Server.Engines.Craft
 			}
 
 			if ( craftItem.NameNumber > 0 )
-				AddHtmlLocalized( 330, 40, 180, 18, craftItem.NameNumber, LabelColor, false, false );
+				AddHtmlLocalized( 214, 40, 180, 18, craftItem.NameNumber, LabelColor, false, false );//I moded 330 to 214 - To clean up Display code
 			else
-				AddLabel( 330, 40, LabelHue, craftItem.NameString );
+				AddLabel( 214, 40, LabelHue, craftItem.NameString );//I moded 330 to 214 - To clean up Display code
 
 			if ( craftItem.UseAllRes )
 				AddHtmlLocalized( 170, 302 + (m_OtherCount++ * 20), 310, 18, 1048176, LabelColor, false, false ); // Makes as many as possible at once
